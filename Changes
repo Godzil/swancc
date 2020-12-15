@@ -1,0 +1,499 @@
+For version 0.16.*.
+
+> General clean out of some files that are no longer needed.
+
+> as86 modified to use normal malloc routines - no longer has limited 
+  input file size.
+
+> as6809 repaired, appears to work.
+
+> as86 error display adjusted, some errors demoted to warnings.
+
+> Complete re-write of bcc.c driver program. Should now be easier to
+  modify, does have more versatility so that things that were formerly
+  compile time options are all run time.
+
+> #asm and #endasm now interact with statment processing inside functions.
+  If statments and case labels no longer need special layout however #asm
+  must be placed between statments now.
+
+> The __heap_top virtual constant added, allows the -H option to be used
+  with the -d option in the linker.
+
+> Conio routines added, merged with bios_getc/bios_putc routines which
+  now no longer exist under those names.
+
+> monitor.out now copes with very old zimages, like the memtest86 program,
+  and has 'Retry' prompt for disk errors.
+
+> msdos.s and tarboot.s loading of non-a.out executables adjusted for 
+  dos BIN like files.
+
+> Standalone library startup adjusted to allow execution of a '-d' 
+  executable from DOS, if __argr.x.cflag is set this is running under
+  DOS.
+
+For version 0.16.0.
+
+> As major bugs seem to be absent 0.16.0 is escaping.
+
+> Seperated the multi-pass optimisation from the jump extension. We now have
+  the -j back to it's old meaning and -O added to help shorten instructions.
+
+> Fix for nested conditionals in the assembler.
+
+> Fix for listing to unusual locations; assembler tried to list non-existant 
+  lines.
+
+> Removed lots of warning from the ar86 code. (__STDC__ flags too)
+
+> Stop trying to strip scripts on install.
+
+> Remove non-working versions of malloc and stdio from libc directories.
+
+> Lots of changes in the 'bootblocks' example code.
+
+> Updated 'make distribution' to be all in the distribution.
+
+> bin86 Makefile adjusted so that the as86 script isn't installed with -s.
+
+For version 0.15.0.
+
+> Added support for archives to nm86/objdump86 and size86.
+
+> ar86 added. Used for Linux because RedHat is broken.
+
+> Bugfixes on utmpent and friends.
+
+> A bit more in the manpages on how to use the assembler etc.
+
+> Bug fixes in stdio, fp->mode cached too much, buffer type mixup.
+
+> Altered initial make variables, you only need to modify 'PREFIX=' to allow
+  installs into /usr/local.
+
+> The BIOS library has a simple MSDOS fs file reader now, based on the code
+  from monitor.out.
+
+> Added bin86-0.... source distribution archive.
+
+> Fixed bug in -t option to as/bcc (for moving the text segment)
+
+> Lines that have a unexpected character are now listed by the assembler
+  not just ignored.
+
+> Added assembly externals in as86_encap generated code.
+
+> I appear to have bcc generating a consistant set of code fragments for
+  floating point operations. No floating libs though ...
+
+> Lots of bootblocks changes including
+   Added lsys.com to install the dosfs boot sector under dos.  
+   monitor.out now (finally!) loads zImage files.  
+   Monitor.out now works with a TAR "filesystem" on a floppy.  
+   Added two conpile time options (-DTARFLOPPY and -DDOSFLOPPY) for smaller
+     executables to only boot linux-386 from a floppy.  
+   Makeboot can install the mbr.  
+   Removed the ELKS specific code from the minixfs loader, added a helper 
+     program to load and relocate ELKS.
+   One config file for booting a [b]zImage.
+   DOSFS boot can boot any named file.
+
+> Fixed/avoided some problems with the optimiser breaking hand optimised code.
+
+> I've made some alterations to the header files in an effort to merge the
+  ELKS kernel files with fewer problems.
+
+> Oops, Claudio says that qsort went the wrong way, hmm.
+
+> Added some more library code for MSDOS programs, there's still more to go.
+
+> Removed the 'libc-8086' distribution tgz file.
+
+For version 0.14.0.
+
+> Objdump86 utility added, also includes nm86 and size86 that work on
+  as86's object files and elks executables.
+
+> Added ability to put ELKSSRC=/././. on initial make command line.
+
+> Some bug fixes and buffering improvements for stdio2.
+
+> Changed output of linker -m option to be more verbose (useful).
+
+> Linker errors are now directed to STDERR on unix/elks.
+
+> Alterations to elksemu and the C library to be closer to elks, 0.13.1+
+  should not need a patch to work with 0.0.60+ ELKS.
+
+> Link symbol dump now flags local variables differently to exported.
+
+> Fixes for libc/misc/crypt.c, they do change the values of the encrypted
+  password so beware.
+
+> as86_encap now uses a static array and #defines.
+
+> Added -t <digit> flag to as86 and bcc to move the text segment
+  for this object into another one.
+
+> Moved segments 4..14 so that instead of being attached above the
+  data segment they now sit between the text and data segments in
+  the final a.out, this is where they'd be needed for medium model.
+
+> Added -x option to bcc to prevent it linking in crt0.o.
+
+> Added various improvemnts to the optimiser, I don't think it'll generate
+  illegal code now for "-O", "-O1", or "-Oi". the last inlines the functions
+  __get_es(), __seg_es(), __poke_es(), __peek_es() etc.
+
+> Code generator improvement for integer multiply and shifts. (Including
+  making it far less keen to do multiple shifts instead of a multiply.
+
+> Code generator fix to remove incorrect (but accepted by the assembler)
+  addressing modes like:  mov ax,#_ar[bx]
+
+> Been messing with boot block stuff again, still can't get it to load
+  zImages (bzImages ok tho). Minix.c can't load an ELKS kernel either,
+  it's looking like there isn't actually enough room :-(
+
+> Fix to elksemu for breakages caused by glibc.
+
+> Other fixes to elksemu for execve(), dup(), readdir() etc functions.
+
+For version 0.13.0.
+
+> Removed too eager 'typeconv.c' warning.
+
+> Well, I just broken everything! To be exact if Dev86 sees a directory
+  called ${ELKSSRC:-/usr/src/elks}/include it'll assume that is the
+  equlivent of libc/kinclude and use that in preference. I've sent off
+  a patch so that elks-0.0.* should be compatible but meantime there
+  are bound to be lots of problems caused by shuffling of include files.
+  (Later: Actually doesn't seem too bad)
+
+> Added '-g' to gcc options, make sure install has '-s' to strip symbols.
+
+> Grrrr, missing files in bootblocks directory, I didn't have them all.
+  OK, as part of the dist script I'll have to do a 'make other' ...
+  Some other bits there too ...
+
+> Minor alteration to opening files in ld to fix problem when share.exe
+  loaded under dos.
+
+> Added Config.dflt for default libc configuration flags. I can now
+  re-introduce Joel's standard I/O functions ... but they haven't
+  been updated in a while ...
+
+> Addition to minix.c to use allow BB to determine the track size by
+  trial and error (not intuit from superblock) to allow mis-sized
+  filesystems on a floppy. Also add some error retries to the floppy
+  version.
+
+> Squeeze the minix BB a bit more, DOTS is now working again.
+
+> Can now do 'use16 8086' in assembler instead of 'use16 86' also
+  'use16 80386'
+
+> Add 'make install-ln', this installs _symbolic_links_ to the dev
+  directory in the normal directories. This means you don't have
+  to do a make install after re-compiling. But it also means the
+  'install' is dependent on the dev dirs.
+
+> Add ability to use overrides on the command line of the initial make,
+  and have them saved, for CC, CFLAGS, LDFLAGS, PREFIX, BINDIR and LIBDIR.
+  Includes minor alteration to bcc.c and as86_encap.
+
+> Added in 'objchop' as an option in the ld directory.
+
+> The cpu type warnings were worrying some people so I've set the
+  initial value of the '-w' flag to off, use -w- to turn them back on.
+  The -W flag to bcc now does this too.
+
+> Added the ELKS_SETUP from Ken Yap to minix.c.
+
+> Added __ELKS__, __8086__ and __i386__ #defines for relevent bcc configs.
+
+> Clarified some of the copyrights, esp for Bruce's stuff.
+
+> Added a few changes to clean up compiles on an AIX/RS6000. It still
+  needs gnu-make installed and is only tested with gcc though.
+  (Because of IBM's recent contribution to increasing the popularity of GCC)
+
+For version 0.12.0.
+
+> Notice the change in the version numbers, as long as I'm releasing the
+  upto the minute patches I thought I'd better give everyone a way of
+  keeping track. So now the 0.X.0 are the main releases, the 0.X.Y are
+  interim patches.
+
+> I've added a new output binary for ld86, it can now do the broken
+  relocatable a.out that bin86 produces. I don't like this but it
+  does let me move ld86 back to /usr/bin without breaking DOSEMU.
+  Note! If you've installed vsn 0.0.11 or earlier you will need to
+  uninstall it before installing this one.
+
+> Altered makefiles for GNU-make 3.74, GNU-make no longer generates
+  automatic 'rm' commands so I have to do it manually.
+
+> Altered makefiles again, starting to get non GNU makefile working.
+
+> Added some cleanups to ifdef.c. (voids etc)
+
+> Assembler now understands monadic '-' and '+' operations (for copt).
+
+> Improved the type conversion functions, they should now work on most
+  machines. There may still be some problems with sizeof(long) == 8 tho,
+  added some warnings/traps.
+
+> Improved the auto-detection and auto-rejection of <a.out.h> ld is more
+  likely to compile even if a.out.h is completely incompatible (leaving
+  out native support).
+
+> Fix for stdio, there was a problem if the OS only did a partial write.
+
+> Alter align() macros to use ssize_t iff both __STDC__ and _POSIX_SOURCE
+  are defined.
+
+> Add some changes for compiling under AIX. Assember and BCC appear to work,
+  ld has problems with AIX's 'ar' command - problem: AIX's make and gmake
+  won't like the smell of a standard following ar86 command ... hmmm.
+
+> Changes in bootblocks, minix.c can now be compiled for a hard disk (works
+  on dosemu, dunno about the real thing tho), fixes for mbr.s re preboot
+  facility. Addition to minix.c to fix number of sectors in bpb for floppy.
+
+For version 0.0.11.
+
+> New, most recent, version of unproto inserted.
+
+> AAARG! First_arg_in_ax breaks stdarg.h! As a consequence printf wasn't
+  working, now why didn't _you_ notice! OK. printf now uses varargs, that
+  is more likely to work and does for printf & scanf.
+
+> Added -Mc for 'caller saves' _without_ first_arg_in_ax. As this uses the
+  normal libc there are likely to be problems with library -> user callbacks.
+
+> Added -Ml for 386 'Large linux' compile.
+
+> Added -Mn for 'normal' elks compiles so the default for dos can be -Md
+
+> Brand new, an optimiser has been added, it's in its early stages yet
+  the 8086 (plain -O) version seems ok. The 386 generator (-O3) is definitly
+  missing some requirements. It's probably not a good idea to use -Ml and -O.
+  (Later: The 8086 can generate bad code it seems, oh well)
+
+> Some changes to the makefile, minix make will now _try_ to compile bcc,
+  it doesn't seem to succeed yet though. Also because of this I've gone
+  back over the headers, should be better on non-ansi or non-posix systems
+  now.  BTW: minix make has no chance with compiling libc so I've added
+  another zip archive containing just the compiled libcs.
+
+> Add the -a-, -j-, -g-, -u- and -w- flags to as86; specifically for -w-
+  to allow easy enabling of assembler warnings while using bcc.
+
+> Bugfix for assembler 'ifc' pseudo op.
+
+> Bugfix for preprocessor and unterminated last line of included file.
+
+> Add minix syscall detector to elksemu, I may make it into an emulator ...
+
+> I've split of the 8086 ELKS and i386 Linux libc stuff into seperate
+  directories. I expect Chad will want to take over the 8086 one for a while.
+  Plus some other files moved around to help new users.
+
+For version 0.0.10.
+
+> Some serious changes to the makefiles, practically a rewrite of them.
+  'make', 'make all', 'make install', 'make clean' and 'make realclean'
+  do the expected things. 'make distribution' should let you create the
+  partial and binary dirtributions from the full source.
+
+> The makefiles now allow multiple libc binaries to co-exist.
+
+> The makefiles now allow a _full_ compile without installing anything.
+
+> In part because of the makefile changes a lot of files in the library
+  have been moved, this is a large portion of the patch size.
+
+> ifdef.c added as part of makefile changes, I'm not quite sure if I like
+  this way of doing things but it's ok for the mo.
+
+> MSDOS, in the output of *.bin files from as86 skipped areas have zeros
+  written not semi-random bytes.
+
+> MSDOS (+ other machines where sizeof(char*) != sizeof(int)) problem with
+  macros resolved, they appear to work correctly now.
+
+> NCC added, this is a different version of bcc with libs and include dirs
+  in the same format as the MSDOS driver.
+  This is used for 'uninstalled' compiling and also if you do:
+      $ ln -s `pwd`/bcc/ncc $HOME/bin/bcc
+  The bcc will use the 'uninstalled' include and library files for when you
+  don't have root access.
+
+> -H option added to ld86, this controls the size of the heap or 'chmem'
+  field in the executable.
+
+> BOOT-Blocks, makeboot can be compiled as a DOS COM, bootblock for msdos
+  filesystem completed, this will allow lilo, monitor.out or any Linux-86
+  standalone executable to be executed from an msdos floppy. Makeboot
+  can also install several other types of bootblock.
+
+> Monitor.out now includes 'bzimage' command, which will boot a Linux-i386
+  bzImage with command line and initrd.
+
+> 'skip.s' bootblock fixed.
+
+> A few more functions now work in 'standalone' mode, malloc() especially.
+
+-Rob
+
+For version 0.0.9.
+
+> The debian stuff has been removed again, Christoph want's to keep contol
+  of the debian specific files.
+
+> I've done some changes to the makefiles, it'll now honour CC=XXX on the
+  make command line.
+
+> The assembler now works again compiled under bcc, it tried to allocate
+  too much memory.
+
+> Major change to the assembler, '-j' not auto-sizes jumps this requires
+  a change to at least 3 passes. Sometimes it'll say it needs another -j
+  because lengthing jumps cause others to fail, two -j's will give it lots
+  of passes :-)
+
+> The second large change is an effort to identify when instructions are
+  not right for a specific processor and generate a warning. The use16
+  and use32 instructions now have an optional argument of a processor
+  type (86,186..686). Also bcc has a '-W' to remove the -w it passes to
+  the assembler.
+
+> Altered the way bcc deals with LOCALPREFIX, now under DOS it picks this
+  up based on the path to the executable.
+
+> Fixed a bug introduced by the 'cpp in asm' change in 0.0.8, bcc-cc1 
+  wasn't compiling under bcc.
+
+> Two new bootblocks in the 'examples' mbr.s is an MBR (no really :-))
+  msdos.s is unfinished but even this far allows lilo to be used on an
+  MSDOS filesystem floppy.
+
+> Changed ld to _check_ the magic on files inside an archive, this cures
+  the problem caused by long names inserted by gnu-ar. Also it notices
+  if an archive has been included in an archive and will link that too.
+
+> Changed ld to do a final check that it knows what sort of a.out.h file
+  it's got, if this fails '-N' is disabled.
+
+> Ld changed so for 16 bit exes the heap is limited to 32k.
+
+> getcwd and execvp added, sash should now work. Also added to the 386-lib
+  except execvp won't run scripts without '#!'
+
+> Nasty bug with syscalls of > 3 args in 386 code fixed, none of them would
+  have been working correctly.
+
+For version 0.0.8.
+
+> Christoph Lameter <clameter@debian.org> has provided a patch for
+  installation using the debian packaging, I've probably broken it :-)
+
+> Doselks has been added in, it's not that big really.
+
+> Triggered by the debian stuff the makefiles can now create a pure
+  binary installation tree, nothing needed in /usr/src. If kinclude is
+  configured out the include directory will reference /usr/src/linuxmt
+
+> Some good changes to the linker today, it will generate a Linux-386
+  (That's right, growed up linux) executable. It's still very fragile
+  but it does work. The '-r' option now works, but unlike bin86-0.3
+  it creates a _Linux_ OMAGIC file. This means that bcc -G works, the
+  names are mangled by ld86 such that if it was compiled with ELF the
+  OMAGIC will successfully link in an ELF environment.  Beware older
+  versions of GCC-binutils can segfault in this situation.
+
+> Bit of sneakyness for the assembler, org will accept negative values ...
+
+> Made a few changes to idcc, I think I'll translate it to C soon.
+
+> Fixed a couple of problems with the preprocessor WRT hashes not at the
+  start of a line and quotes in ifdef'd out code.
+
+> Missed a bet in the kernel patch and module, the old one wouldn't
+  execute impure executables it will now.
+
+> Fixed matching bug in elksemu, A piece of code was commented out for
+  some reason ... oops.
+
+> Some of the error reporting in the linker has improved, if it can't
+  open libc it now says so!
+
+> Some 386 specific stuff has been added to libc, mainly the syscall
+  generator, startup stuff and BCC's 386 floating point code.
+
+> Change in malloc, Linux-386 limits +ve brk() changes to 32Mb, the malloc
+  will now allow for this ...  Phew! grab.c will grab about 3Gb of virtual
+  memory, with 1Gb chunks, when compiled in 386 mode! One oddity, glibc
+  (quite an old one) hangs when trying to free if grab.c is compiled static.
+
+> Hunted down the most important 16 bit dependancies in dis88, it seems to
+  generate a reasonable output file now. Plus a couple of fiddles in the
+  disassembler, personally I prefer Hex and I've added a couple of markers
+  for 386 code (use opr32, use adr32, seg fs/gs) and the -f flag to force
+  disassembly of any file.
+
+> The i386 compile uncovered a bug in alloca, In fact the move to 386 has
+  been amazingly painless, practically everything so far has worked first
+  time or nearly so ... Wow!
+
+> Added minimal dirent to i386-lib, elksemu now compiles under BCC-386
+  AND WORKS!
+
+> Trying to compile bash, it does some hackish stuff with the preprocessor
+  and uncovered a couple of problems, fixed. Now I need more float stuff.
+
+> Added for bcc-cc1, code between #asm and #endasm _is_ scanned for #defined
+  words and functions, it didn't effect the libc at all. Of course we now
+  need some way to put multiple instructions in one #define, I've nominated
+  '^' as the statement terminator, I didn't have many choices :-(
+
+> Added '-t' for bcc-cc1 when bcc gets -S
+
+-Rob
+
+For version 0.0.7.
+
+I've been making quite a few changes to the assembler:
+   The 'include' or 'get' command now works.
+   The '-b' and '-s' options are now quite useful for bootblocks
+      or encapsulated code.
+   The standard input is now a valid source for the assemble
+      (but only on 'big' machines).
+   Various other functions now work, macros, 'jmp near',
+      'jmpi qword $100000,$1000', and other bug fixes.
+   As86_encap script added.
+   Some of the 256 char line limits have been removed for non-bcc compiles.
+
+The linker will now fail more gracefully for reversed 'org's and complain
+about too large segments.
+
+Bcc-cc1 will now compile under itself, with some limitations, and appears
+to generate correct output.  There are problems tho in that I think the
+heap<->stack saftey margin is too short and I've disconnected all code for
+floating point features.
+
+The components will all compile and seem to work quite well using MSC 5.1
+under dos and will probably compile using other dos compilers. BCC cannot
+compile itself under dos because the libs to fake the unix syscalls under
+dos are currently too large.
+
+A number of fixes have been added that were apperently in another version
+of the tools to aid operation on other machines, there's now a better chance
+of these programs working on 'big-endian' machines.
+
+Various bits and pieces have been added to the libs, including some time
+functions (but these need a _small_ way of dealing with "DST").
+
+-Rob

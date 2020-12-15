@@ -1,0 +1,17 @@
+bcc:+:
+bios:+:
+conio:+:
+error:+:
+getent:+:
+gtermcap:+:
+i386fp:+:
+i386sys:+:
+malloc:+:
+misc:+:
+msdos:+:
+regexp:+:
+stdio:+:
+string:+:
+syscall:+:
+termios:+:
+time:+:
