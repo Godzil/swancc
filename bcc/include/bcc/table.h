@@ -1,17 +1,23 @@
-/* table.h - table handler for bcc */
+/* table.h - table handler for swancc
+ *
+ * swancc: A rudimentary C compiler for the WonderSwan
+ *
+ * Based on bcc 0.16.2 by Bruce Evans
+ *
+ * Copyright (C) 1992 Bruce Evans
+ * Copyright (C) 2020 Manoel <godzil> Trapier / 986-Studio
+ */
 
-/* Copyright (C) 1992 Bruce Evans */
+#ifndef _BCC_BCC_TABLE_H
+#define _BCC_BCC_TABLE_H
 
-extern char *charptr;		/* next free spot in catchall table */
-extern char *chartop;		/* spot after last in table */
-extern char *char1top;		/* last character spot in table */
-extern char *char3top;		/* third last character spot in table */
-extern struct symstruct *exprptr;
-				/* next entry in expression symbol table */
-extern struct symstruct *locptr;
-				/* next entry in local symbol table */
-extern struct symstruct locsyms[];
-				/* local symbol table */
+extern char *charptr;              /* next free spot in catchall table */
+extern char *chartop;              /* spot after last in table */
+extern char *char1top;             /* last character spot in table */
+extern char *char3top;             /* third last character spot in table */
+extern struct symstruct *exprptr;  /* next entry in expression symbol table */
+extern struct symstruct *locptr;   /* next entry in local symbol table */
+extern struct symstruct locsyms[]; /* local symbol table */
 
 #define TS1
 #ifdef TS
@@ -69,3 +75,5 @@ uvalue_t ts_size_growobj_wasted;
 uvalue_t ts_n_growheap;
 uvalue_t ts_s_growheap;
 #endif
+
+#endif /* _BCC_BCC_TABLE_H */

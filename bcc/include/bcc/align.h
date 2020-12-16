@@ -7,6 +7,8 @@
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 2020 Manoel <godzil> Trapier / 986-Studio
  */
+#ifndef _BCC_BCC_ALIGN_H
+#define _BCC_BCC_ALIGN_H
 
 #ifndef S_ALIGNMENT
 # define align(x) (x)
@@ -18,4 +20,7 @@
 # endif
 #endif
 
-extern uoffset_T alignmask;	/* general alignment mask */
+extern uoffset_T alignmask;    /* general alignment mask */
+
+
+#endif /* _BCC_BCC_ALIGN_H */

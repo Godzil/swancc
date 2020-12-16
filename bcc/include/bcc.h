@@ -8,12 +8,12 @@
  * Copyright (C) 1997 Robert de Bath <robert@mayday.cix.co.uk>
  * Copyright (C) 2020 Manoel <godzil> Trapier / 986-Studio
  */
-#ifdef BCC_BCC_H
-#define BCC_BCC_H
+#ifndef _BCC_BCC_H
+#define _BCC_BCC_H
 
-#include <const.h>
-#include <types.h>
-#include <proto.h>
-#include <sysproto.h>
+/* Commonly imported headers */
+#include <bcc/const.h>
+#include <bcc/types.h>
+#include <bcc/proto.h>
 
-#endif /* BBCC_BCC_H */
+#endif /* _BCC_BCC_H */
