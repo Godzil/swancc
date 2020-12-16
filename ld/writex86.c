@@ -78,7 +78,7 @@ FORWARD void skip P((unsigned countsize));
 FORWARD void writeheader P((void));
 FORWARD void writenulls P((bin_off_t count));
 
-EXTERN bool_t reloc_output;
+extern bool_t reloc_output;
 
 /* write binary file */
 

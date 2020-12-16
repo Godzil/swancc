@@ -14,7 +14,7 @@ PREFIX=  /usr
 LIBPRE=  $(PREFIX)/bcc
 BINDIR=	 $(PREFIX)/bin
 LIBDIR=  $(LIBPRE)/lib/bcc
-CFLAGS=  -O
+CFLAGS=  -Os
 
 # Some makes take the last of a list as the default ...
 all: make.fil

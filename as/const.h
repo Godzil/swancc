@@ -51,7 +51,7 @@
 
 /* C tricks */
 
-#define EXTERN		extern
+#define extern		extern
 #define FORWARD		static
 #define PRIVATE		static
 #define PUBLIC

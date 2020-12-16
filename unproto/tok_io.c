@@ -80,11 +80,7 @@ static char io_sccsid[] = "@(#) tok_io.c 1.3 92/01/15 21:52:59";
 
 #include <stdio.h>
 #include <ctype.h>
-
-extern char *strchr();
-extern char *malloc();
-extern char *realloc();
-extern char *strcpy();
+#include <stdlib.h>
 
 /* Application-specific stuff */
 
@@ -189,7 +185,7 @@ static char *ignore_directives[] = {
 
 /* do_control - parse control line */
 
-static int do_control()
+static void do_control()
 {
     struct token *t;
     int     line;

@@ -6,8 +6,8 @@
 #include "globvar.h"
 #include "opcode.h"
 #include "scan.h"
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "address.h"
 
 #define is8bitadr(offset) ((offset_t) offset < 0x100)

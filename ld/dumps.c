@@ -1,6 +1,9 @@
 /* dumps.c - print data about symbols and modules for linker */
 
 /* Copyright (C) 1994 Bruce Evans */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "const.h"
 #include "obj.h"

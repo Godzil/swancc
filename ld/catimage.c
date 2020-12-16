@@ -181,7 +181,7 @@ read_symtable()
       if( memcmp(item.n_name, "__seg", 5) != 0 || item.n_name[6] != '_' )
          continue;
 
-      /* Externals only */
+      /* externals only */
       if( (item.n_sclass & N_CLASS) != C_EXT )
          continue;
 

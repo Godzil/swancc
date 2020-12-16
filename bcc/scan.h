@@ -143,7 +143,7 @@ enum scan_states
     UNSIGNDECL,
 
     AUTODECL,
-    EXTERNDECL,
+    externDECL,
     REGDECL,
     STATICDECL,
     TYPEDEFDECL,
@@ -179,8 +179,8 @@ enum scan_states
     IFNDEFCNTL
 };
 
-EXTERN op_pt arg1op;		/* LISTOP, or ROOTLISTOP if arg1inreg */
-EXTERN struct
+extern op_pt arg1op;		/* LISTOP, or ROOTLISTOP if arg1inreg */
+extern struct
 {
     union
     {
@@ -193,13 +193,13 @@ EXTERN struct
 }
  constant;			/* value of last constant scanned */
 				/* sym tells type */
-EXTERN char funcname[NAMESIZE];	/* name of current function for unique labels */
-EXTERN char gs2name[2 + NAMESIZE];	/* 2 reserved for namespace keys */
+extern char funcname[NAMESIZE];	/* name of current function for unique labels */
+extern char gs2name[2 + NAMESIZE];	/* 2 reserved for namespace keys */
 #define gsname (gs2name + 2)	/* before last identifier */
-EXTERN struct symstruct *gsymptr;	/* symbol ptr for last identifier */
-EXTERN bool_t incppexpr;	/* nonzero while scanning cpp expression */
-EXTERN sym_t sym;		/* current symbol */
+extern struct symstruct *gsymptr;	/* symbol ptr for last identifier */
+extern bool_t incppexpr;	/* nonzero while scanning cpp expression */
+extern sym_t sym;		/* current symbol */
 extern sym_t symofchar[];	/* table to convert chars to their symbols */
-EXTERN bool_t expect_statement; /* If set #asm needs to clear the recursive
+extern bool_t expect_statement; /* If set #asm needs to clear the recursive
 				 * pending operations. ie: if stmts. */
 

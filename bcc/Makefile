@@ -6,7 +6,7 @@
 PREFIX=/usr
 LIBPRE=$(PREFIX)
 
-CFLAGS	=-O
+CFLAGS	=-Os -Ilibc/include/
 LDFLAGS	=-s
 BINDIR	=$(PREFIX)/bin
 LIBDIR	=$(LIBPRE)/lib/bcc

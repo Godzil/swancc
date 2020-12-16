@@ -72,27 +72,27 @@ extern uoffset_T stypesize;
 
 /* basic scalar types */
 
-EXTERN struct typestruct *dtype;
-EXTERN struct typestruct *fltype;
-EXTERN struct typestruct *itype;
-EXTERN struct typestruct *ltype;
-EXTERN struct typestruct *sctype;
-EXTERN struct typestruct *stype;
-EXTERN struct typestruct *uctype;
-EXTERN struct typestruct *uitype;
-EXTERN struct typestruct *ultype;
-EXTERN struct typestruct *ustype;
-EXTERN struct typestruct *vtype;
+extern struct typestruct *dtype;
+extern struct typestruct *fltype;
+extern struct typestruct *itype;
+extern struct typestruct *ltype;
+extern struct typestruct *sctype;
+extern struct typestruct *stype;
+extern struct typestruct *uctype;
+extern struct typestruct *uitype;
+extern struct typestruct *ultype;
+extern struct typestruct *ustype;
+extern struct typestruct *vtype;
 
 /* working type */
 
-EXTERN struct typestruct *ctype;
+extern struct typestruct *ctype;
 
 /* constructed types */
 
-EXTERN struct typestruct *fitype;
-EXTERN struct typestruct *pctype;
+extern struct typestruct *fitype;
+extern struct typestruct *pctype;
 
 /* return type of current function */
 
-EXTERN struct typestruct *returntype;
+extern struct typestruct *returntype;

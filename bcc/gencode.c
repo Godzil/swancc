@@ -13,8 +13,8 @@
 #include "scan.h"
 #include "type.h"
 
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "gencode.h"
 #include "sizes.h"
 

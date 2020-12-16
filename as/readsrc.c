@@ -8,8 +8,8 @@
 #include "globvar.h"
 #include "macro.h"
 #include "scan.h"
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "source.h"
 
 /*

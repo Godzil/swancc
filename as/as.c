@@ -10,8 +10,8 @@
 #include "type.h"
 #include "byteord.h"
 #include "macro.h"
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "file.h"
 #include "flag.h"
 #include "globvar.h"

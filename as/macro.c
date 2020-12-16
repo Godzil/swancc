@@ -5,8 +5,8 @@
 #include "type.h"
 #include "globvar.h"
 #include "scan.h"
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "macro.h"
 
 /*

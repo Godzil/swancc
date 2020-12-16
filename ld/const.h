@@ -6,7 +6,7 @@
 #define NUL_PTR	((void*)0)
 #define TRUE	1
 
-#define EXTERN	extern
+#define extern	extern
 #define FORWARD	static
 #define PRIVATE	static
 #define PUBLIC

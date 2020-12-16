@@ -9,8 +9,8 @@
 #include "scan.h"
 #include "table.h"
 
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "type.h"
 
 PUBLIC uoffset_T ctypesize = 1;

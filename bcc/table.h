@@ -2,13 +2,13 @@
 
 /* Copyright (C) 1992 Bruce Evans */
 
-EXTERN char *charptr;		/* next free spot in catchall table */
-EXTERN char *chartop;		/* spot after last in table */
-EXTERN char *char1top;		/* last character spot in table */
-EXTERN char *char3top;		/* third last character spot in table */
-EXTERN struct symstruct *exprptr;
+extern char *charptr;		/* next free spot in catchall table */
+extern char *chartop;		/* spot after last in table */
+extern char *char1top;		/* last character spot in table */
+extern char *char3top;		/* third last character spot in table */
+extern struct symstruct *exprptr;
 				/* next entry in expression symbol table */
-EXTERN struct symstruct *locptr;
+extern struct symstruct *locptr;
 				/* next entry in local symbol table */
 extern struct symstruct locsyms[];
 				/* local symbol table */

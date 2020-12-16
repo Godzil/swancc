@@ -8,8 +8,8 @@
 #include "sizes.h"
 #include "table.h"
 
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "output.h"
 
 #ifdef XENIX_AS
@@ -24,7 +24,7 @@ PRIVATE unsigned errcount;	/* # errors in compilation */
 				/* depends on zero init */
 PRIVATE char hexdigits[] = "0123456789ABCDEF";
 PRIVATE char *outbuf;
-EXTERN char *outbufend;		/* end of pair of output buffers */
+extern char *outbufend;		/* end of pair of output buffers */
 PRIVATE char *outbufmid;
 PRIVATE fd_t output;
 PRIVATE fastin_t outstage;	/* depends on zero init */

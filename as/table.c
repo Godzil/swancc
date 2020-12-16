@@ -7,19 +7,19 @@
 #include "opcode.h"
 #include "scan.h"
 
-#define hconv(ch) ((unsigned char) (ch) - 0x41)	/* better form for hashing */
+#define hconv(ch) ((unsigned char) (ch) - 0x41)    /* better form for hashing */
 
 #ifdef I80386
 # ifdef MNSIZE
-EXTERN char bytesizeops[];
+extern char bytesizeops[];
 # endif
 #endif
-EXTERN char ops[];
-EXTERN char page1ops[];
-EXTERN char page2ops[];
-EXTERN char regs[];
+extern char ops[];
+extern char page1ops[];
+extern char page2ops[];
+extern char regs[];
 #ifdef I80386
-EXTERN char typesizes[];
+extern char typesizes[];
 #endif
 
 #ifdef DEBUG
@@ -30,7 +30,7 @@ unsigned nx[30];
 FORWARD void printchain P((void));
 #endif
 
-FORWARD void install P((register char *keyptr, int data));
+FORWARD void install P(( char *keyptr, int data));
 
 PUBLIC void inst_keywords()
 {
@@ -48,40 +48,42 @@ PUBLIC void inst_keywords()
 #endif
 }
 
-PRIVATE void install(keyptr, data)
-register char *keyptr;
-unsigned char data;
+PRIVATE void install(keyptr, data)char *keyptr;
+                                  unsigned char data;
 {
     char lowcasebuf[20];
     unsigned namelength;
     char *nameptr;
     char *namend;
-    register struct sym_s *symptr;
+    struct sym_s *symptr;
 
     while (*keyptr != 0)
     {
-	namelength = *keyptr++;
-	lineptr = (symname = keyptr) + namelength;
-	for (nameptr = lowcasebuf, namend = lowcasebuf + namelength;
-	     nameptr < namend;)
-	{
-	    if (*keyptr < 'A' || *keyptr > 'Z')
-		*nameptr++ = *keyptr++;
-	    else
-		*nameptr++ = *keyptr++ + ('a' - 'A');
-	}
-	symptr = lookup();
-	symptr->type = MNREGBIT;
-	symptr->data = data;
-	symptr->value_reg_or_op.op.routine = *keyptr;
-	symptr->value_reg_or_op.op.opcode = keyptr[1];
-	lineptr = (symname = lowcasebuf) + namelength;
-	symptr = lookup();
-	symptr->type = MNREGBIT;
-	symptr->data = data;
-	symptr->value_reg_or_op.op.routine = *keyptr;
-	symptr->value_reg_or_op.op.opcode = keyptr[1];
-	keyptr += 2;
+        namelength = *keyptr++;
+        lineptr = (symname = keyptr) + namelength;
+        for (nameptr = lowcasebuf, namend = lowcasebuf + namelength ; nameptr < namend ;)
+        {
+            if (*keyptr < 'A' || *keyptr > 'Z')
+            {
+                *nameptr++ = *keyptr++;
+            }
+            else
+            {
+                *nameptr++ = *keyptr++ + ('a' - 'A');
+            }
+        }
+        symptr = lookup();
+        symptr->type = MNREGBIT;
+        symptr->data = data;
+        symptr->value_reg_or_op.op.routine = *keyptr;
+        symptr->value_reg_or_op.op.opcode = keyptr[1];
+        lineptr = (symname = lowcasebuf) + namelength;
+        symptr = lookup();
+        symptr->type = MNREGBIT;
+        symptr->data = data;
+        symptr->value_reg_or_op.op.routine = *keyptr;
+        symptr->value_reg_or_op.op.opcode = keyptr[1];
+        keyptr += 2;
     }
 }
 
@@ -96,10 +98,10 @@ unsigned char data;
 PUBLIC struct sym_s *lookup()
 {
     struct sym_s **hashptr;
-    register char *nameptr;
-    register struct sym_s *symptr;
-    register unsigned hashval;
-    register unsigned length;
+    char *nameptr;
+    struct sym_s *symptr;
+    unsigned hashval;
+    unsigned length;
 #ifdef DEBUG
     int tries;
 
@@ -122,62 +124,70 @@ PUBLIC struct sym_s *lookup()
     length = nameptr - symname;
     if (length <= 3)
     {
-	if (length <= 2)
-	    hashval  = hconv(nameptr[-1]) * MULTIPLIER;
-	else
-	    hashval  = hconv(nameptr[-2]) * MULTIPLIER,
-	    hashval ^= hconv(nameptr[-1]);
+        if (length <= 2)
+        {
+            hashval = hconv(nameptr[-1]) * MULTIPLIER;
+        }
+        else
+        {
+            hashval = hconv(nameptr[-2]) * MULTIPLIER;
+            hashval ^= hconv(nameptr[-1]);
+        }
     }
     else
-	hashval  = hconv(nameptr[-(length / 2)]) * MULTIPLIER,
-	hashval ^= hconv(nameptr[-2]) << 2,
-	hashval ^= hconv(nameptr[-1]);
-    nameptr = symname;
-    if ((symptr = *(hashptr = spt +
-			      (hashval ^ (hconv(nameptr[0]) << 1)) % SPTSIZ))
-	!= NUL_PTR)
     {
-	do
-	{
+        hashval = hconv(nameptr[-(length / 2)]) * MULTIPLIER;
+        hashval ^= hconv(nameptr[-2]) << 2;
+        hashval ^= hconv(nameptr[-1]);
+    }
+    nameptr = symname;
+    if ((symptr = *(hashptr = spt + (hashval ^ (hconv(nameptr[0]) << 1)) % SPTSIZ)) != NUL_PTR)
+    {
+        do
+        {
 #ifdef DEBUG
-	    if (tries != 0)
-		--nx[tries];
-	    ++tries;
-	    if (tries < sizeof nx / sizeof nx[0])
-		++nx[tries];
-	    if (tries >= 5)
-		printchain(hashptr - spt)
+            if (tries != 0)
+            --nx[tries];
+            ++tries;
+            if (tries < sizeof nx / sizeof nx[0])
+            ++nx[tries];
+            if (tries >= 5)
+            printchain(hashptr - spt)
 #endif
-	    if ((unsigned char) length != symptr->length)
-		continue;
-	    if (memcmp(symptr->name, nameptr, length) == 0)
-		return symptr;
-	}
-	while ((symptr = symptr->next) != NUL_PTR);
+            if ((unsigned char)length != symptr->length)
+            {
+                continue;
+            }
+            if (memcmp(symptr->name, nameptr, length) == 0)
+            {
+                return symptr;
+            }
+        } while ((symptr = symptr->next) != NUL_PTR);
 
-	/* Calculate last non-NUL_PTR hash ptr.
-	 * This is faster than keeping hashptr up to date in previous loop
-	 * since most lookups are successful and hash ptr is not needed.
-	 */
-	do
-	{
-	    symptr = *hashptr;
-	    hashptr = &symptr->next;
-	}
-	while (symptr->next != NUL_PTR);
+        /* Calculate last non-NUL_PTR hash ptr.
+         * This is faster than keeping hashptr up to date in previous loop
+         * since most lookups are successful and hash ptr is not needed.
+         */
+        do
+        {
+            symptr = *hashptr;
+            hashptr = &symptr->next;
+        } while (symptr->next != NUL_PTR);
     }
     if (!ifflag)
-	return NUL_PTR;
+    {
+        return NUL_PTR;
+    }
 #ifdef DEBUG
     ++nsym;
     if (hashptr >= spt && hashptr < spt + SPTSIZ)
-	++nhash;
+    ++nhash;
 #endif
     *hashptr = symptr = asalloc(sizeof(struct sym_s) + length);
     symptr->type = 0;
     symptr->data = inidata;
     symptr->length = length;
-    symptr->value_reg_or_op.value = (offset_t) (symptr->next = NUL_PTR);
+    symptr->value_reg_or_op.value = (offset_t)(symptr->next = NUL_PTR);
     memcpy(symptr->name, nameptr, length);
     symptr->name[length] = 0;
     return symptr;
@@ -188,11 +198,11 @@ PUBLIC struct sym_s *lookup()
 static void printchain(hashval)
 unsigned hashval;
 {
-    register struct sym_s *symptr;
+     struct sym_s *symptr;
 
     printf("%04x ", hashval);
     for (symptr = spt[hashval]; symptr != NUL_PTR; symptr = symptr->next)
-	printf("%s ", symptr->name);
+    printf("%s ", symptr->name);
     printf("\n");
 }
 
@@ -205,13 +215,13 @@ PUBLIC void statistics()
     int weight;
 
     for (i = 0; i < SPTSIZ; ++i)
-	printchain(i);
+    printchain(i);
     printf("nhash = %d, nsym = %d, nlookup = %d nx =\n", nhash, nsym, nlookup);
     weight = 0;
-    for (i = 0; i < 30; ++i) 
+    for (i = 0; i < 30; ++i)
     {
-	printf("%5d", nx[i]);
-	weight += nx[i] * i;
+    printf("%5d", nx[i]);
+    weight += nx[i] * i;
     }
     printf("\n");
     printf("weight = %d%d\n", w);

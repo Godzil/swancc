@@ -1,11 +1,12 @@
 /* (C) 1992,1996,1998-9 R de Bath */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 
 #ifdef __STDC__		/* == Not braindead compiler (hopefully!) */
-#include <malloc.h>
+//#include <malloc.h>
 
 #define P(x) x
 #else

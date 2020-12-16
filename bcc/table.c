@@ -17,8 +17,8 @@
 #include "sizes.h"
 #include "type.h"
 
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "table.h"
 
 #define GOLDEN 157		/* GOLDEN/HASHTABSIZE approx golden ratio */
@@ -93,7 +93,7 @@ PRIVATE struct keywordstruct keywords[NKEYWORDS] =
     { "unsigned", UNSIGNDECL, },
 
     { "auto", AUTODECL, },
-    { "extern", EXTERNDECL, },
+    { "extern", externDECL, },
     { "register", REGDECL, },
     { "static", STATICDECL, },
 
@@ -362,7 +362,7 @@ outnl();
 #endif
     for (i = 0; i < HASHTABSIZE; ++i)
 	for (symptr = hashtab[i]; symptr != NULL; symptr = symptr->next)
-	    if (symptr->storage == GLOBAL && !(symptr->flags & EXTERNAL)
+	    if (symptr->storage == GLOBAL && !(symptr->flags & externAL)
 		&& *symptr->name.namea >= 'A' && symptr->flags <= MAXDUMPFLAG
 		/* Don't access type unless flags <= MAXDUMPFLAG, because
 		 * type is punned to a symbol pointer for the label chain

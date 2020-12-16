@@ -5,7 +5,7 @@
 
 #ifndef NO_AOUT
 #ifndef A_OUT_INCL
-#define A_OUT_INCL <a.out.h>
+#define A_OUT_INCL "a.out.h"
 #endif
 #endif
 

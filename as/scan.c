@@ -4,8 +4,8 @@
 #include "const.h"
 #include "type.h"
 #include "globvar.h"
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "scan.h"
 
 PRIVATE int numbase;		/* base for number */

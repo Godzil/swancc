@@ -2,11 +2,11 @@
 
 #define EOLCHAR '\n'
 
-EXTERN struct sym_s *gsymptr;	/* global symbol ptr */
-EXTERN char lindirect;		/* left symbol for indirect addressing */
-EXTERN char *lineptr;		/* current line position */
-EXTERN offset_t number; 	/* constant number */
-EXTERN char * rindexp;		/* error code for missing rindirect */
-EXTERN char rindirect;		/* right symbol for indirect addressing */
-EXTERN char sym;		/* current symbol */
-EXTERN char *symname;		/* current symbol name */
+extern struct sym_s *gsymptr;	/* global symbol ptr */
+extern char lindirect;		/* left symbol for indirect addressing */
+extern char *lineptr;		/* current line position */
+extern offset_t number; 	/* constant number */
+extern char * rindexp;		/* error code for missing rindirect */
+extern char rindirect;		/* right symbol for indirect addressing */
+extern char sym;		/* current symbol */
+extern char *symname;		/* current symbol name */

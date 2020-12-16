@@ -31,7 +31,7 @@
   * You can use the varargs.c program provided with the unproto package to
   * verify that the stdarg.h file has been set up correctly.
   */
-
+#if 0
 #ifdef sparc /* tested with SunOS 4.1.1 */
 
 #define _VA_ALIST_		"__builtin_va_alist"
@@ -83,3 +83,6 @@ typedef char *va_list;
 #endif /* m88k */
 #endif /* mips */
 #endif /* sparc */
+#else
+#include <stdarg.h>
+#endif

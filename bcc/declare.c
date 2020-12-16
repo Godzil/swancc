@@ -14,8 +14,8 @@
 #include "table.h"
 #include "type.h"
 
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "parse.h"
 
 PRIVATE bool_t argsallowed;	/* nonzero to allow args in declarator */
@@ -219,7 +219,7 @@ PRIVATE void declarator()
 {
     rdeclarator();
     if (gvartype->constructor == STRUCTU && gvartype->typesize == 0 &&
-	gvarsc != TYPEDEFDECL && gvarsc != EXTERNDECL)
+	gvarsc != TYPEDEFDECL && gvarsc != externDECL)
 	error("undefined structure");
 }
 
@@ -432,7 +432,7 @@ PRIVATE bool_pt declspec()
 	    declenum();
 	    gvartype = itype;	/* kludge - ignore type of enum */
 	    break;
-	case EXTERNDECL:
+	case externDECL:
 	    ++nsc;
 	    gvarsc = sym;
 	    nextsym();
@@ -721,7 +721,7 @@ PRIVATE void idecllist()
 	}
 	else if (gvarsymptr != NULL && (gvarsymptr->level == level ||
 					gvartype->constructor == FUNCTION ||
-					(gvarsc == EXTERNDECL &&
+					(gvarsc == externDECL &&
 					gvarsymptr->level == GLBLEVEL)))
 	{
 	    if (gvarsymptr->level != GLBLEVEL || gvarsymptr->flags == KEYWORD)
@@ -738,18 +738,18 @@ PRIVATE void idecllist()
 		    gvarsymptr->type = gvartype;
 	    }
 	    if (gvarsc == NULLDECL)
-		gvarsymptr->flags &= ~EXTERNAL;
+		gvarsymptr->flags &= ~externAL;
 	}
 	else if (level == GLBLEVEL || gvartype->constructor == FUNCTION ||
-		 gvarsc == EXTERNDECL)
+		 gvarsc == externDECL)
 	{
 	    gvarsymptr = addglb(gvarname, gvartype);
 #ifdef DIRECTPAGE /* make all global scalar and pointer variables DIRECTPAGE */
 	    if (!(gvartype->constructor & ~POINTER))
 		gvarsymptr->flags = DIRECTPAGE;
 #endif
-	    if (gvarsc == EXTERNDECL)
-		gvarsymptr->flags |= EXTERNAL;
+	    if (gvarsc == externDECL)
+		gvarsymptr->flags |= externAL;
 	}
 	else
 	{
@@ -762,7 +762,7 @@ PRIVATE void idecllist()
 	}
 	if (gvarsc == STATICDECL)
 	{
-	    gvarsymptr->flags &= ~EXTERNAL;
+	    gvarsymptr->flags &= ~externAL;
 	    gvarsymptr->flags |= STATIC;
 	    if (gvarsymptr->level != GLBLEVEL)
 	    {
@@ -820,7 +820,7 @@ PRIVATE void idecllist()
 	    }
 	    else
 	    {
-		if (gvarsc == EXTERNDECL)
+		if (gvarsc == externDECL)
 		    error("initialization of externs is illegal");
 		switch (gvartype->constructor)
 		{

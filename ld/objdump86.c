@@ -16,7 +16,6 @@
  */
 
 #include <stdio.h>
-#include <malloc.h>
 #include <string.h>
 #ifdef __STDC__
 #include <stdlib.h>

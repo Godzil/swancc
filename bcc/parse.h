@@ -13,7 +13,7 @@
 
 #define LVALUE		(1 << 0)
 
-EXTERN struct nodestruct *etptr;     /* ptr to next entry in expression tree */
-EXTERN struct symstruct *gvarsymptr; /* gsymptr for last identifier declared */
-EXTERN scopelev_t level;	/* scope level */
+extern struct nodestruct *etptr;     /* ptr to next entry in expression tree */
+extern struct symstruct *gvarsymptr; /* gsymptr for last identifier declared */
+extern scopelev_t level;	/* scope level */
 				/* depends on zero init */

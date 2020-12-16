@@ -1,8 +1,8 @@
 /* address.h - global variables involving addresses for assembler */
 
-EXTERN struct address_s lastexp;/* last expression parsed */
+extern struct address_s lastexp;/* last expression parsed */
 
-EXTERN union
+extern union
 {
     char fcbuf[LINLEN - 6];	/* buffer for fcb and fcc data */
 				/* data is absolute in 1 char pieces */
@@ -20,11 +20,11 @@ EXTERN union
 }
     databuf;
 
-EXTERN bool_t fcflag;
-EXTERN bool_t fdflag;
+extern bool_t fcflag;
+extern bool_t fdflag;
 #if SIZEOF_OFFSET_T > 2
-EXTERN bool_t fqflag;
+extern bool_t fqflag;
 #endif
 
-EXTERN struct address_s immadr;
-EXTERN smallcount_t immcount;
+extern struct address_s immadr;
+extern smallcount_t immcount;

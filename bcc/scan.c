@@ -13,8 +13,8 @@
 #include "table.h"
 #include "type.h"
 
-#undef EXTERN
-#define EXTERN
+#undef extern
+#define extern
 #include "scan.h"
 
 PUBLIC sym_t symofchar[256] =

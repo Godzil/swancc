@@ -7,7 +7,7 @@
 #include "const.h"
 #include "obj.h"
 #include "type.h"
-#undef EXTERN
+#undef extern
 #include "globvar.h"
 
 FORWARD void linkrefs P((struct modstruct *modptr));

@@ -1,6 +1,6 @@
 
 LIBDIR	=/usr/bin
-CFLAGS	=-O
+CFLAGS	=-Os
 LDFLAGS	=
 
 # May need some of these if the auto-sense fails.
@@ -33,12 +33,15 @@ clean realclean clobber:
 $(OBJS): align.h ar.h bindef.h byteord.h config.h const.h globvar.h obj.h \
 	 syshead.h type.h x86_aout.h
 
+a.out.h:
+	ln -s ../libc/include/a.out.h .
+
 ar.h:
 	[ -f ar.h ] || \
 	{ rm -f ar.h ; ln -s ../libc/include/ar.h . ; } || \
 	ln ../libc/include/ar.h .
 
-writebin.o: writebin.c
+writebin.o: writebin.c a.out.h
 	$(CC) $(CFLAGS) $(DEFS) $(NATIVE) -c $<
 
 writerel.o: writebin.c
