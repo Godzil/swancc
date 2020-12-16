@@ -1,12 +1,14 @@
-/* const.h - constants for bcc */
+/* const.h - constants for swancc
+ *
+ * swancc: A rudimentary C compiler for the WonderSwan
+ *
+ * Based on bcc 0.16.2 by Bruce Evans
+ *
+ * Copyright (C) 1992 Bruce Evans
+ * Copyright (C) 2020 Manoel <godzil> Trapier / 986-Studio
+ */
 
-/* Copyright (C) 1992 Bruce Evans */
-
-#ifdef __STDC__
 #include <stdlib.h>
-#else
-#include <malloc.h>
-#endif
 
 /* switches for code generation */
 
@@ -80,8 +82,3 @@ typedef long no_hope;
 #endif
 #define FALSE 0
 #define TRUE 1
-
-#define extern extern
-#define FORWARD static
-#define PRIVATE static
-#define PUBLIC
