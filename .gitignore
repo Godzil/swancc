@@ -3,3 +3,5 @@
 ifdef
 bin/
 *.dSym
+
+build/
