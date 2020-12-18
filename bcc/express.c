@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include <bcc.h>
+#include <bcc/express.h>
 #include <bcc/gencode.h>
 #include <bcc/parser.h>
 #include <bcc/reg.h>

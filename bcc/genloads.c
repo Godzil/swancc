@@ -7,6 +7,7 @@
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
+#include <stdio.h>
 
 #include <bcc.h>
 #include <bcc/genloads.h>
@@ -201,7 +202,7 @@ void indexadr(struct symstruct *source, struct symstruct *target)
             {
                 loadany(target);
             }
-            target->offset.offi += source->offset.offv * size;
+            target->offset.offi += source->offset.offv * (offset_T)size;
         }
         return;
     }
@@ -411,7 +412,8 @@ void load(struct symstruct *source, store_t targreg)
             else /* XXX - more for non-386 */
 #endif
             {
-                int regs, i, off = 1;
+                store_t regs;
+                uint32_t i, off = 1;
                 loadconst(((unsigned short *)source->offset.offd)[0], DREG);
                 regs = (targreg & ~DREG);
                 for (i = 1 ; i ; i <<= 1)

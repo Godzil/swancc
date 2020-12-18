@@ -7,9 +7,7 @@
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
-
-#define islvalop(op) \
-    (((op) >= ASSIGNOP && (op) <= SUBABOP) || (op) == PTRADDABOP)
+#include <stdio.h>
 
 #include <bcc.h>
 #include <bcc/align.h>
@@ -33,6 +31,8 @@
 #include <bcc/output.h>
 #include <bcc/codefrag.h>
 
+#define islvalop(op) \
+    (((op) >= ASSIGNOP && (op) <= SUBABOP) || (op) == PTRADDABOP)
 
 /* Global variables */
 uoffset_T arg1size;         /* size of 1st arg to function zero after allocation of 1st arg */

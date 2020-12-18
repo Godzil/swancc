@@ -15,12 +15,13 @@
 
 /* scanner codes */
 
+/* TODO: Split that enum and use proper enum instead of random types */
 enum scan_states
 {
     /* The first group of entries consists of all the values that occur in the
      * switch for cppscan().
      */
-    IDENT,
+    IDENT = 0,
     INTCONST,
 #define MAXIDSYM INTCONST    /* IDENT and INTCONST must be the only symofchar[] entries below this */
     FLOATCONST,
@@ -118,8 +119,6 @@ enum scan_states
     PTRSUBOP,
 
     /* end of operator codes (they must stay contiguous) */
-
-    /* TODO: What does that define is doing here? */
 #define LASTOP PTRSUBOP
 
     ENUMDECL,

@@ -7,6 +7,7 @@
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
+#include <stdio.h>
 
 #include <bcc.h>
 #include <bcc/byteord.h>

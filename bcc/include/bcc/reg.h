@@ -44,25 +44,25 @@
  */
 
 /* register bit flags */
-#define NOSTORAGE 0x000     /* structure/union member offsets */
-#define CONSTANT  0x001     /* offsets are values */
-#define BREG      0x002
-#define DREG      0x004
-#define INDREG0   0x008
-#define INDREG1   0x010
-#define INDREG2   0x020
-#define LOCAL     0x040
-#define GLOBAL    0x080     /* offsets from storage name or 0 */
+#define NOSTORAGE 0x000U     /* structure/union member offsets */
+#define CONSTANT  0x001U     /* offsets are values */
+#define BREG      0x002U
+#define DREG      0x004U
+#define INDREG0   0x008U
+#define INDREG1   0x010U
+#define INDREG2   0x020U
+#define LOCAL     0x040U
+#define GLOBAL    0x080U    /* offsets from storage name or 0 */
 #define CCREG     CONSTANT  /* arg to PSHS/PULS functions only */
 
 #ifdef I8088
 #ifdef FRAMEPOINTER
 #define FRAMEREG LOCAL
 #endif
-#define STACKREG 0x100
-#define DATREG1  0x200
-#define DATREG2  0x400
-#define DATREG1B 0x800
+#define STACKREG 0x100U
+#define DATREG1  0x200U
+#define DATREG2  0x400U
+#define DATREG1B 0x800U
 #endif
 
 #ifdef MC6809

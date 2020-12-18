@@ -91,12 +91,13 @@ void incdec(op_t op, struct symstruct *source)
 #ifdef MC6809
     store_t targreg;
 #endif
-
-    *(target = &targ) = *source;
+    target = &targ;
+    *target = *source;
     bump = 1;
+
     if (targ.type->constructor & POINTER)
     {
-        bump = targ.type->nexttype->typesize;
+        bump = (offset_T)targ.type->nexttype->typesize;
     }
     if (op == PREDECOP || op == POSTDECOP)
     {

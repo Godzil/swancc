@@ -285,7 +285,7 @@ void condop(struct nodestruct *exp)
     struct nodestruct *truenode;
     struct symstruct *truesym;
 
-    jumpcond(exp->left.nodeptr, truelab = getlabel(), falselab = getlabel(), ~0);
+    jumpcond(exp->left.nodeptr, truelab = getlabel(), falselab = getlabel(), TRUE);
     deflabel(truelab);
     makeleaf(truenode = exp->right->left.nodeptr);
     loadany(truesym = truenode->left.symptr);
@@ -351,7 +351,7 @@ void jumpfalse(struct nodestruct *exp, label_no label)
 {
     label_no truelab;
 
-    jumpcond(exp, truelab = getlabel(), label, ~0);
+    jumpcond(exp, truelab = getlabel(), label, TRUE);
     deflabel(truelab);
 }
 
@@ -359,7 +359,7 @@ void jumptrue(struct nodestruct *exp, label_no label)
 {
     label_no falselab;
 
-    jumpcond(exp, label, falselab = getlabel(), 0);
+    jumpcond(exp, label, falselab = getlabel(), FALSE);
     deflabel(falselab);
 }
 
@@ -387,7 +387,7 @@ static void logandcond(struct nodestruct *exp, label_no truelab, label_no falsel
     label_no andlab;
 
     andlab = getlabel();
-    jumpcond(exp->left.nodeptr, andlab, falselab, ~0);
+    jumpcond(exp->left.nodeptr, andlab, falselab, FALSE);
     deflabel(andlab);
     jumpcond(exp->right, truelab, falselab, nojump);
 }
@@ -398,9 +398,9 @@ void logop(struct nodestruct *exp)
     struct symstruct *target;
     label_no truelab;
 
-    jumpcond(exp, truelab = getlabel(), falselab = getlabel(), ~0);
+    jumpcond(exp, truelab = getlabel(), falselab = getlabel(), FALSE);
     deflabel(truelab);
-    target = constsym((value_t)0);    /* anything, loadlogical makes B reg */
+    target = constsym(0);    /* anything, loadlogical makes B reg */
     target->type = ctype;
     loadlogical(target, falselab);
     exp->tag = LEAF;

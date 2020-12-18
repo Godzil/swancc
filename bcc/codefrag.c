@@ -7,6 +7,7 @@
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
+#include <stdio.h>
 
 #include <bcc.h>
 #include <bcc/codefrag.h>
@@ -109,9 +110,9 @@ static void opregadr(void);
 #else
 #define outj1switch() outop3str("seg\tcs\nbr\t");
 #endif
-#define outj2switch() (outindleft(), outstr(ireg0str), outindright(), bumplc2(), outnl())
+#define outj2switch() do { outindleft(); outstr(ireg0str); outindright(); bumplc2(); outnl(); } while(0)
 #define outlcommon() outop0str("\tlcomm\t")
-#define outlswitch() (outload(), outstr(ireg0str), outncregname(DREG))
+#define outlswitch() do { outload(); outstr(ireg0str); outncregname(DREG); } while(0)
 #define outnc1() outnstr(",*1")
 #define outsbc() outop3str("sbb\t")
 #define outset() outstr ("\tset\t")
@@ -122,10 +123,10 @@ static void opregadr(void);
 #define outxor() outop2str(EORSTRING)
 #define reclaimfactor()    /* factor in DXREG, DXREG now junk */
 #define savefactor(reg) regtransfer((reg), DXREG)
-#define smiDreg() (outcwd(), regexchange(DREG, DXREG))
-#define sr1() (outsr(), outaccum(), outnc1())
-#define subfactor(reg) (outsub(), outregname(reg), outncregname(DXREG))
-#define usr1() (outusr(), outaccum(), outnc1())
+#define smiDreg() do { outcwd(); regexchange(DREG, DXREG); } while(0)
+#define sr1() do { outsr(); outaccum(); outnc1(); } while(0)
+#define subfactor(reg) do { outsub(); outregname(reg); outncregname(DXREG); } while(0)
+#define usr1() do {outusr(); outaccum(); outnc1(); } while(0)
 
 static void adjcarry()
 {
@@ -684,8 +685,7 @@ void adc0()
 
 /* add constant to register */
 
-void addconst(offset, reg)offset_T offset;
-                          store_t reg;
+void addconst(offset_T offset, store_t reg)
 {
 #ifdef I8088
 #ifdef I80386
@@ -879,14 +879,14 @@ label_no casejump()
 
 /* clear register to 0 */
 
-static void clr(reg)store_t reg;
+static void clr(store_t reg)
 {
     loadconst((offset_T)0, reg);
 }
 
 /* define common storage */
 
-void common(name)char *name;
+void common(char *name)
 {
 #ifdef I8088
     outcommon();
@@ -912,7 +912,7 @@ void cseg()
 
 /* define long */
 
-void deflong(value)uoffset_T value;
+void deflong(uoffset_T value)
 {
     uoffset_T longhigh;
     uoffset_T longlow;
@@ -952,7 +952,7 @@ void deflong(value)uoffset_T value;
 
 /* define null storage */
 
-void defnulls(nullcount)uoffset_T nullcount;
+void defnulls(uoffset_T nullcount)
 {
     if (nullcount != 0)
     {
@@ -963,9 +963,7 @@ void defnulls(nullcount)uoffset_T nullcount;
 
 /* define string */
 
-label_no defstr(sptr, stop, dataflag)char *sptr;
-                                     char *stop;
-                                     bool_t dataflag;
+label_no defstr(char *sptr, char *stop, bool_t dataflag)
 {
     int byte;            /* promoted char for output */
     label_no strlab;
@@ -1058,8 +1056,7 @@ label_no defstr(sptr, stop, dataflag)char *sptr;
 
 /* divide D register by a constant if it is easy to do with shifts */
 
-bool_t diveasy(divisor, uflag)value_t divisor;
-                               bool_t uflag;
+bool_t diveasy(value_t divisor, bool_t uflag)
 {
     bool_t sign;
 
@@ -1116,8 +1113,7 @@ void dseg()
 
 /* equate a name to an EOL-terminated string */
 
-void equ(name, string)char *name;
-                      char *string;
+void equ(char *name, char *string)
 {
     outstr(name);
     outequate();
@@ -1126,8 +1122,7 @@ void equ(name, string)char *name;
 
 /* equate a local label to a value */
 
-void equlab(label, offset)label_no label;
-                          offset_T offset;
+void equlab(label_no label, offset_T offset)
 {
     outbyte(LOCALSTARTCHAR);
     outlabel(label);
@@ -1138,7 +1133,7 @@ void equlab(label, offset)label_no label;
 
 /* import or export a variable */
 
-void globl(name)char *name;
+void globl(char *name)
 {
     outglobl();
     outnccname(name);
@@ -1146,7 +1141,7 @@ void globl(name)char *name;
 
 /* import a variable */
 
-void import(name)char *name;
+void import(char *name)
 {
     outimport();
     outnccname(name);
@@ -1154,7 +1149,7 @@ void import(name)char *name;
 
 /* extend an int to a long */
 
-void itol(reg)store_t reg;
+void itol(store_t reg)
 {
 #define TEMP_LABEL_FOR_REGRESSION_TESTS
 #ifdef TEMP_LABEL_FOR_REGRESSION_TESTS
@@ -1185,13 +1180,13 @@ void itol(reg)store_t reg;
 
 /* define local common storage */
 
-void lcommlab(label)label_no label;
+void lcommlab(label_no label)
 {
     outlabel(label);
     outlcommon();
 }
 
-void lcommon(name)char *name;
+void lcommon(char *name)
 {
     outccname(name);
     outlcommon();
@@ -1217,8 +1212,7 @@ store_t targreg;
 
 /* load constant into given register */
 
-void loadconst(offset, reg)offset_T offset;
-                           store_t reg;
+void loadconst(offset_T offset, store_t reg)
 {
 #ifdef I8088
     if (offset == 0)
@@ -1279,9 +1273,7 @@ static bool_t lowregisDreg()
 }
 
 /* partially long shift left register by a constant (negative = infinity) */
-
-int lslconst(shift, reg)value_t shift;
-                        store_t reg;
+int lslconst(value_t shift, store_t reg)
 {
     if ((uvalue_t)shift >= INT16BITSTO)
     {
@@ -1315,9 +1307,7 @@ int lslconst(shift, reg)value_t shift;
 
 /* partially long shift right register by a constant (negative = infinity) */
 
-int lsrconst(shift, reg, uflag)value_t shift;
-                               store_t reg;
-                               bool_t uflag;
+int lsrconst(value_t shift, store_t reg, bool_t uflag)
 {
     if ((uvalue_t)shift >= INT16BITSTO)
     {
@@ -1377,8 +1367,7 @@ int lsrconst(shift, reg, uflag)value_t shift;
 
 /* take D register modulo a constant if it is easy to do with a mask */
 
-bool_t modeasy(divisor, uflag)value_t divisor;
-                               bool_t uflag;
+bool_t modeasy(value_t divisor, bool_t uflag)
 {
     bool_t sign;
 
@@ -1413,9 +1402,7 @@ bool_t modeasy(divisor, uflag)value_t divisor;
 }
 
 /* multiply register by a constant if it is easy to do with shifts */
-
-bool_t muleasy(factor, reg)uvalue_t factor;
-                            store_t reg;
+bool_t muleasy(uvalue_t factor, store_t reg)
 {
     int mulstack[MAXINTBITSTO / 2 + 1];    /* must be signed, not a fastin_t */
     int32_t count;
@@ -1510,7 +1497,7 @@ bool_t muleasy(factor, reg)uvalue_t factor;
 
 /* negate a register */
 
-void negreg(reg)store_t reg;
+void negreg(store_t reg)
 {
     if ((store_t)reg == BREG)
         extBnegD();
@@ -1522,7 +1509,7 @@ void negreg(reg)store_t reg;
 
 /* return string of operator */
 
-char *opstring(op)op_t op;
+char *opstring(op_t op)
 {
     switch (op)
     {
@@ -1545,7 +1532,7 @@ static void outaccum()
 
 /* print a c compiler name with leading CCNAMEPREXFIX */
 
-void outccname(name)char *name;
+void outccname(char *name)
 {
     outbyte(CCNAMEPREFIX);
     outstr(name);
@@ -1560,7 +1547,7 @@ void outhiaccum()
 
 /* print immediate address */
 
-void outimmadr(offset)offset_T offset;
+void outimmadr(offset_T offset)
 {
 #ifdef I8088
     if (!isbyteoffset(offset))
@@ -1577,8 +1564,7 @@ void outimmadr(offset)offset_T offset;
 
 /* print register, comma, immediate address and adjust lc */
 
-void outimadj(offset, targreg)offset_T offset;
-                              store_t targreg;
+void outimadj(offset_T offset, store_t targreg)
 {
     outregname(targreg);
     adjlc(offset, targreg);
@@ -1605,7 +1591,7 @@ void outjumpstring()
 
 /* print cc name, then newline */
 
-void outnccname(name)char *name;
+void outnccname(char *name)
 {
     outccname(name);
     outnl();
@@ -1613,7 +1599,7 @@ void outnccname(name)char *name;
 
 /* print separator, immediate address, newline */
 
-void outncimmadr(offset)offset_T offset;
+void outncimmadr(offset_T offset)
 {
 #ifdef I8088
     outcomma();
@@ -1626,8 +1612,7 @@ void outncimmadr(offset)offset_T offset;
 }
 
 /* print signed offset and adjust lc */
-
-void outoffset(offset)offset_T offset;
+void outoffset(offset_T offset)
 {
 #ifdef MC6809
     if (!is5bitoffset(offset))
@@ -1637,13 +1622,12 @@ void outoffset(offset)offset_T offset;
 }
 
 /* print stack register */
-
 static void outstackreg()
 {
     outstr(stackregstr);
 }
 
-void public(name)char *name;
+void public(char *name)
 {
 #ifndef AS09
     outexport();
@@ -1654,8 +1638,7 @@ void public(name)char *name;
 }
 
 /* print cc name as a private label */
-
-void private(name)char *name;
+void private(char *name)
 {
 #ifdef LABELENDCHAR
     outccname(name);
@@ -1666,9 +1649,7 @@ void private(name)char *name;
 }
 
 /* exchange registers */
-
-void regexchange(sourcereg, targreg)store_t sourcereg;
-                                    store_t targreg;
+void regexchange(store_t sourcereg, store_t targreg)
 {
     outexchange();
     outregname(sourcereg);
@@ -1682,9 +1663,7 @@ void regexchange(sourcereg, targreg)store_t sourcereg;
 }
 
 /* transfer a register */
-
-void regtransfer(sourcereg, targreg)store_t sourcereg;
-                                    store_t targreg;
+void regtransfer(store_t sourcereg, store_t targreg)
 {
     outtransfer();
 #ifdef TARGET_FIRST
@@ -1697,7 +1676,6 @@ void regtransfer(sourcereg, targreg)store_t sourcereg;
 }
 
 /* subtract carry resulting from char addition */
-
 void sbc0()
 {
 #ifdef I80386
@@ -1718,9 +1696,7 @@ void sbc0()
 }
 
 /* set a name to a value */
-
-void set(name, value)char *name;
-                     offset_T value;
+void set(char *name, offset_T value)
 {
     outccname(funcname);
     outbyte(LOCALSTARTCHAR);
@@ -1731,8 +1707,7 @@ void set(name, value)char *name;
 }
 
 /* shift left register by 1 */
-
-void sl1(reg)store_t reg;
+void sl1(store_t reg)
 {
     outsl();
 #ifdef I8088
@@ -1746,9 +1721,7 @@ void sl1(reg)store_t reg;
 }
 
 /* shift left register by a constant (negative = infinity) */
-
-void slconst(shift, reg)value_t shift;
-                        store_t reg;
+void slconst(value_t shift, store_t reg)
 {
 #ifdef I80386
     if (i386_32)
@@ -1804,9 +1777,7 @@ void slconst(shift, reg)value_t shift;
 }
 
 /* shift right D register by a constant (negative = infinity) */
-
-void srconst(shift, uflag)value_t shift;
-                          bool_t uflag;
+void srconst(value_t shift, bool_t uflag)
 {
 #ifdef I80386
     if (i386_32)
@@ -1883,8 +1854,7 @@ void srconst(shift, uflag)value_t shift;
 }
 
 /* extend an unsigned in DREG to a long */
-
-void uitol(reg)store_t reg;
+void uitol(store_t reg)
 {
     if (lowregisDreg())
     {
@@ -1899,10 +1869,10 @@ void uitol(reg)store_t reg;
 
 static char opregstr[] = "_opreg";
 
-/*-----------------------------------------------------------------------------
-    opregadr()
-    outputs address of variable opreg where OPREG is saved
------------------------------------------------------------------------------*/
+/*
+ * opregadr()
+ * outputs address of variable opreg where OPREG is saved
+ */
 
 static void opregadr()
 {
@@ -1936,11 +1906,10 @@ static void opregadr()
 #endif
 }
 
-/*-----------------------------------------------------------------------------
-    restoreopreg()
-    restores register OPREG from static location >opreg if it is was use
------------------------------------------------------------------------------*/
-
+/*
+ * restoreopreg()
+ * restores register OPREG from static location >opreg if it is was use
+ */
 void restoreopreg()
 {
     if (reguse & OPREG)
@@ -1959,13 +1928,12 @@ void restoreopreg()
     }
 }
 
-/*-----------------------------------------------------------------------------
-    saveopreg()
-    saves register OPREG to static location >opreg if it is in use
-    this makes the flop routines non-reentrant. It is too messy to
-    push it because the flop routines leave results on the stack
------------------------------------------------------------------------------*/
-
+/*
+ * saveopreg()
+ * saves register OPREG to static location >opreg if it is in use
+ * this makes the flop routines non-reentrant. It is too messy to
+ * push it because the flop routines leave results on the stack
+ */
 void saveopreg()
 {
     if (reguse & OPREG)

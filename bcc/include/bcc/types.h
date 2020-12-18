@@ -64,7 +64,7 @@ typedef int fd_t;             /* file descriptor */
 
 typedef uint32_t bool_t;     /* boolean: TRUE if nonzero */
 typedef int32_t  ccode_t;    /* condition code code */
-typedef uint32_t constr_t;   /* type constructor flags */
+typedef int32_t constr_t;   /* type constructor flags */
 typedef uint32_t indn_t;     /* storage indirection count */
 typedef uint32_t label_no;   /* label number */
 typedef uint32_t maclev_t;   /* macro expansion level */
@@ -110,7 +110,7 @@ struct symstruct
     struct typestruct *type;
     union
     {
-        double *offd;      /* value for double constants */
+        float *offd;      /* value for double constants */
         offset_T offi;     /* offset for register or global storage */
         label_no offlabel; /* label number for strings */
         char *offp;        /* to string for macro definitions */

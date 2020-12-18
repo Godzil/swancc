@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include <bcc.h>
+#include <bcc/function.h>
 #include <bcc/align.h>
 #include <bcc/byteord.h>
 #include <bcc/gencode.h>

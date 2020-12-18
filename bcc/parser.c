@@ -8,6 +8,8 @@
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
 
+#include <stdio.h>
+
 #include <bcc.h>
 #include <bcc/types.h>
 #include <bcc/parser.h>

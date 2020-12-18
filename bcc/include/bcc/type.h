@@ -70,7 +70,9 @@
 
 /* type sizes */
 
-/* TODO: These list of variable definition are suspicious */
+/* TODO: These list of variable definition are suspicious
+ * Also need to check if the types are correct.
+ */
 /* default sizes and long and float sizes are hard-coded into type data */
 extern uoffset_T ctypesize;
 extern uoffset_T dtypesize;

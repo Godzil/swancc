@@ -7,6 +7,7 @@
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
+#include <stdio.h>
 
 #include <bcc.h>
 #include <bcc/condcode.h>
@@ -236,7 +237,8 @@ void deflabel(label_no label)
                         {
                             if (labptr == labmax)
                             {
-                                labptr = &vislab[-1];
+                                /* WTF: labptr = &vislab[-1]; */
+                                labptr = &vislab[0];
                             }
                             else
                             {

@@ -17,7 +17,7 @@
 #define MINLOCLEVEL 1
 
 /* possible node flags */
-#define LVALUE      (1 << 0)
+#define LVALUE      (1U << 0)
 
 extern struct nodestruct *etptr;     /* ptr to next entry in expression tree */
 extern struct symstruct *gvarsymptr; /* gsymptr for last identifier declared */

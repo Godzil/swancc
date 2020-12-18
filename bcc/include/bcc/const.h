@@ -76,12 +76,8 @@ typedef long no_hope;
 #endif
 
 /* local style */
-
-#ifndef NULL
-#define NULL 0
-#endif
 #define FALSE 0
-#define TRUE 1
+#define TRUE !(FALSE)
 
 
 #endif /* _BCC_BCC_CONST_H */

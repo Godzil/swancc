@@ -51,6 +51,7 @@ bool_t f_indirect(struct symstruct *target)
             else
 #endif
             {
+                /* TODO: THIS IS NOT AN ACCEPTABLE WAY as system/compiler dependant */
                 if (target->type->scalar & FLOAT)
                 {
                     float val = *target->offset.offd;
@@ -124,7 +125,7 @@ void floatop(op_t op, struct symstruct *source, struct symstruct *target)
     }
     fpush(target);
     sflag = TRUE;
-    if (source->flags != TEMP || source->offset.offi != sp + dtypesize)
+    if ( (source->flags != TEMP) || (source->offset.offi != (sp + (offset_T)dtypesize)))
     {
         sflag = FALSE;
         if (source->storage == OPREG)
@@ -133,7 +134,8 @@ void floatop(op_t op, struct symstruct *source, struct symstruct *target)
         }
         pointat(source);
     }
-    switch ((op_t)op)
+
+    switch (op)
     {
         case ADDOP:
             call("Fadd");
