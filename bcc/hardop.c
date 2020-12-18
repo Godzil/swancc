@@ -9,6 +9,8 @@
  */
 
 #include <bcc.h>
+#include <bcc/hardop.h>
+#include <bcc/assign.h>
 #include <bcc/byteord.h>
 #include <bcc/condcode.h>
 #include <bcc/gencode.h>
@@ -17,6 +19,16 @@
 #include <bcc/scan.h>
 #include <bcc/sizes.h>
 #include <bcc/type.h>
+#include <bcc/table.h>
+#include <bcc/longop.h>
+#include <bcc/floatop.h>
+#include <bcc/genloads.h>
+#include <bcc/codefrag.h>
+#include <bcc/function.h>
+#include <bcc/preserve.h>
+#include <bcc/output.h>
+#include <bcc/label.h>
+#include <bcc/softop.h>
 
 static void sub1(struct symstruct *source, struct symstruct *target);
 
@@ -69,7 +81,7 @@ void add(struct symstruct *source, struct symstruct *target)
     target->type = iscalartotype(target->type->scalar | sscalar);
 }
 
-void incdec(op_pt op, struct symstruct *source)
+void incdec(op_t op, struct symstruct *source)
 {
     offset_T bump;
     bool_t postflag;
@@ -77,7 +89,7 @@ void incdec(op_pt op, struct symstruct *source)
     struct symstruct *target;
     struct symstruct targ;
 #ifdef MC6809
-    store_pt targreg;
+    store_t targreg;
 #endif
 
     *(target = &targ) = *source;
@@ -252,7 +264,7 @@ void not(struct symstruct *target)
 }
 
 /* 1-byte ops like AND acting on integers (not both constant) */
-void op1(op_pt op, struct symstruct *source, struct symstruct *target)
+void op1(op_t op, struct symstruct *source, struct symstruct *target)
 {
     char *opstr;
 #ifdef OP1

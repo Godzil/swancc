@@ -132,6 +132,7 @@ void run_aspreproc(struct file_list *file);
 void run_preproc(struct file_list *file);
 void run_unproto(struct file_list *file);
 void run_compile(struct file_list *file);
+void run_command(struct file_list *file);
 void run_optim(struct file_list *file);
 void run_as(struct file_list *file);
 void run_link(void);
@@ -155,10 +156,9 @@ void reset_localprefix(void);
 #endif
 
 #ifndef LOCALPREFIX
-#define LOCALPREFIX        /usr
+#define LOCALPREFIX        "/usr"
 #endif
-char *localprefix = QUOT( LOCALPREFIX
-);
+char *localprefix = LOCALPREFIX;
 #ifndef L_TREE
 char *default_include = "-I~/include";
 char *default_libdir0 = "-L~/lib/bcc/i86/";
@@ -271,13 +271,9 @@ char *copystr(char *str)
     return strcpy(xalloc(strlen(str) + 1), str);
 }
 
-char *catstr(char *str,
-
-*str2)
+char *catstr(char *str, char *str2)
 {
-return
-
-strcat(strcpy(xalloc(strlen(str) + strlen(str2) + 1), str), str2);
+    return strcat(strcpy(xalloc(strlen(str) + strlen(str2) + 1), str), str2);
 }
 
 void run_aspreproc(struct file_list *file)

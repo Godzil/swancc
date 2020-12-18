@@ -7,15 +7,21 @@
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
+#include <string.h>
 
 #include <bcc.h>
 #include <bcc/gencode.h>
-#include <bcc/parse.h>
+#include <bcc/parser.h>
 #include <bcc/reg.h>
 #include <bcc/sc.h>
 #include <bcc/scan.h>
 #include <bcc/table.h>        /* just for charptr for string constant */
 #include <bcc/type.h>
+#include <bcc/declare.h>
+#include <bcc/exptree.h>
+#include <bcc/output.h>
+#include <bcc/preproc.h>
+#include <bcc/codefrag.h>
 
 static unsigned insizeof;    /* nest level for getsizeof
                               * used to avoid aborting undefined idents
@@ -29,9 +35,9 @@ static unsigned insizeof;    /* nest level for getsizeof
 
 static struct nodestruct *cast_exp(void);
 static struct nodestruct *exp2(void);
-static struct nodestruct *exp3to12(fastin_pt lprecedence);
+static struct nodestruct *exp3to12(int32_t lprecedence);
 static struct nodestruct *listargs(void);
-static struct nodestruct *postfix_exp(bool_pt seenlp);
+static struct nodestruct *postfix_exp(bool_t seenlp);
 static struct nodestruct *primary_exp(void);
 static struct nodestruct *unary_exp(void);
 
@@ -64,7 +70,7 @@ static struct nodestruct *cast_exp()
 struct nodestruct *assignment_exp()
 {
     struct nodestruct *lhs;
-    op_pt op;
+    op_t op;
 
     lhs = exp2();
     if (sym >= ASSIGNOP && sym <= SUBABOP)    /* assign-op syms in order! */
@@ -105,11 +111,11 @@ static struct nodestruct *exp2()
     return lhs;
 }
 
-static struct nodestruct *exp3to12(lprecedence)fastin_pt lprecedence;
+static struct nodestruct *exp3to12(lprecedence)int32_t lprecedence;
 {
     struct nodestruct *lhs;
-    op_pt op;
-    fastin_t rprecedence;
+    op_t op;
+    int32_t rprecedence;
 
     lhs = cast_exp();
     while (TRUE)
@@ -118,31 +124,31 @@ static struct nodestruct *exp3to12(lprecedence)fastin_pt lprecedence;
         switch (sym)
         {
             case LOGOROP:
-                if ((fastin_t)lprecedence <= 1)
+                if ((int32_t)lprecedence <= 1)
                 {
                     rprecedence = 2;
                 }
                 break;
             case LOGANDOP:
-                if ((fastin_t)lprecedence <= 3)
+                if ((int32_t)lprecedence <= 3)
                 {
                     rprecedence = 4;
                 }
                 break;
             case OROP:
-                if ((fastin_t)lprecedence <= 5)
+                if ((int32_t)lprecedence <= 5)
                 {
                     rprecedence = 6;
                 }
                 break;
             case EOROP:
-                if ((fastin_t)lprecedence <= 7)
+                if ((int32_t)lprecedence <= 7)
                 {
                     rprecedence = 8;
                 }
                 break;
             case AMPERSAND:
-                if ((fastin_t)lprecedence <= 9)
+                if ((int32_t)lprecedence <= 9)
                 {
                     sym = ANDOP;
                     rprecedence = 10;
@@ -150,7 +156,7 @@ static struct nodestruct *exp3to12(lprecedence)fastin_pt lprecedence;
                 break;
             case EQOP:
             case NEOP:
-                if ((fastin_t)lprecedence <= 11)
+                if ((int32_t)lprecedence <= 11)
                 {
                     rprecedence = 12;
                 }
@@ -159,33 +165,33 @@ static struct nodestruct *exp3to12(lprecedence)fastin_pt lprecedence;
             case GTOP:
             case LEOP:
             case LTOP:
-                if ((fastin_t)lprecedence <= 13)
+                if ((int32_t)lprecedence <= 13)
                 {
                     rprecedence = 14;
                 }
                 break;
             case SLOP:
             case SROP:
-                if ((fastin_t)lprecedence <= 15)
+                if ((int32_t)lprecedence <= 15)
                 {
                     rprecedence = 16;
                 }
                 break;
             case HYPHEN:
-                if ((fastin_t)lprecedence <= 17)
+                if ((int32_t)lprecedence <= 17)
                 {
                     sym = SUBOP;
                     rprecedence = 18;
                 }
                 break;
             case ADDOP:
-                if ((fastin_t)lprecedence <= 17)
+                if ((int32_t)lprecedence <= 17)
                 {
                     rprecedence = 18;
                 }
                 break;
             case STAR:
-                if ((fastin_t)lprecedence <= 19)
+                if ((int32_t)lprecedence <= 19)
                 {
                     sym = MULOP;
                     rprecedence = 20;
@@ -193,7 +199,7 @@ static struct nodestruct *exp3to12(lprecedence)fastin_pt lprecedence;
                 break;
             case DIVOP:
             case MODOP:
-                if ((fastin_t)lprecedence <= 19)
+                if ((int32_t)lprecedence <= 19)
                 {
                     rprecedence = 20;
                 }
@@ -231,7 +237,7 @@ static struct nodestruct *listargs()
     return parent;
 }
 
-static struct nodestruct *postfix_exp(seenlp)bool_pt seenlp;
+static struct nodestruct *postfix_exp(seenlp)bool_t seenlp;
 {
     struct nodestruct *nodeptr;
     struct symstruct *symptr;

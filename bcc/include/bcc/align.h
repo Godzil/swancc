@@ -10,6 +10,8 @@
 #ifndef _BCC_BCC_ALIGN_H
 #define _BCC_BCC_ALIGN_H
 
+#include <sys/types.h>
+
 #ifndef S_ALIGNMENT
 # define align(x) (x)
 #else

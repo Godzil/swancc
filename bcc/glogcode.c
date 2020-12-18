@@ -11,10 +11,20 @@
 #include <bcc.h>
 #include <bcc/condcode.h>
 #include <bcc/gencode.h>
+#include <bcc/glogcode.h>
 #include <bcc/reg.h>
 #include <bcc/scan.h>
 #include <bcc/sizes.h>
 #include <bcc/type.h>
+#include <bcc/label.h>
+#include <bcc/table.h>
+#include <bcc/longop.h>
+#include <bcc/floatop.h>
+#include <bcc/preserve.h>
+#include <bcc/assign.h>
+#include <bcc/codefrag.h>
+#include <bcc/genloads.h>
+#include <bcc/output.h>
 
 #define cc_signed(cc) ((cc) >= 4 && (cc) < 8)
 
@@ -43,18 +53,18 @@ static void cmplocal(struct symstruct *source, struct symstruct *target, ccode_t
 
 #ifdef MC6809
 static void cmporsub (struct symstruct *target);
-static bool_pt cmpsmallconst (value_t intconst, struct symstruct *target,
+static bool_t cmpsmallconst (value_t intconst, struct symstruct *target,
                   ccode_t *pcondtrue);
 #endif
 
-static void comparecond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_pt nojump);
-static void jumpcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_pt nojump);
+static void comparecond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_t nojump);
+static void jumpcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_t nojump);
 static void loadlogical(struct symstruct *source, label_no falselab);
-static void logandcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_pt nojump);
-static void logorcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_pt nojump);
+static void logandcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_t nojump);
+static void logorcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_t nojump);
 static void reduceconst(struct symstruct *source);
 static void test(struct symstruct *target, ccode_t *pcondtrue);
-static void testcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_pt nojump);
+static void testcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_t nojump);
 
 void cmp(struct symstruct *source, struct symstruct *target, ccode_t *pcondtrue)
 {
@@ -194,9 +204,9 @@ static void cmporsub(struct symstruct *target)
     }
 }
 
-static bool_pt cmpsmallconst(value_t intconst, struct symstruct *target, ccode_t *pcondtrue)
+static bool_t cmpsmallconst(value_t intconst, struct symstruct *target, ccode_t *pcondtrue)
 {
-    store_pt targreg;
+    store_t targreg;
 
     if ((*pcondtrue == EQ || *pcondtrue == NE) &&
     !(target->storage & ALLDATREGS) && !(target->type->scalar & CHAR) &&
@@ -218,7 +228,7 @@ static bool_pt cmpsmallconst(value_t intconst, struct symstruct *target, ccode_t
 #endif
 
 /* nojump: NB if nonzero, is ~0 so complement is 0 */
-static void comparecond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_pt nojump)
+static void comparecond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_t nojump)
 {
     ccode_t condtrue;
     store_t regmark;
@@ -310,7 +320,7 @@ void condop(struct nodestruct *exp)
 }
 
 /* nojump: NB if nonzero, is ~0 so complement is 0 */
-static void jumpcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_pt nojump)
+static void jumpcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_t nojump)
 {
     switch (exp->tag)
     {
@@ -372,7 +382,7 @@ static void loadlogical(struct symstruct *source, label_no falselab)
 
 
 /* nojump:  NB if nonzero, is ~0 so complement is 0 */
-static void logandcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_pt nojump)
+static void logandcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_t nojump)
 {
     label_no andlab;
 
@@ -398,7 +408,7 @@ void logop(struct nodestruct *exp)
 }
 
 /* nojump: NB if nonzero, is ~0 so complement is 0 */
-static void logorcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_pt nojump)
+static void logorcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_t nojump)
 {
     label_no orlab;
 
@@ -520,7 +530,7 @@ static void test(struct symstruct *target, ccode_t *pcondtrue)
  * test expression and jump depending on NE/EQ
  * nojump: NB if nonzero, is ~0 so complement is 0
  */
-static void testcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_pt nojump)
+static void testcond(struct nodestruct *exp, label_no truelab, label_no falselab, bool_t nojump)
 {
     ccode_t condtrue;
     struct symstruct *source;

@@ -13,6 +13,6 @@
 struct nodestruct *castnode(struct typestruct *type, struct nodestruct *nodeptr);
 void etreeinit(void);
 struct nodestruct *leafnode(struct symstruct *source);
-struct nodestruct *node(op_pt t, struct nodestruct *p1, struct nodestruct *p2);
+struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2);
 
 #endif /* _BCC_BCC_EXPTREE_H */

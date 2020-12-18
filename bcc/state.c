@@ -8,19 +8,31 @@
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
 
+#include <stdlib.h>
+
 #include <bcc.h>
+#include <bcc/state.h>
 #include <bcc/align.h>
 #include <bcc/condcode.h>
 #include <bcc/gencode.h>
 #include <bcc/input.h>        /* just for ch and eof for label check */
 #include <bcc/label.h>
 #include <bcc/os.h>            /* just for EOL */
-#include <bcc/parse.h>
+#include <bcc/parser.h>
 #include <bcc/reg.h>
 #include <bcc/scan.h>
 #include <bcc/sizes.h>
 #include <bcc/table.h>
 #include <bcc/type.h>
+#include <bcc/output.h>
+#include <bcc/preserve.h>
+#include <bcc/declare.h>
+#include <bcc/function.h>
+#include <bcc/express.h>
+#include <bcc/loadexp.h>
+#include <bcc/codefrag.h>
+#include <bcc/glogcode.h>
+#include <bcc/preproc.h>
 
 #define COLONCHAR ':'        /* for label */
 #define GROWCASES    64    /* extra cases for growth of switch struct */
@@ -67,7 +79,7 @@ static void evalexpression(struct nodestruct *exp);
 
 static void exprstatement(void);
 
-static bool_pt isforever(struct nodestruct *exp);
+static bool_t isforever(struct nodestruct *exp);
 
 static void sort(struct casestruct *caselist, int count);
 
@@ -147,7 +159,7 @@ static void exprstatement()
     exprptr = exprmark;
 }
 
-static bool_pt isforever(struct nodestruct *exp)
+static bool_t isforever(struct nodestruct *exp)
 {
     return exp == NULL ||
            (exp->tag == LEAF && exp->left.symptr->storage == CONSTANT && exp->left.symptr->offset.offv != 0);
@@ -657,7 +669,7 @@ static void jumptocases()
     label_no dfaultlab;
     label_no jtablelab;
     ccode_t lowcondition;
-    store_pt targreg;
+    store_t targreg;
     label_no zjtablelab;
 
     caseptr = switchnow->caselist;

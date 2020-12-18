@@ -21,6 +21,101 @@
 
 #include <bcc/gencode.h>
 #include <bcc/sizes.h>
+#include <bcc/preserve.h>
+#include <bcc/assign.h>
+#include <bcc/hardop.h>
+#include <bcc/softop.h>
+#include <bcc/genloads.h>
+#include <bcc/debug.h>
+#include <bcc/glogcode.h>
+#include <bcc/table.h>
+#include <bcc/function.h>
+#include <bcc/output.h>
+#include <bcc/codefrag.h>
+
+
+/* Global variables */
+uoffset_T arg1size;         /* size of 1st arg to function zero after allocation of 1st arg */
+store_t callee1mask;       /* calleemask with doubleregs masked if nec */
+uoffset_T dataoffset;       /* amount of initialized data so far */
+#ifdef DEBUG
+bool_t debugon;             /* nonzero to print debugging messages depends on zero init */
+#endif
+#ifdef FRAMEPOINTER
+store_t framelist;         /* bit pattern for frame and saved regs */
+store_t frame1list;        /* framelist with doubleregs masked if nec */
+offset_T framep;            /* hardware relative frame ptr */
+#endif
+uoffset_T func1saveregsize; /* choice of next two values */
+uoffset_T funcdsaveregsize; /* funcsaveregsize adjusted for doubles */
+uoffset_T funcsaveregsize;  /* tot size of framelist/calleemask regs */
+#ifdef I80386
+bool_t i386_32;             /* nonzero to generate 386 32 bit code depends on zero init */
+#endif
+#ifdef DYNAMIC_LONG_ORDER
+bool_t long_big_endian;    /* nonzero if high long word is first */
+/* depends on zero init */
+#endif
+offset_T lowsp;             /* low water sp (collects locals in switch) */
+#ifdef POSINDEPENDENT
+bool_t posindependent;    /* nonzero to generate pos-independent code */
+                /* depends on zero init */
+#endif
+bool_t printf_fp;           /* nonzero if *printf called with FP arg  */
+bool_t regarg;              /* nonzero to show unloaded register arg depends on zero init */
+store_t reguse;             /* registers in use */
+bool_t scanf_fp;            /* nonzero if *scanf called with ptr-to-FP */
+offset_T softsp;            /* software sp (leads sp during declares) */
+offset_T sp;                /* hardware relative stack ptr depends on zero init */
+#ifdef FRAMEPOINTER
+bool_t stackarg;            /* nonzero to show function has arg on stack */
+#endif
+struct switchstruct *switchnow; /* currently active switch depends on NULL init */
+bool_t optimise;            /* nonzero to add optimisation code */
+
+/* variables to be initialised to nonzero */
+store_t allindregs;        /* mask (in) for index registers */
+store_t allregs;           /* mask (in) for registers */
+bool_t arg1inreg;           /* nonzero to pass 1st arg in reg */
+store_t calleemask;        /* mask (in) for regs to be saved by callee */
+bool_t callersaves;         /* nonzero to make caller save regs */
+char *callstring;           /* opcode string for call */
+store_t doubleargregs;     /* mask (in) for regs for 1st arg if double */
+store_t doubleregs;        /* mask (in) for regs to temp contain double */
+store_t doublreturnregs;   /* mask (in) for regs for returning double */
+offset_T jcclonger;         /* amount jcc long jumps are longer */
+offset_T jmplonger;         /* amount long jumps is longer */
+char *jumpstring;           /* opcode string for jump */
+char *regpulllist;          /* reg names and sizes (0 store_t bit first) */
+char *regpushlist;          /* reg names and sizes (0 store_t bit last) */
+store_t regregs;           /* mask (in) for regs which can be reg vars */
+
+/* register names */
+char *acclostr;
+char *accumstr;
+char *badregstr;
+#ifdef I8088
+char *dreg1str;
+char *dreg1bstr;
+char *dreg2str;
+#endif
+char *ireg0str;
+char *ireg1str;
+char *ireg2str;
+char *localregstr;
+#ifdef I8088
+char *stackregstr;
+#endif
+
+/* register sizes */
+uoffset_T accregsize;
+#ifdef FRAMEPOINTER
+uoffset_T frameregsize;
+#endif
+uoffset_T maxregsize;
+uoffset_T opregsize;
+uoffset_T pshregsize;
+uoffset_T returnadrsize;
 
 #define FIRSTOPDATA GTOP
 
@@ -35,28 +130,28 @@
 
 #ifdef I8088
 #if NOTFINISHED
-store_pt allregs = BREG | DREG | DATREG1 | DATREG2 | INDREG0 | INDREG1 | INDREG2;
+store_t allregs = BREG | DREG | DATREG1 | DATREG2 | INDREG0 | INDREG1 | INDREG2;
 #else
-store_pt allregs = BREG | DREG | INDREG0 | INDREG1 | INDREG2;
+store_t allregs = BREG | DREG | INDREG0 | INDREG1 | INDREG2;
 #endif
-store_pt allindregs = INDREG0 | INDREG1 | INDREG2;
+store_t allindregs = INDREG0 | INDREG1 | INDREG2;
 uoffset_T alignmask = ~(uoffset_T)0x0001;
 bool_t arg1inreg = FALSE;
-store_pt calleemask = INDREG1 | INDREG2;
+store_t calleemask = INDREG1 | INDREG2;
 bool_t callersaves = FALSE;
 char *callstring = "call\t";
-store_pt doubleargregs = DREG | INDREG0 | DATREG1 | DATREG2;
-store_pt doubleregs = DREG | INDREG0 | DATREG1 | DATREG2;
-store_pt doublreturnregs = DREG | INDREG0 | DATREG1 | DATREG2;
+store_t doubleargregs = DREG | INDREG0 | DATREG1 | DATREG2;
+store_t doubleregs = DREG | INDREG0 | DATREG1 | DATREG2;
+store_t doublreturnregs = DREG | INDREG0 | DATREG1 | DATREG2;
 offset_T jcclonger = 3;
 offset_T jmplonger = 1;
 char *jumpstring = "br \t";
 char *regpulllist = "f2ax2ax2bx2si2di2bp2qx2qx2cx2dx2";
 char *regpushlist = "dx2cx2qx2qx2bp2di2si2bx2ax2ax2f2";
 #if NOTFINISHED
-store_pt regregs = INDREG1 | INDREG2 | DATREG1 | DATREG2;
+store_t regregs = INDREG1 | INDREG2 | DATREG1 | DATREG2;
 #else
-store_pt regregs = INDREG1 | INDREG2;
+store_t regregs = INDREG1 | INDREG2;
 #endif
 
 char *acclostr = "al";
@@ -77,22 +172,22 @@ char *stackregstr = "sp";
 #endif
 
 #ifdef MC6809
-store_pt allregs = BREG | DREG | INDREG0 | INDREG1 | INDREG2;
-store_pt allindregs = INDREG0 | INDREG1 | INDREG2;
+store_t allregs = BREG | DREG | INDREG0 | INDREG1 | INDREG2;
+store_t allindregs = INDREG0 | INDREG1 | INDREG2;
 uoffset_T alignmask = ~(uoffset_T) 0x0000;
 bool_t arg1inreg = TRUE;
-store_pt calleemask = INDREG1 | INDREG2;
+store_t calleemask = INDREG1 | INDREG2;
 bool_t callersaves = TRUE;
 char *callstring = "JSR\t>";
-store_pt doubleargregs = DREG | INDREG0 | INDREG1 | INDREG2;
-store_pt doubleregs = DREG | INDREG0 | INDREG1 | INDREG2;
-store_pt doublreturnregs = DREG | INDREG0 | INDREG1 | INDREG2;
+store_t doubleargregs = DREG | INDREG0 | INDREG1 | INDREG2;
+store_t doubleregs = DREG | INDREG0 | INDREG1 | INDREG2;
+store_t doublreturnregs = DREG | INDREG0 | INDREG1 | INDREG2;
 offset_T jcclonger = 2;
 offset_T jmplonger = 1;
 char *jumpstring = "JMP\t>";
 char *regpulllist = "CC1B1D2X2U2Y2DP1PC2";
 char *regpushlist = "PC2DP1Y2U2X2D2B1CC1";
-store_pt regregs = INDREG1 | INDREG2;
+store_t regregs = INDREG1 | INDREG2;
 
 char *acclostr = "B";
 char *accumstr = "D";
@@ -123,10 +218,10 @@ uvalue_t maxushortto = 0xFFFFL;
 uvalue_t shortmaskto = 0xFFFFL;
 #endif
 
-static store_pt callermask;
+static store_t callermask;
 static offset_T lastargsp;
 
-static smalin_t opdata[] = {
+static int32_t opdata[] = {
     /*    GTOP, LTOP, ADDOP, DIVOP, */
     GT, LT, 0, 0,
     /*    MODOP, LOGNOTOP, NOTOP, STRUCELTOP, */
@@ -143,17 +238,17 @@ static smalin_t opdata[] = {
     EQ, NE, GE, LE,
 };
 
-static void abop(op_pt op, struct symstruct *source, struct symstruct *target);
+static void abop(op_t op, struct symstruct *source, struct symstruct *target);
 
 static void smakeleaf(struct nodestruct *exp);
 
 static void tcheck(struct nodestruct *exp);
 
-static void abop(op_pt op, struct symstruct *source, struct symstruct *target)
+static void abop(op_t op, struct symstruct *source, struct symstruct *target)
 {
-    store_pt regmark;
-    store_pt regpushed;
-    store_pt regtemp;
+    store_t regmark;
+    store_t regpushed;
+    store_t regtemp;
     struct symstruct temptarg;
 
     regpushed = preslval(source, target);
@@ -376,9 +471,9 @@ void bileaf(struct nodestruct *exp)
     }
 }
 
-fastin_pt bitcount(uvalue_t number)
+int32_t bitcount(uvalue_t number)
 {
-    fastin_pt count;
+    int32_t count;
 
     for (count = 0 ; number != 0 ; number >>= 1)
     {
@@ -465,9 +560,9 @@ void codeinit()
 #endif
 }
 
-fastin_pt highbit(uvalue_t number)
+int32_t highbit(uvalue_t number)
 {
-    fastin_pt bit;
+    int32_t bit;
 
     for (bit = -1 ; number != 0 ; number >>= 1)
     {
@@ -479,7 +574,7 @@ fastin_pt highbit(uvalue_t number)
 void makeleaf(struct nodestruct *exp)
 {
     ccode_t condtrue;
-    op_pt op;
+    op_t op;
     store_t regmark;
     offset_T saveargsp = 0; /* for -Wall */
     store_t savelist = 0; /* for -Wall */

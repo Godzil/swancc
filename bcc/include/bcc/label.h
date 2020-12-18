@@ -42,12 +42,12 @@ void deflabel(label_no label);
 label_no gethighlabel(void);
 label_no getlabel(void);
 void jump(label_no label);
-void lbranch(ccode_pt cond, label_no label);
+void lbranch(ccode_t cond, label_no label);
 struct symstruct *namedlabel(void);
-void outcond(ccode_pt cond);
+void outcond(ccode_t cond);
 void outlabel(label_no label);
 void outnlabel(label_no label);
-void sbranch(ccode_pt cond, label_no label);
+void sbranch(ccode_t cond, label_no label);
 void unbumplc(void);
 
 #endif /* _BCC_BCC_LABEL_H */

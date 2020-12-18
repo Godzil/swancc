@@ -7,6 +7,7 @@
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
+#include <string.h>
 
 #include <bcc.h>
 #include <bcc/align.h>
@@ -15,6 +16,42 @@
 #include <bcc/scan.h>
 #include <bcc/table.h>
 #include <bcc/type.h>
+#include <bcc/output.h>
+
+/* Global variables */
+/* default sizes and long and float sizes are hard-coded into type data */
+uoffset_T ctypesize;
+uoffset_T dtypesize;
+uoffset_T ftypesize;
+uoffset_T itypesize;
+uoffset_T ptypesize;
+uoffset_T stypesize;
+
+/* basic scalar types */
+struct typestruct *dtype;
+struct typestruct *fltype;
+struct typestruct *itype;
+struct typestruct *ltype;
+struct typestruct *sctype;
+struct typestruct *stype;
+struct typestruct *uctype;
+struct typestruct *uitype;
+struct typestruct *ultype;
+struct typestruct *ustype;
+struct typestruct *vtype;
+
+/* working type */
+struct typestruct *ctype;
+
+/* constructed types */
+struct typestruct *fitype;
+struct typestruct *pctype;
+
+/* return type of current function */
+struct typestruct *returntype;
+
+
+
 
 uoffset_T ctypesize = 1;
 uoffset_T dtypesize = 8;
@@ -60,7 +97,7 @@ struct typestruct *addstruct(char *structname)
     return structype;
 }
 
-struct typestruct *iscalartotype(scalar_pt scalar)
+struct typestruct *iscalartotype(scalar_t scalar)
 {
     if (scalar & LONG)
     {
@@ -106,7 +143,7 @@ struct typestruct *pointype(struct typestruct *type)
     return prefix(POINTER, ptypesize, type);
 }
 
-struct typestruct *prefix(constr_pt constructor, uoffset_T size, struct typestruct *type)
+struct typestruct *prefix(constr_t constructor, uoffset_T size, struct typestruct *type)
 {
     struct typestruct *searchtype;
 

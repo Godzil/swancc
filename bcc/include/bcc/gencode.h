@@ -20,14 +20,14 @@
 #define OPSEPARATOR '\t'           /* char separating op string and operand */
 
 extern uoffset_T arg1size;         /* size of 1st arg to function zero after allocation of 1st arg */
-extern store_pt callee1mask;       /* calleemask with doubleregs masked if nec */
+extern store_t callee1mask;       /* calleemask with doubleregs masked if nec */
 extern uoffset_T dataoffset;       /* amount of initialized data so far */
 #ifdef DEBUG
 extern bool_t debugon;             /* nonzero to print debugging messages depends on zero init */
 #endif
 #ifdef FRAMEPOINTER
-extern store_pt framelist;         /* bit pattern for frame and saved regs */
-extern store_pt frame1list;        /* framelist with doubleregs masked if nec */
+extern store_t framelist;         /* bit pattern for frame and saved regs */
+extern store_t frame1list;        /* framelist with doubleregs masked if nec */
 extern offset_T framep;            /* hardware relative frame ptr */
 #endif
 extern uoffset_T func1saveregsize; /* choice of next two values */
@@ -58,21 +58,21 @@ extern struct switchstruct *switchnow; /* currently active switch depends on NUL
 extern bool_t optimise;            /* nonzero to add optimisation code */
 
 /* variables to be initialised to nonzero */
-extern store_pt allindregs;        /* mask (in) for index registers */
-extern store_pt allregs;           /* mask (in) for registers */
+extern store_t allindregs;        /* mask (in) for index registers */
+extern store_t allregs;           /* mask (in) for registers */
 extern bool_t arg1inreg;           /* nonzero to pass 1st arg in reg */
-extern store_pt calleemask;        /* mask (in) for regs to be saved by callee */
+extern store_t calleemask;        /* mask (in) for regs to be saved by callee */
 extern bool_t callersaves;         /* nonzero to make caller save regs */
 extern char *callstring;           /* opcode string for call */
-extern store_pt doubleargregs;     /* mask (in) for regs for 1st arg if double */
-extern store_pt doubleregs;        /* mask (in) for regs to temp contain double */
-extern store_pt doublreturnregs;   /* mask (in) for regs for returning double */
+extern store_t doubleargregs;     /* mask (in) for regs for 1st arg if double */
+extern store_t doubleregs;        /* mask (in) for regs to temp contain double */
+extern store_t doublreturnregs;   /* mask (in) for regs for returning double */
 extern offset_T jcclonger;         /* amount jcc long jumps are longer */
 extern offset_T jmplonger;         /* amount long jumps is longer */
 extern char *jumpstring;           /* opcode string for jump */
 extern char *regpulllist;          /* reg names and sizes (0 store_t bit first) */
 extern char *regpushlist;          /* reg names and sizes (0 store_t bit last) */
-extern store_pt regregs;           /* mask (in) for regs which can be reg vars */
+extern store_t regregs;           /* mask (in) for regs which can be reg vars */
 
 /* register names */
 extern char *acclostr;
@@ -104,9 +104,9 @@ extern uoffset_T returnadrsize;
 /* Prototypes */
 
 void bileaf(struct nodestruct *exp);
-fastin_pt bitcount(uvalue_t number);
+int32_t bitcount(uvalue_t number);
 void codeinit(void);
-fastin_pt highbit(uvalue_t number);
+int32_t highbit(uvalue_t number);
 void makeleaf(struct nodestruct *exp);
 
 #endif /* _BCC_BCC_GENCODE_H */

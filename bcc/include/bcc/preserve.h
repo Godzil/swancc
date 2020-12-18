@@ -10,13 +10,13 @@
 #ifndef _BCC_BCC_PRESERVE_H
 #define _BCC_BCC_PRESERVE_H
 
-void changesp(offset_T newsp, bool_pt absflag);
+void changesp(offset_T newsp, bool_t absflag);
 void loadpres(struct symstruct *source, struct symstruct *target);
 void modstk(offset_T newsp);
 void pres2(struct symstruct *source, struct symstruct *target);
 void preserve(struct symstruct *source);
-store_pt preslval(struct symstruct *source, struct symstruct *target);
-void recovlist(store_pt reglist);
-void savereturn(store_pt savelist, offset_T saveoffset);
+store_t preslval(struct symstruct *source, struct symstruct *target);
+void recovlist(store_t reglist);
+void savereturn(store_t savelist, offset_T saveoffset);
 
 #endif /* _BCC_BCC_PRESERVE_H */

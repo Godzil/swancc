@@ -9,6 +9,14 @@
  */
 
 #include <bcc.h>
+#include <bcc/table.h>
+#include <bcc/exptree.h>
+#include <bcc/preproc.h>
+#include <bcc/input.h>
+#include <bcc/gencode.h>
+#include <bcc/type.h>
+#include <bcc/declare.h>
+#include <bcc/output.h>
 
 int main(int argc, char *argv[])
 {

@@ -104,11 +104,11 @@ extern struct typestruct *returntype;
 
 /* Prototypes */
 struct typestruct *addstruct(char *structname);
-struct typestruct *iscalartotype(scalar_pt scalar);
+struct typestruct *iscalartotype(scalar_t scalar);
 struct typestruct *newtype(void);
 void outntypechar(struct typestruct *type);
 struct typestruct *pointype(struct typestruct *type);
-struct typestruct *prefix(constr_pt constructor, uoffset_T size, struct typestruct *type);
+struct typestruct *prefix(constr_t constructor, uoffset_T size, struct typestruct *type);
 struct typestruct *promote(struct typestruct *type);
 struct typestruct *tounsigned(struct typestruct *type);
 void typeinit(void);

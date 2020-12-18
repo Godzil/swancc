@@ -8,16 +8,24 @@
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
 
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+
 #include <bcc.h>
 #include <bcc/input.h>
 #include <bcc/os.h>
 #include <bcc/sizes.h>
 #include <bcc/table.h>
+#include <bcc/output.h>
+#include <bcc/codefrag.h>
+#include <bcc/label.h>
 
-#undef extern
-#define extern
-
-#include "output.h"
+/* Global variables */
+bool_t ctext;        /* nonzero to intermix C source depends on zero init */
+char *outbufptr;     /* current spot in output buffer */
+char *outbuftop;     /* top of current output buffer */
+bool_t watchlc;      /* nonzero to print lc after every line depends on zero init */
 
 #ifdef XENIX_AS
 # define HEXSTARTCHAR '/'
@@ -31,10 +39,10 @@ static unsigned errcount;    /* # errors in compilation */
 /* depends on zero init */
 static char hexdigits[] = "0123456789ABCDEF";
 static char *outbuf;
-extern char *outbufend;        /* end of pair of output buffers */
+char *outbufend;        /* end of pair of output buffers */
 static char *outbufmid;
 static fd_t output;
-static fastin_t outstage;    /* depends on zero init */
+static int32_t outstage;    /* depends on zero init */
 
 static void errorsummary(void);
 
@@ -93,7 +101,7 @@ void error2error(char *message1, char *message2)
         char *old_outbufptr;
         char *old_outbuftop;
         fd_t old_output;
-        fastin_t old_outstage;
+        int32_t old_outstage;
         char smallbuf[81];    /* don't use heap - might be full or busy */
 
         old_outbuf = outbuf;
@@ -720,7 +728,7 @@ static void outvaldigs(uvalue_t num)
     outvaldigs(num / 0x10);
     num %= 0x10;
     }
-    outbyte(hexdigits[(fastin_t) num]);
+    outbyte(hexdigits[(int32_t) num]);
 }
 
 /* print signed value, hex format (like outshex except value_t is larger) */

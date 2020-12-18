@@ -10,10 +10,17 @@
 
 #include <bcc.h>
 #include <bcc/gencode.h>
-#include <bcc/reg.h<
+#include <bcc/reg.h>
 #include <bcc/scan.h>
 #include <bcc/sizes.h>
 #include <bcc/type.h>
+#include <bcc/longop.h>
+#include <bcc/floatop.h>
+#include <bcc/assign.h>
+#include <bcc/genloads.h>
+#include <bcc/codefrag.h>
+#include <bcc/output.h>
+#include <bcc/function.h>
 
 /*
  * softop(operation code, source leaf, target leaf)
@@ -24,7 +31,7 @@
  * they are not cast to ints or unsigneds before they get here
  * considerable effort goes into avoiding unnecessary pushes
  */
-void softop(op_pt op, struct symstruct *source, struct symstruct *target)
+void softop(op_t op, struct symstruct *source, struct symstruct *target)
 {
     store_t regpushed;
     store_t regmark;

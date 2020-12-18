@@ -11,12 +11,16 @@
 #include <bcc.h>
 #include <bcc/byteord.h>
 #include <bcc/gencode.h>
-#include <bcc/parse.h>
+#include <bcc/exptree.h>
+#include <bcc/parser.h>
 #include <bcc/reg.h>
 #include <bcc/sc.h>
 #include <bcc/scan.h>
 #include <bcc/sizes.h>
 #include <bcc/type.h>
+#include <bcc/output.h>
+#include <bcc/genloads.h>
+#include <bcc/table.h>
 
 #ifdef VERY_SMALL_MEMORY
 #define ETREESIZE 300
@@ -35,8 +39,8 @@ static void binconvert(struct nodestruct *nodeptr);
 static void castiright(struct nodestruct *nodeptr);
 static void etreefull(void);
 static void fixnode(struct nodestruct *nodeptr);
-static bool_pt isconst0(struct nodestruct *nodeptr);
-static bool_pt isnodecharconst(struct nodestruct *nodeptr);
+static bool_t isconst0(struct nodestruct *nodeptr);
+static bool_t isnodecharconst(struct nodestruct *nodeptr);
 static void needint(struct nodestruct *nodeptr);
 static void neednonstruct(struct nodestruct *nodeptr);
 static void needscalar(struct nodestruct *nodeptr);
@@ -177,7 +181,7 @@ static void fixnode(struct nodestruct *nodeptr)
     nodeptr->nodetype = errtype;
 }
 
-static bool_pt isconst0(struct nodestruct *nodeptr)
+static bool_t isconst0(struct nodestruct *nodeptr)
 {
     struct symstruct *symptr;
 
@@ -185,7 +189,7 @@ static bool_pt isconst0(struct nodestruct *nodeptr)
            symptr->type->scalar & ISCALAR;
 }
 
-static bool_pt isnodecharconst(struct nodestruct *nodeptr)
+static bool_t isnodecharconst(struct nodestruct *nodeptr)
 {
     struct symstruct *symptr;
 
@@ -249,7 +253,7 @@ static void needspv(struct nodestruct *nodeptr)
     }
 }
 
-struct nodestruct *node(op_pt t, struct nodestruct *p1, struct nodestruct *p2)
+struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
 {
 #if MAXREGS != 1
     weight_t rightweight;

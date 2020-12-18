@@ -10,6 +10,6 @@
 #ifndef _BCC_BCC_SOFTOP_H
 #define _BCC_BCC_SOFTOP_H
 
-void softop(op_pt op, struct symstruct *source, struct symstruct *target);
+void softop(op_t op, struct symstruct *source, struct symstruct *target);
 
 #endif /* _BCC_BCC_SOFTOP_H */

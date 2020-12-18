@@ -8,15 +8,20 @@
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
 
+#include <string.h>
+
 #include <bcc.h>
 #include <bcc/input.h>
 #include <bcc/os.h>
 #include <bcc/output.h>
-#include <bcc/parse.h>
+#include <bcc/parser.h>
 #include <bcc/sc.h>
 #include <bcc/scan.h>
 #include <bcc/table.h>
 #include <bcc/type.h>
+#include <bcc/preproc.h>
+#include <bcc/codefrag.h>
+#include <bcc/loadexp.h>
 
 #define MAX_IF        32
 #define MAX__LINE__    10    /* enough for 32-bit source unsigneds */
@@ -49,7 +54,7 @@ struct macroposition
 };
 
 static char dummyparam[] = {EOL, 0};
-static fastin_t iflevel;    /* depends on zero init */
+static int32_t iflevel;    /* depends on zero init */
 static struct ifstruct ifstate;
 /* elseflag depends on zero init */
 static struct ifstruct ifstack[MAX_IF];
@@ -60,15 +65,15 @@ static void asmcontrol(void);
 
 static void control(void);
 
-static void defineorundefinestring(char *str, bool_pt defineflag);
+static void defineorundefinestring(char *str, bool_t defineflag);
 
 static void elsecontrol(void);
 
 static void endif(void);
 
-static fastin_pt getparnames(void);
+static int32_t getparnames(void);
 
-static void ifcontrol(sym_pt ifcase);
+static void ifcontrol(sym_t ifcase);
 
 static void undef(void);
 
@@ -157,7 +162,7 @@ static void asmcontrol()
 
 /* blanksident() - return nonzero if at blanks followed by an identifier */
 
-bool_pt blanksident()
+bool_t blanksident()
 {
     blanks();
     return isident();
@@ -303,7 +308,7 @@ void define()
     struct symstruct **hashptr;
     struct symstruct *locmark = NULL; /* for -Wall */
     char *macstring;
-    fastin_t nparnames;
+    int32_t nparnames;
     char *oldstring;
     struct symstruct *symptr;
 
@@ -469,7 +474,7 @@ void define()
 }
 
 /* str: "name[=def]" or "name def" */
-static void defineorundefinestring(char *str, bool_pt defineflag)
+static void defineorundefinestring(char *str, bool_t defineflag)
 {
     char *fakeline;
     unsigned len;
@@ -844,9 +849,9 @@ void entermac()
 }
 
 /* getparnames() - get parameter names during macro definition, return count */
-static fastin_pt getparnames()
+static int32_t getparnames()
 {
-    fastin_t nparnames;
+    int32_t nparnames;
     struct symstruct *symptr;
 
     nparnames = 0;
@@ -883,7 +888,7 @@ static fastin_pt getparnames()
 }
 
 /* ifcontrol - process #if, #ifdef, #ifndef */
-static void ifcontrol(sym_pt ifcase)
+static void ifcontrol(sym_t ifcase)
 {
     bool_t iftrue;
     struct symstruct *symptr;

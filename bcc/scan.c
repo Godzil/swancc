@@ -8,7 +8,7 @@
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
 
-#define GCH1() do { if (SYMOFCHAR(ch = *++lineptr) == SPECIALCHAR) specialchar(); } while (0)
+#include <stdlib.h>
 
 #include <bcc.h>
 #include <bcc/input.h>
@@ -19,6 +19,20 @@
 #include <bcc/table.h>
 #include <bcc/type.h>
 #include <bcc/scan.h>
+#include <bcc/preproc.h>
+
+/* Global variables */
+op_t arg1op;        /* LISTOP, or ROOTLISTOP if arg1inreg */
+struct constant_t constant;            /* value of last constant scanned */
+char funcname[NAMESIZE];    /* name of current function for unique labels */
+char gs2name[2 + NAMESIZE]; /* 2 reserved for namespace keys */
+struct symstruct *gsymptr;  /* symbol ptr for last identifier */
+bool_t incppexpr;           /* nonzero while scanning cpp expression */
+sym_t sym;                  /* current symbol */
+sym_t symofchar[];          /* table to convert chars to their symbols */
+bool_t expect_statement;    /* If set #asm needs to clear the recursive pending operations. ie: if stmts. */
+
+#define GCH1() do { if (SYMOFCHAR(ch = *++lineptr) == SPECIALCHAR) specialchar(); } while (0)
 
 sym_t symofchar[256] = {
     BADCHAR,
@@ -527,7 +541,7 @@ static void getident()
 }
 
 /* return nonzero if at an identifier */
-bool_pt isident()
+bool_t isident()
 {
     if (SYMOFCHAR(ch) != IDENT)
     {
@@ -539,11 +553,11 @@ bool_pt isident()
 
 static void intconst()
 {
-    fastin_t base;
-    fastin_t digit;
+    int32_t base;
+    int32_t digit;
     char *digptr;
-    fastin_t lcount;
-    fastin_t ucount;
+    int32_t lcount;
+    int32_t ucount;
     bool_t dflag;
 
     ppnumber();
@@ -1079,7 +1093,7 @@ static void newstringorcharconst()
 {
     char *endinptr;
     int escvalue;
-    fastin_t maxdigits;
+    int32_t maxdigits;
     char *inptr;
     char *outptr;
 

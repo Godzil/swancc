@@ -10,8 +10,8 @@
 #ifndef _BCC_BCC_LONGOP_H
 #define _BCC_BCC_LONGOP_H
 
-void longop(op_pt op, struct symstruct *source, struct symstruct *target);
-void long1op(op_pt op, struct symstruct *target);
+void longop(op_t op, struct symstruct *source, struct symstruct *target);
+void long1op(op_t op, struct symstruct *target);
 void outlongendian(void);
 
 #endif /* _BCC_BCC_LONGOP_H */

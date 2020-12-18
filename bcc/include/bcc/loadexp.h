@@ -12,6 +12,6 @@
 
 value_t constexpression(void);
 void initexpression(struct typestruct *type);
-struct typestruct *loadexpression(store_pt targreg, struct typestruct *targtype);
+struct typestruct *loadexpression(store_t targreg, struct typestruct *targtype);
 
 #endif /* _BCC_BCC_LOADEXP_H */

@@ -9,13 +9,16 @@
  */
 
 #include <bcc.h>
-
-#ifdef DEBUG
+#include <bcc/debug.h>
 #include <bcc/gencode.h>
 #include <bcc/reg.h>
 #include <bcc/sc.h>
 #include <bcc/scan.h>
 #include <bcc/type.h>
+#include <bcc/output.h>
+#include <bcc/genloads.h>
+#include <bcc/label.h>
+#include <bcc/codefrag.h>
 
 static char *opname[LASTOP - FIRSTOP + 1] =    /* operator names */
 {                /* order must agree with op.h */
@@ -48,7 +51,7 @@ static char *opname[LASTOP - FIRSTOP + 1] =    /* operator names */
     "ptraddab", "ptradd", "ptrsub",
 };
 
-static void outindchars(int byte, indn_pt count);
+static void outindchars(int byte, indn_t count);
 
 void dbitem(struct symstruct *item)
 {
@@ -160,8 +163,8 @@ void dbtype(struct typestruct *type)
     }
 }
 
-void debug(exp)        /* sub-nodes must be leaves */
-struct nodestruct *exp;
+/* sub-nodes must be leaves */
+void debug(struct nodestruct *exp)
 {
     if (!debugon)
     return;
@@ -193,12 +196,8 @@ void debugswap()
     outnstr("* swapping");
 }
 
-static void outindchars(byte, count)
-int byte;
-indn_pt count;
+static void outindchars(int byte, indn_t count)
 {
     while (count--)
     outbyte(byte);
 }
-
-#endif /* DEBUG */

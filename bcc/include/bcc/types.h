@@ -11,19 +11,20 @@
 #ifndef _BCC_BCC_TYPES_H
 #define _BCC_BCC_TYPES_H
 
+#include <stdint.h>
+
 /*
  * source types big enough to handle target quantities
  * these have to be match the source compiler and target machine
  * this is impossible if the source long type is too small
  */
 
-typedef unsigned char char_t;    /* target char */
-typedef long value_t;            /* target ints, longs and offsets */
-typedef unsigned long uvalue_t;  /* target unsigned ints, longs and offsets */
+typedef int32_t value_t;            /* target ints, longs and offsets */
+typedef uint32_t uvalue_t;  /* target unsigned ints, longs and offsets */
 
 #ifdef I8088
-typedef long offset_T;           /* target machine offset */
-typedef unsigned long uoffset_T; /* target unsigned machine offset */
+typedef int32_t offset_T;           /* target machine offset */
+typedef uint32_t uoffset_T; /* target unsigned machine offset */
 #define outuvalue outhex
 #define outvalue outshex
 #endif
@@ -39,14 +40,13 @@ typedef unsigned uoffset_T;
  */
 
 #ifdef I8088
-typedef unsigned store_pt;    /* promoted store_t */
-typedef unsigned store_t;    /* storage class flags */
+typedef uint32_t store_t;    /* storage class flags */
 #endif
 #ifdef MC6809
 #ifdef __STDC__
-typedef int store_pt;
+typedef int store_t;
 # else
-typedef unsigned store_pt;
+typedef unsigned store_t;
 # endif
 typedef unsigned char store_t;
 #endif
@@ -56,61 +56,24 @@ typedef unsigned char store_t;
  * types for library routines
  */
 
-typedef int fd_t;        /* file descriptor */
-
-/*
- * basic scalar types - may be tuned to suit machine
- */
-
-typedef int fastin_pt;        /* promoted fastin_t
-                               * always an int - use to show that the
-                               * value may be accessed as a fastin_t */
-typedef char fastin_t;        /* fast int - a small integer value
-                               * on some machines, chars can be accessed
-                               * more efficiently than ints for arithmetic
-                               * such as comparing and masking which
-                               * does not requiring promotion
-                               * change to int if chars are inefficient
-                               * or if char has < 8 bits */
-typedef int smalin_pt;        /* promoted smalin_t */
-typedef char smalin_t;        /* small int - a small integer value
-                               * on most machines, chars are stored in
-                               * less space than any other type
-                               * change to fastin_t if this is not true
-                               * or if char has < 8 bits
-                               * or if space is not a limiting factor */
-#ifdef __STDC__
-typedef int smalu_pt;
-#else
-typedef unsigned smalu_pt;
-#endif
-typedef unsigned char smalu_t;
-
-
+typedef int fd_t;             /* file descriptor */
 /*
  * derived scalar types
  * the types containing bit flags fit in an 8 bit smalin_t
  */
 
-typedef fastin_pt bool_pt;  /* promoted bool_t */
-typedef fastin_t bool_t;    /* boolean: TRUE if nonzero */
-typedef fastin_pt ccode_pt; /* promoted ccode_t */
-typedef fastin_t ccode_t;   /* condition code code */
-typedef smalu_pt constr_pt; /* promoted constr_t */
-typedef smalu_t constr_t;   /* type constructor flags */
-typedef smalu_pt indn_pt;   /* promoted indn_t */
-typedef smalu_t indn_t;     /* storage indirection count */
-typedef unsigned label_no;  /* label number */
-typedef smalu_t maclev_t;   /* macro expansion level */
-typedef smalin_pt op_pt;    /* promoted op_t */
-typedef smalin_t op_t;      /* operator code */
-typedef smalu_t sc_t;       /* storage class flags */
-typedef smalu_pt scalar_pt; /* promoted scalar_t */
-typedef smalu_t scalar_t;   /* type scalar flags */
-typedef smalu_t scopelev_t; /* scope level */
-typedef fastin_pt sym_pt;   /* promoted sym_t */
-typedef fastin_t sym_t;     /* symbol code from scanner */
-typedef smalu_t weight_t;   /* expression tree node weight */
+typedef uint32_t bool_t;     /* boolean: TRUE if nonzero */
+typedef int32_t  ccode_t;    /* condition code code */
+typedef uint32_t constr_t;   /* type constructor flags */
+typedef uint32_t indn_t;     /* storage indirection count */
+typedef uint32_t label_no;   /* label number */
+typedef uint32_t maclev_t;   /* macro expansion level */
+typedef int32_t  op_t;       /* operator code */
+typedef uint32_t sc_t;       /* storage class flags */
+typedef uint32_t scalar_t;   /* type scalar flags */
+typedef uint32_t scopelev_t; /* scope level */
+typedef int32_t  sym_t;      /* symbol code from scanner */
+typedef uint32_t weight_t;   /* expression tree node weight */
 
 
 /*
@@ -125,7 +88,7 @@ struct nodestruct
 {
     op_t tag;
     weight_t weight;
-    smalu_t flags;
+    uint32_t flags;
     struct typestruct *nodetype;
     union nodeunion
     {
@@ -151,7 +114,7 @@ struct symstruct
         offset_T offi;     /* offset for register or global storage */
         label_no offlabel; /* label number for strings */
         char *offp;        /* to string for macro definitions */
-        sym_pt offsym;     /* symbol code for keywords */
+        sym_t offsym;      /* symbol code for keywords */
         value_t offv;      /* value for integral constants */
     } offset;
     union

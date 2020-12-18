@@ -9,11 +9,17 @@
  */
 
 #include <bcc.h>
+#include <bcc/longop.h>
 #include <bcc/byteord.h>
 #include <bcc/gencode.h>
 #include <bcc/reg.h>
 #include <bcc/scan.h>
 #include <bcc/type.h>
+#include <bcc/genloads.h>
+#include <bcc/preserve.h>
+#include <bcc/codefrag.h>
+#include <bcc/function.h>
+#include <bcc/output.h>
 
 /*
  * longop(operation code, source leaf, target leaf)
@@ -23,9 +29,9 @@
  * hence they must be direct (in an index reg paired with DREG),
  * or singly indirect (local, global, or from an index reg)
  */
-void longop(op_pt op, struct symstruct *source, struct symstruct *target)
+void longop(op_t op, struct symstruct *source, struct symstruct *target)
 {
-    store_pt reglist;
+    store_t reglist;
     store_t regmark;
     bool_t shiftflag;
     scalar_t scalar;
@@ -145,7 +151,7 @@ void longop(op_pt op, struct symstruct *source, struct symstruct *target)
  * hence it must be direct (in an index reg paired with DREG),
  * or singly indirect (local, global, or from an index reg)
  */
-void long1op(op_pt op, struct symstruct *target)
+void long1op(op_t op, struct symstruct *target)
 {
     pushlist(reguse & OPREG);
     load(target, OPREG);

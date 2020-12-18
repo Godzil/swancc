@@ -11,6 +11,12 @@
 #define ARBITRARY_BACKSLASH_NEWLINES_NOT
 #define INSERT_BACKSLASH_NEWLINES_NOT
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+
 #include <bcc.h>
 #include <bcc/gencode.h>
 #include <bcc/output.h>
@@ -19,8 +25,22 @@
 #include <bcc/scan.h>
 #include <bcc/table.h>
 #include <bcc/input.h>
+#include <bcc/preproc.h>
+#include <bcc/codefrag.h>
 
 #define INBUFSIZE 2048
+
+/* Global variables */
+bool_t asmmode;           /* nonzero when processing assembler code depends on zero init */
+char ch;                  /* current char */
+bool_t cppmode;           /* nonzero if acting as cpp not as compiler */
+bool_t eofile;            /* nonzero after end of main file reached depends on zero init */
+struct fcbstruct input;   /* current input file control block input.lineptr is not kept up to date */
+char *lineptr;            /* ptr to current char */
+maclev_t maclevel;        /* nest level of #defined identifiers depends on zero init */
+bool_t orig_cppmode;      /* same as cppmode ex. not varied while in # */
+bool_t virtual_nl;        /* For -C and asm, don't print first nl */
+
 
 struct fbufstruct        /* file buffer structure */
 {
@@ -54,7 +74,7 @@ static struct inclist inclast =
 #endif
     NULL,
 };
-static fastin_t inclevel;    /* nest level of include files */
+static int32_t inclevel;    /* nest level of include files */
                 /* depends on zero init */
 static struct fbufstruct *inputbuf;    /* current input file buffer */
                     /* its fcb only to date in includes */

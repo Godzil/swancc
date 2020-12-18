@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include <bcc.h>
+#include <bcc/declare.h>
 #include <bcc/align.h>
 #include <bcc/byteord.h>
 #include <bcc/gencode.h>
@@ -23,7 +24,12 @@
 #include <bcc/table.h>
 #include <bcc/type.h>
 
-#include <bcc/parse.h>
+#include <bcc/parser.h>
+#include <bcc/output.h>
+#include <bcc/loadexp.h>
+#include <bcc/codefrag.h>
+#include <bcc/state.h>
+#include <bcc/label.h>
 
 static bool_t argsallowed;    /* nonzero to allow args in declarator */
 static sym_t gvarsc;        /* sc flags of last identifier declared */
@@ -40,7 +46,7 @@ static void declarg(void);
 static struct typestruct *declenum(void);
 static void declfunc(void);
 static void declselt(struct typestruct *structype, offset_T *psoffset, struct typelist **ptypelist);
-static bool_pt declspec(void);
+static bool_t declspec(void);
 static struct typestruct *declsu(void);
 static void idecllist(void);
 static void initarray(struct typestruct *type);
@@ -50,7 +56,7 @@ static void lbrace(void);
 static void multidecl(char *sname);
 static void need(int charneeded);
 static void rdeclarator(void);
-static bool_pt regdecl(void);
+static bool_t regdecl(void);
 
 static struct typestruct *chainprefix(struct typestruct *pretype, struct typestruct *sufftype)
 {
@@ -496,7 +502,7 @@ static void declselt(struct typestruct *structype, offset_T *psoffset, struct ty
     *psoffset = offset;
 }
 
-static bool_pt declspec()
+static bool_t declspec()
 {
     unsigned nsc;
     unsigned ntype;
@@ -885,7 +891,7 @@ static void idecllist()
             }
             if (gvarsc == NULLDECL)
             {
-                gvarsymptr->flags &= ~externAL;
+                gvarsymptr->flags &= ~EXTERNAL;
             }
         }
         else if (level == GLBLEVEL || gvartype->constructor == FUNCTION || gvarsc == EXTERNDECL)
@@ -897,7 +903,7 @@ static void idecllist()
 #endif
             if (gvarsc == EXTERNDECL)
             {
-                gvarsymptr->flags |= externAL;
+                gvarsymptr->flags |= EXTERNAL;
             }
         }
         else
@@ -911,7 +917,7 @@ static void idecllist()
         }
         if (gvarsc == STATICDECL)
         {
-            gvarsymptr->flags &= ~externAL;
+            gvarsymptr->flags &= ~EXTERNAL;
             gvarsymptr->flags |= STATIC;
             if (gvarsymptr->level != GLBLEVEL)
             {
@@ -1255,7 +1261,7 @@ static void rdeclarator()
     declaf();
 }
 
-static bool_pt regdecl()
+static bool_t regdecl()
 {
     store_t regavail;
 

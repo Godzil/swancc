@@ -7,6 +7,8 @@
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
+#include <string.h>
+
 #include <bcc.h>
 #include <bcc/byteord.h>
 #include <bcc/gencode.h>
@@ -14,11 +16,17 @@
 #include <bcc/sc.h>
 #include <bcc/sizes.h>
 #include <bcc/type.h>
+#include <bcc/assign.h>
+#include <bcc/genloads.h>
+#include <bcc/codefrag.h>
+#include <bcc/table.h>
+#include <bcc/function.h>
+#include <bcc/output.h>
+#include <bcc/preserve.h>
+#include <bcc/floatop.h>
 
 static void blockmove(struct symstruct *source, struct symstruct *target);
-
 static void call3(char *funcname, struct symstruct *target, struct symstruct *source, uoffset_T size);
-
 static void fconvert(struct symstruct *source, struct typestruct *type);
 
 /* block move assumes itypesize == accregsize && BREG size == 1 */
@@ -73,7 +81,7 @@ static void blockmove(struct symstruct *source, struct symstruct *target)
 
 static void call3(char *funcname, struct symstruct *target, struct symstruct *source, uoffset_T size)
 {
-    store_pt regpushed;
+    store_t regpushed;
     offset_T spmark;
     struct symstruct *length;
 
@@ -140,7 +148,7 @@ void cast(struct typestruct *type, struct symstruct *target)
     uoffset_T newsize;
     scalar_t oldscalar;
     uoffset_T oldsize;
-    store_pt targreg;
+    store_t targreg;
 
     if (type->constructor & (ARRAY | FUNCTION) || (type->constructor & STRUCTU && target->type != type))
     {
@@ -277,8 +285,8 @@ void cast(struct typestruct *type, struct symstruct *target)
 
     void assign(struct symstruct *source, struct symstruct *target)
 {
-    store_pt regpushed;
-    store_pt sourcereg;
+    store_t regpushed;
+    store_t sourcereg;
     scalar_t tscalar;
 
     if (target->type->constructor & (ARRAY | FUNCTION) || target->flags == TEMP ||

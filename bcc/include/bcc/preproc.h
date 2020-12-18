@@ -11,7 +11,7 @@
 #define _BCC_BCC_PREPROC_H
 
 void blanks(void);
-bool_pt blanksident(void);
+bool_t blanksident(void);
 void checknotinif(void);
 void define(void);
 void definestring(char *str);

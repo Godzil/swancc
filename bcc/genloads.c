@@ -9,6 +9,7 @@
  */
 
 #include <bcc.h>
+#include <bcc/genloads.h>
 #include <bcc/byteord.h>
 #include <bcc/condcode.h>
 #include <bcc/gencode.h>
@@ -17,14 +18,24 @@
 #include <bcc/scan.h>
 #include <bcc/sizes.h>
 #include <bcc/type.h>
+#include <bcc/codefrag.h>
+#include <bcc/output.h>
+#include <bcc/label.h>
+#include <bcc/table.h>
+#include <bcc/preserve.h>
+#include <bcc/function.h>
+#include <bcc/softop.h>
+#include <bcc/hardop.h>
+#include <bcc/state.h>
+#include <bcc/floatop.h>
 
 static void badaddress(void);
 static void blockpush(struct symstruct *source);
-static void loadadr(struct symstruct *source, store_pt targreg);
-static void loadlongindirect(struct symstruct *source, store_pt targreg);
+static void loadadr(struct symstruct *source, store_t targreg);
+static void loadlongindirect(struct symstruct *source, store_t targreg);
 static void outnamoffset(struct symstruct *adr);
 static void outnnadr(struct symstruct *adr);
-static fastin_pt pushpull(store_pt reglist, bool_pt pushflag);
+static int32_t pushpull(store_t reglist, bool_t pushflag);
 
 void addoffset(struct symstruct *source)
 {
@@ -125,7 +136,7 @@ void exchange(struct symstruct *source, struct symstruct *target)
  * getindexreg()
  * returns the "best" available index register
  */
-store_pt getindexreg()
+store_t getindexreg()
 {
     if (!(reguse & INDREG0))
     {
@@ -172,9 +183,9 @@ void indexadr(struct symstruct *source, struct symstruct *target)
     bool_t canABX;
 #endif
     uoffset_T size;
-    store_pt sourcereg;
+    store_t sourcereg;
     struct typestruct *targtype;
-    store_pt targreg;
+    store_t targreg;
 
     if (!(target->type->constructor & (ARRAY | POINTER)))
     {
@@ -348,7 +359,7 @@ void indirec(struct symstruct *source)
  * if the type is long or float, DREG is paired with the target register
  * the result has no offset
  */
-void load(struct symstruct *source, store_pt targreg)
+void load(struct symstruct *source, store_t targreg)
 {
     if (source->type->scalar & DLONG)
     {
@@ -480,7 +491,7 @@ void load(struct symstruct *source, store_pt targreg)
     }
 }
 
-static void loadadr(struct symstruct *source, store_pt targreg)
+static void loadadr(struct symstruct *source, store_t targreg)
 {
     if ((store_t)targreg & ALLDATREGS)
     {
@@ -563,7 +574,7 @@ void loadany(struct symstruct *source)
     }
 }
 
-static void loadlongindirect(struct symstruct *source, store_pt targreg)
+static void loadlongindirect(struct symstruct *source, store_t targreg)
 {
     sc_t flags;
     offset_T offset;
@@ -588,7 +599,7 @@ static void loadlongindirect(struct symstruct *source, store_pt targreg)
     source->type = type;
 }
 
-void loadreg(struct symstruct *source, store_pt targreg)
+void loadreg(struct symstruct *source, store_t targreg)
 {
     offset_T longhigh;
     offset_T longlow;
@@ -669,7 +680,7 @@ void loadreg(struct symstruct *source, store_pt targreg)
 
 void makelessindirect(struct symstruct *source)
 {
-    store_pt lreg;
+    store_t lreg;
 
     if (!((store_t)(lreg = source->storage) & ~reguse & allindregs))
     {
@@ -691,7 +702,7 @@ void makelessindirect(struct symstruct *source)
 #endif
 }
 
-void movereg(struct symstruct *source, store_pt targreg)
+void movereg(struct symstruct *source, store_t targreg)
 {
     if ((store_t)targreg & ALLDATREGS && source->type->scalar & CHAR)
     {
@@ -743,7 +754,7 @@ void outadr(struct symstruct *adr)
     outnl();
 }
 
-void outcregname(store_pt reg)
+void outcregname(store_t reg)
 {
     outcomma();
     outregname(reg);
@@ -777,7 +788,7 @@ static void outnamoffset(struct symstruct *adr)
 }
 
 /* print comma, then register name, then newline */
-void outncregname(store_pt reg)
+void outncregname(store_t reg)
 {
     outcomma();
     outnregname(reg);
@@ -1036,14 +1047,14 @@ static void outnnadr(struct symstruct *adr)
 }
 
 /* print register name, then newline */
-void outnregname(store_pt reg)
+void outnregname(store_t reg)
 {
     outregname(reg);
     outnl();
 }
 
 /* print register name */
-void outregname(store_pt reg)
+void outregname(store_t reg)
 {
     switch ((store_t)reg)
     {
@@ -1116,7 +1127,7 @@ void outregname(store_pt reg)
 #ifdef I8088
 
 /* print register name for short type */
-void outshortregname(store_pt reg)
+void outshortregname(store_t reg)
 {
     switch ((store_t)reg)
     {
@@ -1162,7 +1173,7 @@ void pointat(struct symstruct *target)
     target->type = target->type->nexttype;
 }
 
-void poplist(store_pt reglist)
+void poplist(store_t reglist)
 {
     if (reglist)
     {
@@ -1264,7 +1275,7 @@ void push(struct symstruct *source)
     onstack(source);
 }
 
-void pushlist(store_pt reglist)
+void pushlist(store_t reglist)
 {
     if ((store_t)reglist)
     {
@@ -1272,18 +1283,18 @@ void pushlist(store_pt reglist)
     }
 }
 
-static fastin_pt pushpull(store_pt reglist, bool_pt pushflag)
+static int32_t pushpull(store_t reglist, bool_t pushflag)
 {
-    store_pt lastregbit;
-    void (*ppfunc)(void));
+    store_t lastregbit;
+    void (*ppfunc)(void);
     char *regptr;
 
 #ifdef MC6809
     int separator;        /* promoted char for output */
 
 #endif
-    fastin_t bytespushed;
-    store_pt regbit;
+    int32_t bytespushed;
+    store_t regbit;
 
     if ((bool_t)pushflag)
     {
@@ -1372,7 +1383,7 @@ static fastin_pt pushpull(store_pt reglist, bool_pt pushflag)
     return bytespushed;
 }
 
-void pushreg(store_pt reg)
+void pushreg(store_t reg)
 {
     outpshs();
     outtab();
@@ -1380,9 +1391,9 @@ void pushreg(store_pt reg)
     sp -= pshregsize;
 }
 
-void storereg(store_pt sourcereg, struct symstruct *target)
+void storereg(store_t sourcereg, struct symstruct *target)
 {
-    store_pt targreg;
+    store_t targreg;
 
     if (target->indcount == 0)
     {
@@ -1456,7 +1467,7 @@ void struc(struct symstruct *source, struct symstruct *target)
     }
 }
 
-void transfer(struct symstruct *source, store_pt targreg)
+void transfer(struct symstruct *source, store_t targreg)
 {
     regtransfer(source->storage, targreg);
     source->storage = targreg;

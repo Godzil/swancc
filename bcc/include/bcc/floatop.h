@@ -10,9 +10,9 @@
 #ifndef _BCC_BCC_FLOATOP_H
 #define _BCC_BCC_FLOATOP_H
 
-bool_pt f_indirect(struct symstruct *target);
-void float1op(op_pt op, struct symstruct *source);
-void floatop(op_pt op, struct symstruct *source, struct symstruct *target);
+bool_t f_indirect(struct symstruct *target);
+void float1op(op_t op, struct symstruct *source);
+void floatop(op_t op, struct symstruct *source, struct symstruct *target);
 void fpush(struct symstruct *source);
 void justpushed(struct symstruct *target);
 

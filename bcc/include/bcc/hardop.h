@@ -11,10 +11,10 @@
 #define _BCC_BCC_HARDOP_H
 
 void add(struct symstruct *source, struct symstruct *target);
-void incdec(op_pt op, struct symstruct *source);
+void incdec(op_t op, struct symstruct *source);
 void neg(struct symstruct *target);
 void not (struct symstruct *target);
-void op1(op_pt op, struct symstruct *source, struct symstruct *target);
+void op1(op_t op, struct symstruct *source, struct symstruct *target);
 void ptrsub(struct symstruct *source, struct symstruct *target);
 void sub(struct symstruct *source, struct symstruct *target);
 

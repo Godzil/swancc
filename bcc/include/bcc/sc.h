@@ -14,7 +14,7 @@
 #define DIRECTPAGE  0x01    /* modifier on global to show in dpseg */
 #endif
 
-#define externAL    0x02    /* external */
+#define EXTERNAL    0x02    /* external */
 #define STATIC      0x04
 
 /* symbols with flags above the 1st initialised value are not to be dumped */

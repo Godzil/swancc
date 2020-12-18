@@ -14,13 +14,19 @@
 #include <bcc/sc.h>
 #include <bcc/scan.h>
 #include <bcc/type.h>
+#include <bcc/table.h>
+#include <bcc/genloads.h>
+#include <bcc/codefrag.h>
+#include <bcc/function.h>
+#include <bcc/floatop.h>
+#include <bcc/output.h>
 
 /*
  * f_indirect(target leaf)
  * make the float or double target indirect if it is not already
  * return nonzero iff the result is a temp double on the base of the stack
  */
-bool_pt f_indirect(struct symstruct *target)
+bool_t f_indirect(struct symstruct *target)
 {
     if (target->indcount == 0)
     {
@@ -78,7 +84,7 @@ bool_pt f_indirect(struct symstruct *target)
  * handles all flop unary operations except inc/dec
  * result is double on stack (or in condition codes for EQOP)
  */
-void float1op(op_pt op, struct symstruct *source)
+void float1op(op_t op, struct symstruct *source)
 {
     saveopreg();
     pointat(source);
@@ -103,7 +109,7 @@ void float1op(op_pt op, struct symstruct *source)
  * handles all flop binary operations
  * result is double on stack (or in condition codes for EQOP)
  */
-void floatop(op_pt op, struct symstruct *source, struct symstruct *target)
+void floatop(op_t op, struct symstruct *source, struct symstruct *target)
 {
     store_t regmark;
     bool_t sflag;

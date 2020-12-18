@@ -17,6 +17,8 @@
 #include <bcc/scan.h>
 #include <bcc/sizes.h>
 #include <bcc/type.h>
+#include <bcc/codefrag.h>
+#include <bcc/table.h>
 
 #ifdef I8088
 #define outlbranch() outop3str( "b")
@@ -67,15 +69,15 @@ static label_no lastlab;    /* bss init to 0 */
 static offset_T lc;        /* bss init to 0 */
 
 static struct labdatstruct vislab[MAXVISLAB];    /* bss, all labnum's init 0 */
-static smalin_t nextvislab;    /* bss init to NULL */
+static int32_t nextvislab;    /* bss init to NULL */
 static struct symstruct *namedfirst;    /* bss init to NULL */
 static struct symstruct *namedlast;    /* bss init to NULL */
 
-static void addlabel(ccode_pt cond, label_no label, char *patch);
+static void addlabel(ccode_t cond, label_no label, char *patch);
 static struct labdatstruct *findlabel(label_no label);
 
 /* add label to circular list */
-static void addlabel(ccode_pt cond, label_no label, char *patch)
+static void addlabel(ccode_t cond, label_no label, char *patch)
 {
     struct labdatstruct *labptr;
 
@@ -247,7 +249,7 @@ void deflabel(label_no label)
             } while (labptr != labmid);
         }
     }
-    addlabel((ccode_pt)0, label, (char *)NULL);
+    addlabel((ccode_t)0, label, (char *)NULL);
 }
 
 static struct labdatstruct *findlabel(label_no label)
@@ -288,7 +290,7 @@ void jump(label_no label)
 }
 
 /* long branch on condition to label */
-void lbranch(ccode_pt cond, label_no label)
+void lbranch(ccode_t cond, label_no label)
 {
 #ifdef I8088
     char *cnameptr;
@@ -380,7 +382,7 @@ struct symstruct *namedlabel()
 
 /* print condition code name */
 
-void outcond(ccode_pt cond)
+void outcond(ccode_t cond)
 {
     char *cnameptr;
 
@@ -412,7 +414,7 @@ void outnlabel(label_no label)
 
 /* short branch on condition to label */
 
-void sbranch(ccode_pt cond, label_no label)
+void sbranch(ccode_t cond, label_no label)
 {
 #ifdef I8088
     char *cnameptr;

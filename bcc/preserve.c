@@ -9,13 +9,17 @@
  */
 
 #include <bcc.h>
+#include <bcc/preserve.h>
 #include <bcc/gencode.h>
 #include <bcc/reg.h>
 #include <bcc/type.h>
+#include <bcc/codefrag.h>
+#include <bcc/state.h>
+#include <bcc/output.h>
+#include <bcc/genloads.h>
 
 /* change stack ptr without changing condition codes */
-
-void changesp(offset_T newsp, bool_pt absflag)
+void changesp(offset_T newsp, bool_t absflag)
 {
     if (newsp != sp || ((bool_t)absflag && switchnow != NULL))
     {
@@ -110,7 +114,6 @@ void modstk(offset_T newsp)
 }
 
 /* preserve target without changing source */
-
 void pres2(struct symstruct *source, struct symstruct *target)
 {
     if (target->storage & allregs)
@@ -150,9 +153,9 @@ void preserve(struct symstruct *source)
 }
 
 /* preserve lvalue target without changing source or target */
-store_pt preslval(struct symstruct *source, struct symstruct *target)
+store_t preslval(struct symstruct *source, struct symstruct *target)
 {
-    store_pt regpushed;
+    store_t regpushed;
 
     if (target->indcount == 0)
     {
@@ -172,26 +175,26 @@ store_pt preslval(struct symstruct *source, struct symstruct *target)
     return regpushed;
 }
 
-void recovlist(store_pt reglist)
+void recovlist(store_t reglist)
 {
     poplist(reglist);
     reguse |= (store_t)reglist;
 }
 
 #ifdef I8088
-static smalin_t regoffset[] = {0, 0, 0, 1, 2, 3, 0, 0, 0, 4, 5};
+static int32_t regoffset[] = {0, 0, 0, 1, 2, 3, 0, 0, 0, 4, 5};
 /* CONSTANT, BREG, ax = DREG, bx = INDREG0, si = INDREG1, di = INDREG2 */
 /* LOCAL, GLOBAL, STACKREG, cx = DATREG1, dx = DATREG2 */
 #endif
 #ifdef MC6809
-static smalin_t regoffset[] = {0, 0, 0, 1, 3, 2};
+static int32_t regoffset[] = {0, 0, 0, 1, 3, 2};
  /* CONSTANT, BREG, DREG, XREG = INDREG0, UREG = INDREG1, YREG = INDREG2 */
 #endif
 
-void savereturn(store_pt savelist, offset_T saveoffset)
+void savereturn(store_t savelist, offset_T saveoffset)
 {
     store_t reg;
-    smalin_t *regoffptr;
+    int32_t *regoffptr;
     offset_T spoffset;
 
     if (savelist == 0)

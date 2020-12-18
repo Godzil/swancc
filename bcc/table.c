@@ -15,18 +15,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 #include <bcc.h>
 #include <bcc/align.h>
 #include <bcc/gencode.h>
 #include <bcc/os.h>
-#include <bcc/parse.h>
+#include <bcc/parser.h>
 #include <bcc/reg.h>
 #include <bcc/sc.h>
 #include <bcc/scan.h>
 #include <bcc/sizes.h>
 #include <bcc/type.h>
 #include <bcc/table.h>
+#include <bcc/output.h>
+#include <bcc/codefrag.h>
+#include <bcc/label.h>
+
+/* Global variables */
+char *charptr;              /* next free spot in catchall table */
+char *chartop;              /* spot after last in table */
+char *char1top;             /* last character spot in table */
+char *char3top;             /* third last character spot in table */
+struct symstruct *exprptr;  /* next entry in expression symbol table */
+struct symstruct *locptr;   /* next entry in local symbol table */
+struct symstruct locsyms[]; /* local symbol table */
 
 #define GOLDEN 157        /* GOLDEN/HASHTABSIZE approx golden ratio */
 #define HASHTABSIZE 256
@@ -66,7 +79,7 @@ struct typedatastruct
     char *tdname;
     bool_t tdkeyscalar;
     scalar_t tdscalar;
-    smalin_t tdsize;
+    int32_t tdsize;
     struct typestruct **tdtypeptr;
 };
 
@@ -151,7 +164,7 @@ static struct typedatastruct scaltypes[NSCALTYPES] = {
 #endif
 };
 
-static struct symstruct *addkeyword(char *name, sym_pt code);
+static struct symstruct *addkeyword(char *name, sym_t code);
 static void heapcorrupterror(void);
 
 struct symstruct *addglb(char *name, struct typestruct *type)
@@ -188,7 +201,7 @@ struct symstruct *addglb(char *name, struct typestruct *type)
     return symptr;
 }
 
-static struct symstruct *addkeywordchar *name, sym_pt code)
+static  struct symstruct *addkeyword(char *name, sym_t code)
 {
     struct symstruct *symptr;
 
@@ -526,7 +539,7 @@ static void heapcorrupterror()
 
 /* hold string for dumping at end, to avoid mixing it with other data */
 
-label_no holdstr(char *sptr; char *stop)
+label_no holdstr(char *sptr, char *stop)
 {
     struct string *stringp;
 
@@ -699,7 +712,7 @@ void swapsym(struct symstruct *sym1, struct symstruct *sym2)
     *sym2 = swaptemp;
 }
 
-void xdcsyminit()
+void syminit()
 {
     struct keywordstruct *kwptr;
     struct typedatastruct *tdptr;

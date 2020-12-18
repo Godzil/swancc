@@ -9,15 +9,23 @@
  */
 
 #include <bcc.h>
+#include <bcc/loadexp.h>
 #include <bcc/byteord.h>
 #include <bcc/gencode.h>
-#include <bcc/parse.h>
+#include <bcc/parser.h>
 #include <bcc/reg.h>
 #include <bcc/sc.h>
 #include <bcc/scan.h>
 #include <bcc/sizes.h>
 #include <bcc/table.h>
 #include <bcc/type.h>
+#include <bcc/express.h>
+#include <bcc/output.h>
+#include <bcc/function.h>
+#include <bcc/exptree.h>
+#include <bcc/codefrag.h>
+#include <bcc/label.h>
+#include <bcc/genloads.h>
 
 value_t constexpression()
 {
@@ -165,7 +173,7 @@ void initexpression(struct typestruct *type)
     exprptr = exprmark;
 }
 
-struct typestruct *loadexpression(store_pt targreg, struct typestruct *targtype)
+struct typestruct *loadexpression(store_t targreg, struct typestruct *targtype)
 {
     struct nodestruct *etmark;
     struct nodestruct *exp;

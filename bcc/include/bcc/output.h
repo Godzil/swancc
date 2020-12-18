@@ -23,39 +23,43 @@ extern bool_t watchlc;      /* nonzero to print lc after every line depends on z
 
 /* Prototypes */
 void bugerror(char *message);
-void closeout(void);
 void error(char *message);
-void error2error(char *message1, char *message2);
 void fatalerror(char *message);
-void finishup(void);
-void flushout(void);
 void limiterror(char *message);
-void initout(void);
+
+/* TODO: Most of these function need to be removed and replace by standard IO */
 void openout(char *oname);
-void outbyte(int ch);
-void outcomma(void);
+
+void closeout(void) __attribute__ ((deprecated));
+void error2error(char *message1, char *message2);
+void finishup(void) __attribute__ ((deprecated));
+void flushout(void) __attribute__ ((deprecated));
+void initout(void) __attribute__ ((deprecated));
+void outbyte(int ch) __attribute__ ((deprecated));
+void outcomma(void) __attribute__ ((deprecated));
 void outcpplinenumber(unsigned nr, char *fname, char *str);
-void outhex(uoffset_T num);
-void outhexdigs(uoffset_T num);
-void outline(char *s);
-void outminus(void);
-void outnl(void);
-void outnbyte(int byte);
-void outnhex(uoffset_T num);
-void outnop1str(char *s);
-void outnop2str(char *s);
-void outnstr(char *s);
-void outop0str(char *s);
-void outop1str(char *s);
-void outop2str(char *s);
-void outop3str(char *s);
-void outplus(void);
-void outshex(offset_T num);
-void outstr(char *s);
-void outtab(void);
-void outudec(unsigned num);
-void outuvalue(uvalue_t num);
-void outvalue(value_t num);
+void outhex(uoffset_T num) __attribute__ ((deprecated));
+void outhexdigs(uoffset_T num) __attribute__ ((deprecated));
+void outline(char *s) __attribute__ ((deprecated));
+void outminus(void) __attribute__ ((deprecated));
+void outnl(void) __attribute__ ((deprecated));
+void outnbyte(int byte) __attribute__ ((deprecated));
+void outnhex(uoffset_T num) __attribute__ ((deprecated));
+void outnop1str(char *s) __attribute__ ((deprecated));
+void outnop2str(char *s) __attribute__ ((deprecated));
+void outnstr(char *s) __attribute__ ((deprecated));
+void outop0str(char *s) __attribute__ ((deprecated));
+void outop1str(char *s) __attribute__ ((deprecated));
+void outop2str(char *s) __attribute__ ((deprecated));
+void outop3str(char *s) __attribute__ ((deprecated));
+void outplus(void) __attribute__ ((deprecated));
+void outshex(offset_T num) __attribute__ ((deprecated));
+void outstr(char *s) __attribute__ ((deprecated));
+void outtab(void) __attribute__ ((deprecated));
+void outudec(unsigned num) __attribute__ ((deprecated));
+void outuvalue(uvalue_t num) __attribute__ ((deprecated));
+void outvalue(value_t num) __attribute__ ((deprecated));
+
 char *pushudec(char *s, unsigned num);
 void setoutbufs(void);
 

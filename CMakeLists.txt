@@ -10,6 +10,18 @@ git_describe(VERSION --tags --dirty=-dirty)
 
 message("-- Building version ${VERSION}")
 
+option(WARN_AS_ERR "Compile with -Werror" ON)
+
+# -Wno-unused-parameter -Wno-unused-result -Wno-write-strings
+set(BASE_CFLAGS "-Wall -Wextra -Wpedantic -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion -Wno-deprecated-declarations")
+set(CMAKE_C_FLAGS "${BASE_CFLAGS}")
+set(CMAKE_CXX_FLAGS "${BASE_CFLAGS}")
+
+if (WARN_AS_ERR)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+endif()
+
 # Global define
 add_definitions(-DVERSION="${VERSION}")
 

@@ -166,8 +166,8 @@ enum scan_states
     IFNDEFCNTL
 };
 
-extern op_pt arg1op;        /* LISTOP, or ROOTLISTOP if arg1inreg */
-extern struct
+extern op_t arg1op;        /* LISTOP, or ROOTLISTOP if arg1inreg */
+extern struct constant_t
 {
     union
     {
@@ -191,7 +191,7 @@ extern bool_t expect_statement;    /* If set #asm needs to clear the recursive p
 /* Prototypes */
 void cppscan(int asmonly);
 void eofin(char *message);
-bool_pt isident(void);
+bool_t isident(void);
 void nextsym(void);
 void stringorcharconst(void);
 

@@ -7,17 +7,27 @@
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
+#include <string.h>
 
 #include <bcc.h>
 #include <bcc/align.h>
 #include <bcc/byteord.h>
 #include <bcc/gencode.h>
-#include <bcc/parse.h>
+#include <bcc/parser.h>
 #include <bcc/reg.h>
 #include <bcc/sc.h>
 #include <bcc/table.h>
 #include <bcc/type.h>
 #include <bcc/scan.h>
+#include <bcc/output.h>
+#include <bcc/codefrag.h>
+#include <bcc/genloads.h>
+#include <bcc/express.h>
+#include <bcc/assign.h>
+#include <bcc/loadexp.h>
+#include <bcc/preserve.h>
+#include <bcc/debug.h>
+#include <bcc/label.h>
 
 #ifdef I8088
 #define ADJUSTLONGRETURN
@@ -137,7 +147,7 @@ void function(struct symstruct *source)
 void ldregargs()
 {
     struct symstruct *symptr;
-    store_pt targreg;
+    store_t targreg;
     struct symstruct temptarg;
 
     for (symptr = &locsyms[0] ; symptr < locptr && symptr->level == ARGLEVEL ; symptr = (struct symstruct *)align(
@@ -363,7 +373,7 @@ void reslocals()
 #endif /* FRAMEPOINTER */
     if (arg1size)
     {
-        switch ((fastin_t)arg1size)
+        switch ((int32_t)arg1size)
         {
             case 8:
                 pushlist(doubleargregs);
@@ -448,7 +458,7 @@ void ret()
     outreturn();
 #else /* no FRAMEPOINTER */
 #ifdef MC6809
-    store_pt reglist;
+    store_t reglist;
 
     switch (sp)
     {
