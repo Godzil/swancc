@@ -298,7 +298,7 @@ static void newstringorcharconst(void);
 /* skip white space up to end of line (skip EOL's if in comments) */
 void blanks()
 {
-    register char *reglineptr;
+    char *reglineptr;
 
     while (TRUE)
     {
@@ -496,10 +496,10 @@ void eofin(char *message)
 /* get identifier in gsname == gs2name + 2 */
 static void getident()
 {
-    register int c;
-    register char *idptr;
-    register int length;
-    register char *reglineptr;
+    int c;
+    char *idptr;
+    int length;
+    char *reglineptr;
 
     idptr = gsname;
     length = NAMESIZE;
@@ -541,7 +541,7 @@ static void intconst()
 {
     fastin_t base;
     fastin_t digit;
-    register char *digptr;
+    char *digptr;
     fastin_t lcount;
     fastin_t ucount;
     bool_t dflag;
@@ -695,7 +695,7 @@ static void intconst()
 void nextsym()
 {
     static char lastch;
-    register char *reglineptr;
+    char *reglineptr;
 
     if (expect_statement && asmmode)
     {
@@ -1080,8 +1080,8 @@ static void newstringorcharconst()
     char *endinptr;
     int escvalue;
     fastin_t maxdigits;
-    register char *inptr;
-    register char *outptr;
+    char *inptr;
+    char *outptr;
 
     outptr = constant.value.s;
     inptr = charptr - 1;

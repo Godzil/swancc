@@ -160,7 +160,7 @@ static void definefile(char *fname)
 
 void errorloc()
 {
-    register struct fbufstruct *infbuf;
+    struct fbufstruct *infbuf;
 
     if ((infbuf = inputbuf) == NULL)
     return;
@@ -350,7 +350,7 @@ ts_s_filename_tot -= charptr - fnameptr;
 /* initialise current input file */
 static void inputinit(char *fname, fd_t fd)
 {
-    register struct fbufstruct *newinputbuf;
+    struct fbufstruct *newinputbuf;
 
     /*
      * don't allocate after saying input.includer = inputbuf (to save a reg)
@@ -452,7 +452,7 @@ ts_s_inputbuf_tot -= sizeof *inputbuf;
 
 void openio(int argc, char *argv[])
 {
-    register char *arg;
+    char *arg;
     int argn;
     fd_t fd;
     char *fname;

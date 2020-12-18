@@ -136,7 +136,7 @@ void function(struct symstruct *source)
 
 void ldregargs()
 {
-    register struct symstruct *symptr;
+    struct symstruct *symptr;
     store_pt targreg;
     struct symstruct temptarg;
 

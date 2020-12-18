@@ -376,9 +376,9 @@ void bileaf(struct nodestruct *exp)
     }
 }
 
-fastin_pt bitcount(register uvalue_t number)
+fastin_pt bitcount(uvalue_t number)
 {
-    register fastin_pt count;
+    fastin_pt count;
 
     for (count = 0 ; number != 0 ; number >>= 1)
     {
@@ -465,9 +465,9 @@ void codeinit()
 #endif
 }
 
-fastin_pt highbit(register uvalue_t number)
+fastin_pt highbit(uvalue_t number)
 {
-    register fastin_pt bit;
+    fastin_pt bit;
 
     for (bit = -1 ; number != 0 ; number >>= 1)
     {
@@ -747,9 +747,9 @@ static void smakeleaf(struct nodestruct *exp)
 
 #ifdef SELFTYPECHECK
 
-static void tcheck(register struct nodestruct *exp)
+static void tcheck(struct nodestruct *exp)
 {
-    register struct symstruct *target;
+    struct symstruct *target;
 
     if (exp->nodetype != (target = exp->left.symptr)->type)
     {

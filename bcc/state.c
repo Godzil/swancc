@@ -147,7 +147,7 @@ static void exprstatement()
     exprptr = exprmark;
 }
 
-static bool_pt isforever(register struct nodestruct *exp)
+static bool_pt isforever(struct nodestruct *exp)
 {
     return exp == NULL ||
            (exp->tag == LEAF && exp->left.symptr->storage == CONSTANT && exp->left.symptr->offset.offv != 0);
@@ -156,8 +156,8 @@ static bool_pt isforever(register struct nodestruct *exp)
 /* shell sort */
 static void sort(struct casestruct *caselist, int count)
 {
-    register int gap;
-    register int i;
+    int gap;
+    int i;
     int j;
     struct casestruct swaptemp;
 

@@ -117,7 +117,7 @@ static void asmcontrol()
     {
         if (ctext)
         {
-        register char *lptr;
+        char *lptr;
 
         comment();
         if (treasure != 0)
@@ -405,7 +405,7 @@ void define()
         gch1();
     }
     {
-        register char *rcp;
+        char *rcp;
 
         /* strip trailing blanks, but watch out for parameters */
         for (rcp = charptr ;
@@ -483,7 +483,7 @@ static void defineorundefinestring(char *str, bool_pt defineflag)
     ts_s_fakeline_tot += 3 + len + 2 + 2;
 #endif
     {
-        register char *endfakeline;
+        char *endfakeline;
 
         endfakeline = fakeline + len;
         endfakeline[0] = EOL;    /* guards any trailing backslash */
@@ -503,7 +503,7 @@ static void defineorundefinestring(char *str, bool_pt defineflag)
             }
             else if (ch == EOL)
             {
-                register char *lptr;
+                char *lptr;
 
                 lptr = lineptr;
                 lptr[0] = ' ';
@@ -581,7 +581,7 @@ static void endif()
         return;
     }
     {
-        register struct ifstruct *ifptr;
+        struct ifstruct *ifptr;
 
         ifptr = &ifstack[(int)--iflevel];
         ifstate.elseflag = ifptr->elseflag;
@@ -737,8 +737,8 @@ void entermac()
 #endif
                 *charptr++ = EOL;
                 {
-                    register char *newparam;
-                    register char *oldparam;
+                    char *newparam;
+                    char *oldparam;
                     unsigned size;
 
                     oldparam = *(paramlist - 1);
@@ -824,7 +824,7 @@ void entermac()
     }
 
     {
-        register struct macroposition *mpptr;
+        struct macroposition *mpptr;
 
         mpptr = &macrostack[maclevel];
         mpptr->paramlist = paramhead;
@@ -895,7 +895,7 @@ static void ifcontrol(sym_pt ifcase)
     }
 
     {
-        register struct ifstruct *ifptr;
+        struct ifstruct *ifptr;
 
         ifptr = &ifstack[(int)iflevel++];
         ifptr->elseflag = ifstate.elseflag;

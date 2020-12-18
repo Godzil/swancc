@@ -294,8 +294,8 @@ enumerator =
 
 static struct typestruct *declenum()
 {
-    register struct symstruct *esymptr;
-    register struct typestruct *enumtype;
+    struct symstruct *esymptr;
+    struct typestruct *enumtype;
     offset_T ordinal;
 
     nextsym();
@@ -465,7 +465,7 @@ static void declselt(struct typestruct *structype, offset_T *psoffset, struct ty
                 offset = (gvarsymptr->offset.offi = (offset + ~gvartype->alignmask) & gvartype->alignmask) +
                          gvartype->typesize;
                 {
-                    register struct typelist *newtypelist;
+                    struct typelist *newtypelist;
 
                     newtypelist = qmalloc(sizeof *newtypelist);
 #ifdef TS

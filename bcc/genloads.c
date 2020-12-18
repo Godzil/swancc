@@ -725,7 +725,7 @@ void movereg(struct symstruct *source, store_pt targreg)
     source->offset.offi = 0;    /* indcount was adjusted by outadr */
 }
 
-void onstack(register struct symstruct *target)
+void onstack(struct symstruct *target)
 {
     target->storage = LOCAL;
     target->flags = TEMP;

@@ -253,7 +253,7 @@ void openout(char *oname)
 void outbyte(int c)
 {
 #if C_CODE || __AS09__ + __AS386_16__ + __AS386_32__ != 1
-    register char *outp;
+    char *outp;
 
     outp = outbufptr;
     *outp++ = c;
@@ -365,7 +365,7 @@ void outhex(uoffset_T num)
 }
 
 /* print unsigned offset, hex format with digits only (no hex designator) */
-void outhexdigs(register uoffset_T num)
+void outhexdigs(uoffset_T num)
 {
     if (num >= 0x10)
     {
@@ -378,8 +378,8 @@ void outhexdigs(register uoffset_T num)
 /* print string terminated by EOL */
 void outline(char *s)
 {
-    register char *outp;
-    register char *rs;
+    char *outp;
+    char *rs;
 
     outp = outbufptr;
     rs = s;
@@ -513,8 +513,8 @@ void outshex(num)offset_T num;
 void outstr(s)char *s;
 {
 #if C_CODE || __AS09__ + __AS386_16__ + __AS386_32__ != 1
-    register char *outp;
-    register char *rs;
+    char *outp;
+    char *rs;
 
     outp = outbufptr;
     rs = s;
@@ -713,7 +713,7 @@ uvalue_t num;
 }
 
 /* print unsigned value, hex format with digits only (no hex designator) */
-static void outvaldigs(register uvalue_t num)
+static void outvaldigs(uvalue_t num)
 {
     if (num >= 0x10)
     {
@@ -724,7 +724,7 @@ static void outvaldigs(register uvalue_t num)
 }
 
 /* print signed value, hex format (like outshex except value_t is larger) */
-void outvalue(register value_t num)
+void outvalue(value_t num)
 {
     if (num < 0)
     {
@@ -738,7 +738,7 @@ void outvalue(register value_t num)
 #endif /* MC6809 */
 
 /* push decimal digits of an unsigned onto a stack of chars */
-char *pushudec(register char *s, register unsigned num)
+char *pushudec(char *s, register unsigned num)
 {
     register unsigned reduction;
 

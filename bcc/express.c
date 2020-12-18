@@ -266,7 +266,7 @@ static struct nodestruct *postfix_exp(seenlp)bool_pt seenlp;
                 nextsym();
                 nodeptr = node(FUNCOP, nodeptr, listargs());
                 {
-                    register struct nodestruct *np;
+                    struct nodestruct *np;
 
                     for (np = nodeptr->right ; np != NULL ; np = np->right)
                     {
@@ -280,7 +280,7 @@ static struct nodestruct *postfix_exp(seenlp)bool_pt seenlp;
                             else
                             {
                                 unsigned len;
-                                register char *name;
+                                char *name;
 
                                 name = np->left.symptr->name.namep;
                                 if ((len = strlen(name)) >= 6 && strcmp(name + len - 6, "printf") == 0)
@@ -303,7 +303,7 @@ static struct nodestruct *postfix_exp(seenlp)bool_pt seenlp;
                             else
                             {
                                 unsigned len;
-                                register char *name;
+                                char *name;
 
                                 name = np->left.symptr->name.namep;
                                 if ((len = strlen(name)) >= 5 && strcmp(name + len - 5, "scanf") == 0)

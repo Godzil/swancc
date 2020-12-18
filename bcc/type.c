@@ -79,7 +79,7 @@ struct typestruct *iscalartotype(scalar_pt scalar)
 
 struct typestruct *newtype()
 {
-    register struct typestruct *type;
+    struct typestruct *type;
 
     type = qmalloc(sizeof *type);
 #ifdef TS
@@ -108,7 +108,7 @@ struct typestruct *pointype(struct typestruct *type)
 
 struct typestruct *prefix(constr_pt constructor, uoffset_T size, struct typestruct *type)
 {
-    register struct typestruct *searchtype;
+    struct typestruct *searchtype;
 
     for (searchtype = type->prevtype ; searchtype != NULL ; searchtype = searchtype->sidetype)
     {

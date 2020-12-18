@@ -77,7 +77,7 @@ static struct labdatstruct *findlabel(label_no label);
 /* add label to circular list */
 static void addlabel(ccode_pt cond, label_no label, char *patch)
 {
-    register struct labdatstruct *labptr;
+    struct labdatstruct *labptr;
 
     labptr = &vislab[(int)nextvislab];
     labptr->labcond = cond;
@@ -111,8 +111,8 @@ void bumplc3()
 /* clear out labels in function */
 void clearfunclabels()
 {
-    register struct symstruct *symptr;
-    register struct symstruct *tmp;
+    struct symstruct *symptr;
+    struct symstruct *tmp;
 
     for (symptr = namedfirst ; symptr != NULL ;)
     {
@@ -132,9 +132,9 @@ void clearfunclabels()
 
 void clearlabels(char *patchbuf, char *patchtop)
 {
-    register struct labdatstruct *labptr;
+    struct labdatstruct *labptr;
     struct labdatstruct *labtop;
-    register char *labpatch;
+    char *labpatch;
 
     for (labptr = &vislab[0], labtop = &vislab[MAXVISLAB] ; labptr < labtop ; ++labptr)
     {
@@ -148,7 +148,7 @@ void clearlabels(char *patchbuf, char *patchtop)
 /* clear out labels in switch statement */
 void clearswitchlabels()
 {
-    register struct symstruct *symptr;
+    struct symstruct *symptr;
 
     for (symptr = namedfirst ; symptr != NULL ; symptr = (struct symstruct *)symptr->type)
     {
@@ -179,8 +179,8 @@ void deflabel(label_no label)
 
     outnlabel(label);
     {
-        register struct labdatstruct *labptr;
-        register char *labpatch;
+        struct labdatstruct *labptr;
+        char *labpatch;
 
         labmin = &vislab[0];
         labmax = &vislab[MAXVISLAB];
@@ -252,7 +252,7 @@ void deflabel(label_no label)
 
 static struct labdatstruct *findlabel(label_no label)
 {
-    register struct labdatstruct *labptr;
+    struct labdatstruct *labptr;
     struct labdatstruct *labtop;
 
     for (labptr = &vislab[0], labtop = &vislab[MAXVISLAB] ; labptr < labtop ; ++labptr)

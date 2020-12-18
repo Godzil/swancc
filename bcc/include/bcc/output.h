@@ -11,7 +11,7 @@
 #ifndef _BCC_BCC_OUTPUT_H
 #define _BCC_BCC_OUTPUT_H
 
-#define OUTBYTE(ch) do { register char *outp = outbufptr; \
+#define OUTBYTE(ch) do { char *outp = outbufptr; \
                          *outp++ = (ch);                  \
                          outbufptr = outp;                \
                          if (outp >= outbuftop) { flushout(); }  } while (0)

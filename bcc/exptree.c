@@ -51,12 +51,12 @@ static void badlvalue(struct nodestruct *nodeptr)
     fixnode(nodeptr);
 }
 
-static void binconvert(register struct nodestruct *nodeptr)
+static void binconvert(struct nodestruct *nodeptr)
 {
     bool_t bothscalar;
     value_t divisor;
     scalar_t lscalar;
-    register struct nodestruct *right;
+    struct nodestruct *right;
     scalar_t rscalar;
 
     rscalar = (right = nodeptr->right)->nodetype->scalar;
@@ -169,7 +169,7 @@ void etreeinit()
     ettop = (etptr = etree) + ETREESIZE;
 }
 
-static void fixnode(register struct nodestruct *nodeptr)
+static void fixnode(struct nodestruct *nodeptr)
 {
     nodeptr->tag = LEAF;
     nodeptr->flags = nodeptr->weight = 0;
@@ -177,17 +177,17 @@ static void fixnode(register struct nodestruct *nodeptr)
     nodeptr->nodetype = errtype;
 }
 
-static bool_pt isconst0(register struct nodestruct *nodeptr)
+static bool_pt isconst0(struct nodestruct *nodeptr)
 {
-    register struct symstruct *symptr;
+    struct symstruct *symptr;
 
     return nodeptr->tag == LEAF && (symptr = nodeptr->left.symptr)->storage == CONSTANT && symptr->offset.offv == 0 &&
            symptr->type->scalar & ISCALAR;
 }
 
-static bool_pt isnodecharconst(register struct nodestruct *nodeptr)
+static bool_pt isnodecharconst(struct nodestruct *nodeptr)
 {
-    register struct symstruct *symptr;
+    struct symstruct *symptr;
 
     if (nodeptr->tag == LEAF && (symptr = nodeptr->left.symptr)->storage == CONSTANT &&
         ischarconst(symptr->offset.offv) && symptr->type->scalar & ISCALAR)
@@ -199,7 +199,7 @@ static bool_pt isnodecharconst(register struct nodestruct *nodeptr)
 
 struct nodestruct *leafnode(struct symstruct *source)
 {
-    register struct nodestruct *leafptr;
+    struct nodestruct *leafptr;
 
     if ((leafptr = etptr++) >= ettop)
     {
@@ -356,7 +356,7 @@ struct nodestruct *node(op_pt t, struct nodestruct *p1, struct nodestruct *p2)
         case ADDRESSOP:
             if (target->indcount == 0 && target->flags == REGVAR)
             {
-                error("register variable addressed");
+                error("variable addressed");
             }
             else if (target->type->constructor & ARRAY)
             {
@@ -877,8 +877,8 @@ struct nodestruct *node(op_pt t, struct nodestruct *p1, struct nodestruct *p2)
 
     node1:
     {
-        register struct nodestruct *nodeptr;
-        register struct nodestruct *regp2;
+        struct nodestruct *nodeptr;
+        struct nodestruct *regp2;
 
         if ((nodeptr = etptr++) >= ettop)
         {
