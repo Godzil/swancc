@@ -1,19 +1,23 @@
 cmake_minimum_required(VERSION 3.1)
 
-project("bcc")
+project(bcc)
 
-set(CMAKE_C_FLAGS "-Wall -Wextra -Wno-unused-parameter -Wno-unused-result -Wno-write-strings -Wpedantic -Werror")
+set(CMAKE_C_FLAGS "-Wall -Wextra -Wno-unused-parameter -Wno-unused-result -Wno-write-strings -Wpedantic -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion -Werror")
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-parameter -Wno-unused-result -Wno-write-strings -Wpedantic -Werror")
 
 # Base lib
-set(LIBSRC codefrag.c debug.c declare.c express.c exptree.c floatop.c function.c gencode.c genloads.c 
+set(LIBSRC assign.c codefrag.c debug.c declare.c express.c exptree.c floatop.c function.c gencode.c genloads.c
         glogcode.c hardop.c input.c label.c loadexp.c longop.c output.c preproc.c preserve.c scan.c 
-        softop.c state.c table.c type.c assign.c)
-add_library(bcclib ${LIBSRC})
-target_include_directories(bcclib PUBLIC include)
+        softop.c state.c table.c type.c)
+set(LIBHDR include/bcc.h include/bcc/align.h include/bcc/byteord.h include/bcc/condcode.h include/bcc/const.h
+        include/bcc/gencode.h include/bcc/input.h include/bcc/label.h include/bcc/os.h include/bcc/output.h
+        include/bcc/parse.h include/bcc/proto.h include/bcc/reg.h include/bcc/sc.h include/bcc/scan.h
+        include/bcc/sizes.h include/bcc/table.h include/bcc/type.h include/bcc/types.h)
+
+add_library(bcclib ${LIBSRC} ${LIBHDR})
 target_include_directories(bcclib PUBLIC include)
 
-# bcc-cc&
+# bcc-cc1
 add_executable(bcc-cc1 bcc-cc1.c)
 target_include_directories(bcc-cc1 PUBLIC include)
 target_link_libraries(bcc-cc1 bcclib)
