@@ -6,7 +6,7 @@
  *
  * Copyright (C) 1992 Bruce Evans
  * Copyright (C) 1997 Robert de Bath <robert@mayday.cix.co.uk>
- * Copyright (C) 2020 Manoel <godzil> Trapier / 986-Studio
+ * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
 #ifndef _BCC_BCC_H
 #define _BCC_BCC_H

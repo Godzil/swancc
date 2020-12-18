@@ -5,7 +5,7 @@
  * Based on bcc 0.16.2 by Bruce Evans
  *
  * Copyright (C) 1992 Bruce Evans
- * Copyright (C) 2020 Manoel <godzil> Trapier / 986-Studio
+ * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
 
 #ifndef _BCC_BCC_PROTO_H

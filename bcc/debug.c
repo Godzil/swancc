@@ -1,18 +1,24 @@
-/* debug.c - print debug messages for operators for bcc */
+/* debug.c - print debug messages for operators for swancc
+ *
+ * swancc: A rudimentary C compiler for the WonderSwan
+ *
+ * Based on bcc 0.16.2 by Bruce Evans
+ *
+ * Copyright (C) 1992 Bruce Evans
+ * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
+ */
 
-/* Copyright (C) 1992 Bruce Evans */
-
-#include "bcc.h"
+#include <bcc.h>
 
 #ifdef DEBUG
-#include "gencode.h"
-#include "reg.h"
-#include "sc.h"
-#include "scan.h"
-#include "type.h"
+#include <bcc/gencode.h>
+#include <bcc/reg.h>
+#include <bcc/sc.h>
+#include <bcc/scan.h>
+#include <bcc/type.h>
 
-PRIVATE char *opname[LASTOP - FIRSTOP + 1] =	/* operator names */
-{				/* order must agree with op.h */
+static char *opname[LASTOP - FIRSTOP + 1] =    /* operator names */
+{                /* order must agree with op.h */
     "cond?",
     "or",
     "eor",
@@ -42,42 +48,41 @@ PRIVATE char *opname[LASTOP - FIRSTOP + 1] =	/* operator names */
     "ptraddab", "ptradd", "ptrsub",
 };
 
-FORWARD void outindchars P((int byte, indn_pt count));
+static void outindchars(int byte, indn_pt count);
 
-PUBLIC void dbitem(item)
-struct symstruct *item;
+void dbitem(struct symstruct *item)
 {
     dbtype(item->type);
     if (item->storage == NOSTORAGE)
     {
-	outbyte(' ');
-	outstr(item->name.namep + 2);
-	outstr(" (offset ");
-	outshex(item->offset.offi);
-	outbyte(')');
-	return;
+    outbyte(' ');
+    outstr(item->name.namep + 2);
+    outstr(" (offset ");
+    outshex(item->offset.offi);
+    outbyte(')');
+    return;
     }
     if (item->storage == LOCAL)
     {
-	outbyte(' ');
-	if (item->flags == TEMP)
-	    outstr("(temp)");
-	else
-	    outstr(item->name.namep);
+    outbyte(' ');
+    if (item->flags == TEMP)
+        outstr("(temp)");
+    else
+        outstr(item->name.namep);
     }
     outstr(" = ");
     outindchars('[', item->indcount);
     switch (item->storage)
     {
     case CONSTANT:
-	outstr("const ");
-	if (item->type->scalar & RSCALAR)
-	    outstr("(whatever)");
-	else if (item->type->scalar & UNSIGNED)
-	    outuvalue((uvalue_t) item->offset.offv);
-	else
-	    outvalue(item->offset.offv);
-	break;
+    outstr("const ");
+    if (item->type->scalar & RSCALAR)
+        outstr("(whatever)");
+    else if (item->type->scalar & UNSIGNED)
+        outuvalue((uvalue_t) item->offset.offv);
+    else
+        outvalue(item->offset.offv);
+    break;
     case BREG:
     case DREG:
     case INDREG0:
@@ -89,112 +94,111 @@ struct symstruct *item;
 #ifdef DATREG2
     case DATREG2:
 #endif
-	outregname(item->storage);
-	if (item->level == OFFKLUDGELEVEL)
-	{
-	    outplus();
-	    if (item->flags & LABELLED)
-		outlabel(item->name.label);
-	    else
-		outccname(item->name.namep);
-	}
-	break;
+    outregname(item->storage);
+    if (item->level == OFFKLUDGELEVEL)
+    {
+        outplus();
+        if (item->flags & LABELLED)
+        outlabel(item->name.label);
+        else
+        outccname(item->name.namep);
+    }
+    break;
     case LOCAL:
-	outbyte('S');
-	if (sp <= 0)
-	    outplus();
-	outshex(-sp);
-	break;
+    outbyte('S');
+    if (sp <= 0)
+        outplus();
+    outshex(-sp);
+    break;
     case GLOBAL:
-	if (item->flags & LABELLED)
-	    outlabel(item->name.label);
-	else
-	    outstr(item->name.namep);
-	break;
+    if (item->flags & LABELLED)
+        outlabel(item->name.label);
+    else
+        outstr(item->name.namep);
+    break;
     default:
-	outstr("bad storage (");
-	outhex((uoffset_T) item->storage);
-	outbyte(')');
-	outstr(" offset ");
+    outstr("bad storage (");
+    outhex((uoffset_T) item->storage);
+    outbyte(')');
+    outstr(" offset ");
     }
     if (item->storage != CONSTANT)
     {
-	if (item->offset.offi >= 0)
-	    outplus();
-	outshex(item->offset.offi);
+    if (item->offset.offi >= 0)
+        outplus();
+    outshex(item->offset.offi);
     }
     outindchars(']', item->indcount);
 }
 
-PUBLIC void dbtype(type)
-struct typestruct *type;
+void dbtype(struct typestruct *type)
 {
     for ( ; type != NULL; type = type->nexttype)
     {
-	outbyte(' ');
-	switch (type->constructor)
-	{
-	case ARRAY:
-	    outbyte('[');
-	    outhex(type->typesize / type->nexttype->typesize);
-	    outbyte(']');
-	    break;
-	case FUNCTION:
-	    outstr("()");
-	    break;
-	case POINTER:
-	    outbyte('*');
-	    break;
-	case STRUCTU:
-	    outstr("struct ");
-	default:
-	    if (type->scalar & UNSIGNED)
-		outstr("unsigned ");
-	    outstr(type->tname);
-	    break;
-	}
+    outbyte(' ');
+    switch (type->constructor)
+    {
+    case ARRAY:
+        outbyte('[');
+        outhex(type->typesize / type->nexttype->typesize);
+        outbyte(']');
+        break;
+    case FUNCTION:
+        outstr("()");
+        break;
+    case POINTER:
+        outbyte('*');
+        break;
+    case STRUCTU:
+        outstr("struct ");
+    default:
+        if (type->scalar & UNSIGNED)
+        outstr("unsigned ");
+        outstr(type->tname);
+        break;
+    }
     }
 }
 
-PUBLIC void debug(exp)		/* sub-nodes must be leaves */
+void debug(exp)        /* sub-nodes must be leaves */
 struct nodestruct *exp;
 {
     if (!debugon)
-	return;
+    return;
     comment();
     if (exp->tag < FIRSTOP && exp->tag > LASTOP)
-	outstr("unknown op");
+    outstr("unknown op");
     else
-	outstr(opname[exp->tag - FIRSTOP]);
+    outstr(opname[exp->tag - FIRSTOP]);
     if (exp->right != NULL && exp->tag != FUNCOP &&
-	exp->tag != LISTOP && exp->tag != ROOTLISTOP)
+    exp->tag != LISTOP && exp->tag != ROOTLISTOP)
     {
-	dbitem(exp->right->left.symptr);
-	outstr(" to");
+    dbitem(exp->right->left.symptr);
+    outstr(" to");
     }
     dbitem(exp->left.nodeptr->left.symptr);
     outstr(" (used reg = ");
     if (reguse & INDREG0)
-	outregname(INDREG0);
+    outregname(INDREG0);
     if (reguse & INDREG1)
-	outregname(INDREG1);
+    outregname(INDREG1);
     if (reguse & INDREG2)
-	outregname(INDREG2);
+    outregname(INDREG2);
     outnstr(")");
 }
 
-PUBLIC void debugswap()
+void debugswap()
 {
     if (debugon)
-	outnstr("* swapping");
+    outnstr("* swapping");
 }
 
-PRIVATE void outindchars(byte, count)
+static void outindchars(byte, count)
 int byte;
 indn_pt count;
 {
     while (count--)
-	outbyte(byte);
+    outbyte(byte);
 }
 
 #endif /* DEBUG */
