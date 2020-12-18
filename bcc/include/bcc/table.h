@@ -76,4 +76,30 @@ uvalue_t ts_n_growheap;
 uvalue_t ts_s_growheap;
 #endif
 
+/* Protypes */
+struct symstruct *addglb(char *name, struct typestruct *type);
+struct symstruct *addloc(char *name, struct typestruct *type);
+struct symstruct *addlorg(char *name, struct typestruct *type);
+void addsym(char *name, struct typestruct *type, struct symstruct *symptr);
+struct symstruct *constsym(value_t intconst);
+void delsym(struct symstruct *symptr);
+void dumpglbs(void);
+void dumplocs(void);
+void dumpstrings(void);
+struct symstruct *exprsym(struct symstruct *symptr);
+struct symstruct *findlorg(char *name);
+struct symstruct *findstruct(char *name);
+struct symstruct **gethashptr(char *sname);
+void growheap(unsigned size);
+void *growobject(void *object, unsigned extra);
+label_no holdstr(char *sptr, char *stop);
+void newlevel(void);
+void oldlevel(void);
+void ourfree(void *ptr);
+void *ourmalloc(unsigned nbytes);
+void outofmemoryerror(char *message);
+void *qmalloc(unsigned size);
+void swapsym(struct symstruct *sym1, struct symstruct *sym2);
+void syminit(void);
+
 #endif /* _BCC_BCC_TABLE_H */

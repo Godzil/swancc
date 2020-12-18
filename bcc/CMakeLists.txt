@@ -9,10 +9,14 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-parameter -Wno-unused-result -Wno
 set(LIBSRC assign.c codefrag.c debug.c declare.c express.c exptree.c floatop.c function.c gencode.c genloads.c
         glogcode.c hardop.c input.c label.c loadexp.c longop.c output.c preproc.c preserve.c scan.c 
         softop.c state.c table.c type.c)
-set(LIBHDR include/bcc.h include/bcc/align.h include/bcc/byteord.h include/bcc/condcode.h include/bcc/const.h
-        include/bcc/gencode.h include/bcc/input.h include/bcc/label.h include/bcc/os.h include/bcc/output.h
-        include/bcc/parse.h include/bcc/proto.h include/bcc/reg.h include/bcc/sc.h include/bcc/scan.h
-        include/bcc/sizes.h include/bcc/table.h include/bcc/type.h include/bcc/types.h)
+set(LIBHDR include/bcc.h include/bcc/align.h include/bcc/assign.h include/bcc/byteord.h include/bcc/codefrag.h
+        include/bcc/condcode.h include/bcc/const.h include/bcc/debug.h include/bcc/declare.h include/bcc/express.h
+        include/bcc/exptree.h include/bcc/floatop.h include/bcc/function.h include/bcc/gencode.h include/bcc/genloads.h
+        include/bcc/glogcode.h include/bcc/hardop.h include/bcc/input.h include/bcc/label.h include/bcc/loadexp.h
+        include/bcc/longop.h include/bcc/os.h include/bcc/output.h include/bcc/parse.h include/bcc/preproc.h
+        include/bcc/preserve.h include/bcc/reg.h include/bcc/sc.h include/bcc/scan.h
+        include/bcc/sizes.h include/bcc/softop.h include/bcc/state.h include/bcc/table.h include/bcc/type.h
+        include/bcc/types.h)
 
 add_library(bcclib ${LIBSRC} ${LIBHDR})
 target_include_directories(bcclib PUBLIC include)

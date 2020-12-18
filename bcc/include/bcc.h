@@ -14,6 +14,5 @@
 /* Commonly imported headers */
 #include <bcc/const.h>
 #include <bcc/types.h>
-#include <bcc/proto.h>
 
 #endif /* _BCC_BCC_H */

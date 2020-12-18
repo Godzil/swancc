@@ -40,4 +40,14 @@ extern maclev_t maclevel;        /* nest level of #defined identifiers depends o
 extern bool_t orig_cppmode;      /* same as cppmode ex. not varied while in # */
 extern bool_t virtual_nl;        /* For -C and asm, don't print first nl */
 
+/* Prototypes */
+void closein(void);
+void errorloc(void);
+void gch1(void);
+void include(void);
+void openio(int argc, char **argv);
+void skipeol(void);
+void specialchar(void);
+void linecontol(void);
+
 #endif /* _BCC_BCC_INPUT_H */

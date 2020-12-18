@@ -101,4 +101,12 @@ extern uoffset_T opregsize;
 extern uoffset_T pshregsize;
 extern uoffset_T returnadrsize;
 
+/* Prototypes */
+
+void bileaf(struct nodestruct *exp);
+fastin_pt bitcount(uvalue_t number);
+void codeinit(void);
+fastin_pt highbit(uvalue_t number);
+void makeleaf(struct nodestruct *exp);
+
 #endif /* _BCC_BCC_GENCODE_H */

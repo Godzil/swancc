@@ -188,4 +188,11 @@ extern sym_t sym;                  /* current symbol */
 extern sym_t symofchar[];          /* table to convert chars to their symbols */
 extern bool_t expect_statement;    /* If set #asm needs to clear the recursive pending operations. ie: if stmts. */
 
+/* Prototypes */
+void cppscan(int asmonly);
+void eofin(char *message);
+bool_pt isident(void);
+void nextsym(void);
+void stringorcharconst(void);
+
 #endif /* _BCC_BCC_SCAN_H */

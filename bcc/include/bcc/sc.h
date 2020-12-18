@@ -34,4 +34,7 @@
 #define TEMP       0xa0        /* temporary on stack expression eval */
 #define STRING     0xc0        /* string constant (=> LABELLED) */
 
+/* Protoypes */
+int main(int argc, char *argv[]);
+
 #endif /* _BCC_BCC_SC_H */
