@@ -21,10 +21,8 @@
 #include <swancc/codefrag.h>
 #include <swancc/table.h>
 
-#ifdef I8088
 #define outlbranch() outop3str( "b")
 #define outsbranch() outop2str( "j")
-#endif
 
 #define MAXVISLAB 32
 
@@ -36,7 +34,6 @@ struct labdatstruct
     ccode_t labcond;        /* condition code for branch */
 };
 
-#ifdef I8088
 static char lcondnames[][2] =    /* names of long condition codes */
 {
     {'e', 'q',}, {'n', 'e',}, {'r', ' ',}, {'r', 'n',},
@@ -49,7 +46,6 @@ static char scondnames[][2] =    /* names of short condition codes */
     {'l', ' ',}, {'g', 'e',}, {'l', 'e',}, {'g', ' ',},
     {'b', ' ',}, {'a', 'e',}, {'b', 'e',}, {'a', ' ',},
 };
-#endif
 
 static label_no lasthighlab = 0xFFFF + 1;    /* temp & temp init so labels fixed */
 /* lint */
@@ -188,10 +184,10 @@ void deflabel(label_no label)
                 {
                     if ((labpatch = labptr->labpatch) != NULL && isshortbranch(lc - labptr->lablc))
                     {
-#ifdef I8088 /* patch "swancc(c) to j(c)(c)( ) */
+                        /* patch "swancc(c) to j(c)(c)( ) */
                         *labpatch = 'j';
                         *(labpatch + 1) = *(cnameptr = scondnames[(int)labptr->labcond]);
-#endif
+
                         *(labpatch + 2) = *(cnameptr + 1);
                         *(labpatch + 3) = ' ';
                         nlonger = jcclonger;
@@ -262,10 +258,7 @@ void jump(label_no label)
 /* long branch on condition to label */
 void lbranch(ccode_t cond, label_no label)
 {
-#ifdef I8088
     char *cnameptr;
-
-#endif
     struct labdatstruct *labptr;
     char *oldoutptr;
 
@@ -286,7 +279,6 @@ void lbranch(ccode_t cond, label_no label)
     else
     {
         outlbranch();
-#ifdef I8088
         outbyte(*(cnameptr = lcondnames[(int)cond]));
         outbyte(*(cnameptr + 1));
         if ((ccode_t)cond == LS || (ccode_t)cond == HS)
@@ -299,7 +291,6 @@ void lbranch(ccode_t cond, label_no label)
         }
         outtab();
         bumplc2();
-#endif
     }
     outlabel(label);
     outnl();
@@ -360,7 +351,6 @@ void outnlabel(label_no label)
 
 void sbranch(ccode_t cond, label_no label)
 {
-#ifdef I8088
     char *cnameptr;
 
     if ((ccode_t)cond != RN)
@@ -372,7 +362,6 @@ void sbranch(ccode_t cond, label_no label)
         outlabel(label);
         outnl();
     }
-#endif
 }
 
 /* reverse bump location counter */

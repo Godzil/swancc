@@ -22,21 +22,16 @@
 typedef int32_t value_t;            /* target ints, longs and offsets */
 typedef uint32_t uvalue_t;  /* target unsigned ints, longs and offsets */
 
-#ifdef I8088
 typedef int32_t offset_T;           /* target machine offset */
 typedef uint32_t uoffset_T; /* target unsigned machine offset */
 #define outuvalue outhex
 #define outvalue outshex
-#endif
 
 /*
  * storage class type must hold all the flags defined elsewhere
  * it must have a few more bits than the target has registers
  */
-#ifdef I8088
 typedef uint32_t store_t;    /* storage class flags */
-#endif
-
 
 /*
  * types for library routines

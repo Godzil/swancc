@@ -49,14 +49,10 @@ void changesp(offset_T newsp, bool_t absflag)
             bugerror("no frame pointer");
         }
 #else
-# ifdef I8088
         outleasp();
         outoffset(newsp - sp);
         outindstackreg();
         outnl();
-# else
-        modstk(newsp);        /* this should preserve CC */
-# endif
 #endif /* FRAMEPOINTER */
     }
 }
@@ -102,13 +98,7 @@ void modstk(offset_T newsp)
             regtransfer(FRAMEREG, STACKREG);
         }
 #else
-# ifdef I8088
         addconst(newsp - sp, STACKREG);
-# else
-        outleasp();
-        outoffset(newsp - sp);
-        outncspregname();
-# endif
 #endif
         sp = newsp;
     }
@@ -182,11 +172,9 @@ void recovlist(store_t reglist)
     reguse |= (store_t)reglist;
 }
 
-#ifdef I8088
 static int32_t regoffset[] = {0, 0, 0, 1, 2, 3, 0, 0, 0, 4, 5};
 /* CONSTANT, BREG, ax = DREG, bx = INDREG0, si = INDREG1, di = INDREG2 */
 /* LOCAL, GLOBAL, STACKREG, cx = DATREG1, dx = DATREG2 */
-#endif
 
 void savereturn(store_t savelist, offset_T saveoffset)
 {
@@ -205,8 +193,7 @@ void savereturn(store_t savelist, offset_T saveoffset)
         {
             outstore();
             spoffset = saveoffset + *regoffptr * maxregsize;
-#ifdef I8088
-# ifdef FRAMEPOINTER
+#ifdef FRAMEPOINTER
             if (switchnow != NULL)
             {
                 outswoffset(spoffset);
@@ -216,12 +203,11 @@ void savereturn(store_t savelist, offset_T saveoffset)
                 outoffset(spoffset - framep);
             }
             outindframereg();
-# else
+#else
             outoffset(spoffset - sp);
             outindstackreg();
-# endif
-            outncregname(reg);
 #endif
+            outncregname(reg);
         }
     }
 }

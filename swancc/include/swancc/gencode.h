@@ -73,18 +73,14 @@ extern store_t regregs;           /* mask (in) for regs which can be reg vars */
 extern char *acclostr;
 extern char *accumstr;
 extern char *badregstr;
-#ifdef I8088
 extern char *dreg1str;
 extern char *dreg1bstr;
 extern char *dreg2str;
-#endif
 extern char *ireg0str;
 extern char *ireg1str;
 extern char *ireg2str;
 extern char *localregstr;
-#ifdef I8088
 extern char *stackregstr;
-#endif
 
 /* register sizes */
 extern uoffset_T accregsize;

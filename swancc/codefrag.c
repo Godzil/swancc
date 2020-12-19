@@ -31,38 +31,28 @@
 #define MINPRINTCHAR ' '
 
 /* segment numbers */
-
-#ifdef I8088
 #define CSEG 0
 #define outcseg() outop0str(".text\n")
 #define DSEG 1
 #define outdseg() outop0str(".data\n")
 #define BSSSEG 2
 #define outbssseg() outop0str(".bss\n")
-#endif
 
-#ifdef I8088
 static void adjcarry(void);
-#endif
 static void clr(store_t reg);
 static bool_t lowregisDreg(void);
-#ifdef I8088
 static void outand(void);
 static void outequate(void);
 static void outmovsx(void);
 static void outmovzx(void);
 static void tfrhilo(void);
 static void tfrlohi(void);
-#endif
 
 static void outaccum(void);
 static void outstackreg(void);
 static void opregadr(void);
 
 /* operator and miscellaneous strings */
-
-#ifdef I8088
-
 #define ACCHISTR "ah"
 #define ANDSTRING "and\t"
 #define DEFSTR_QUOTER '\\'
@@ -364,8 +354,6 @@ void ustoi()
     outnl();
 }
 
-#endif /* I8088 */
-
 #ifdef FRAMEREG
 
 void outindframereg()
@@ -394,7 +382,6 @@ void adc0()
 
 void addconst(offset_T offset, store_t reg)
 {
-#ifdef I8088
     if ((uoffset_T) offset + 2 <= 4)    /* do -2 to 2  */
     {
         if (reg == ALREG)
@@ -417,7 +404,6 @@ void addconst(offset_T offset, store_t reg)
         } while (offset);
     }
     else
-#endif
     {
         outadd();
         outimadj(offset, reg);
@@ -433,9 +419,7 @@ void adjlc(offset_T offset, store_t reg)
         bumplc();
         if (!isbyteoffset(offset))
         {
-#ifdef I8088
             if ((store_t)reg != AXREG)
-#endif
             {
                 bumplc();
             }
@@ -494,10 +478,8 @@ void andconst(offset_T offset)
     }
 }
 
-#ifdef I8088
 
 /* set bss segment */
-
 void bssseg()
 {
     if (segment != BSSSEG)
@@ -507,20 +489,16 @@ void bssseg()
     }
 }
 
-#endif
-
 /* jump to case of switch */
-
 label_no casejump()
 {
     label_no jtablelab;
 
-#ifdef I8088
     outlswitch();
     outj1switch();
     outlabel(jtablelab = getlabel());
     outj2switch();
-#endif
+
     return jtablelab;
 }
 
@@ -535,11 +513,9 @@ static void clr(store_t reg)
 
 void common(char *name)
 {
-#ifdef I8088
     outcommon();
     outccname(name);
     outcomma();
-#endif
 }
 
 /* set code segment */
@@ -611,9 +587,7 @@ label_no defstr(char *sptr, char *stop, bool_t dataflag)
     }
 #endif
     oldsegment = segment;
-#ifdef I8088
     dseg();
-#endif
     outnlabel(strlab = getlabel());
     byte = (uint8_t)*sptr++;
     while (sptr <= stop)
@@ -665,11 +639,9 @@ label_no defstr(char *sptr, char *stop, bool_t dataflag)
         case DSEG:
             dseg();
             break;
-#ifdef I8088
         case BSSSEG:
             bssseg();
             break;
-#endif
     }
     return strlab;
 }
@@ -762,18 +734,8 @@ void itol(store_t reg)
 
     if (lowregisDreg())
     {
-#ifdef I8088
         outcwd();
         regtransfer(DXREG, reg);
-#else
-        label_no exitlab;
-
-        clr(reg);
-        testhi();
-        sbranch(GE, exitlab = getlabel());
-        loadconst((offset_T) - 1, reg);
-        outnlabel(exitlab);
-#endif
     }
     else
     {
@@ -799,7 +761,6 @@ void lcommon(char *name)
 /* load constant into given register */
 void loadconst(offset_T offset, store_t reg)
 {
-#ifdef I8088
     if (offset == 0)
     {
         outxor();
@@ -807,7 +768,6 @@ void loadconst(offset_T offset, store_t reg)
         outncregname(reg);
     }
     else
-#endif
     {
         outload();
         outregname(reg);
@@ -851,7 +811,6 @@ int lslconst(value_t shift, store_t reg)
         clr(lowregisDreg() ? DREG : reg);
         return 0;
     }
-#ifdef I8088
     if (shift >= CHBITSTO)
     {
         if (long_big_endian)
@@ -870,7 +829,7 @@ int lslconst(value_t shift, store_t reg)
         }
         return (int)shift - CHBITSTO;
     }
-#endif
+
     return (int)shift;
 }
 
@@ -895,7 +854,7 @@ int lsrconst(value_t shift, store_t reg, bool_t uflag)
         }
         return 0;
     }
-#ifdef I8088
+
     if (shift >= CHBITSTO)
     {
         if (long_big_endian)
@@ -930,7 +889,7 @@ int lsrconst(value_t shift, store_t reg, bool_t uflag)
         }
         return (int)shift - CHBITSTO;
     }
-#endif
+
     return (int)shift;
 }
 
@@ -980,13 +939,12 @@ bool_t muleasy(uvalue_t factor, store_t reg)
     int32_t mulsp;
     int stackentry;        /* signed */
 
-#ifdef I8088
     /* Now using imul directly so don't be so keen to shift */
     if (factor > 16 && factor != 32 && factor != 64 && factor != 0xFFFFFFFFL)
     {
         return FALSE;
     }
-#endif
+
 
     if (factor == 0)
     {
@@ -1040,13 +998,11 @@ bool_t muleasy(uvalue_t factor, store_t reg)
             stackentry = mulstack[(int)mulsp--];
             if (stackentry < 0)
             {
-#ifdef I8088
                 if (stackentry == -INT32BITSTO)
                 {
                     clr(reg);    /* shifting would do nothing */
                 }
                 else
-#endif
                 {
                     slconst((value_t)-stackentry, reg);
                 }
@@ -1118,16 +1074,15 @@ void outhiaccum()
 
 void outimmadr(offset_T offset)
 {
-#ifdef I8088
     if (!isbyteoffset(offset))
     {
         outimmed();
     }
     else
+    {
         outbimmed();
-#else
-    outimmed();
-#endif
+    }
+
     outshex(offset);
 }
 
@@ -1164,9 +1119,7 @@ void outnccname(char *name)
 
 void outncimmadr(offset_T offset)
 {
-#ifdef I8088
     outcomma();
-#endif
     outimmadr(offset);
     outnl();
 }
@@ -1209,12 +1162,10 @@ void regexchange(store_t sourcereg, store_t targreg)
     outexchange();
     outregname(sourcereg);
     outncregname(targreg);
-#ifdef I8088
     if (!((sourcereg | targreg) & AXREG))
     {
         bumplc();
     }
-#endif
 }
 
 /* transfer a register */
@@ -1253,10 +1204,8 @@ void set(char *name, offset_T value)
 void sl1(store_t reg)
 {
     outsl();
-#ifdef I8088
     outregname(reg);
     outnc1();
-#endif
 }
 
 /* shift left register by a constant (negative = infinity) */
@@ -1274,8 +1223,7 @@ void slconst(value_t shift, store_t reg)
             clrBreg();
             shift -= CHBITSTO;
         }
-#ifdef I8088
-# if MAX_INLINE_SHIFT < INT16BITSTO
+#if MAX_INLINE_SHIFT < INT16BITSTO
         if (shift > MAX_INLINE_SHIFT)
         {
             outload();
@@ -1288,7 +1236,6 @@ void slconst(value_t shift, store_t reg)
             outncregname(SHIFTREG);
         }
         else
-# endif
 #endif
         {
             while (shift--)
@@ -1326,8 +1273,7 @@ void srconst(value_t shift, bool_t uflag)
             }
             shift -= CHBITSTO;
         }
-#ifdef I8088
-# if MAX_INLINE_SHIFT < INT16BITSTO
+#if MAX_INLINE_SHIFT < INT16BITSTO
         if (shift > MAX_INLINE_SHIFT)
         {
             outload();
@@ -1343,7 +1289,6 @@ void srconst(value_t shift, bool_t uflag)
             outncregname(SHIFTREG);
         }
         else
-# endif
 #endif
         {
             while (shift--)
@@ -1380,12 +1325,10 @@ static char opregstr[] = "_opreg";
 
 static void opregadr()
 {
-#ifdef I8088
     outindleft();
     outccname(opregstr);
     outindright();
     bumplc2();
-#endif
 }
 
 /*
@@ -1396,13 +1339,11 @@ void restoreopreg()
 {
     if (reguse & OPREG)
     {
-#ifdef I8088
         outload();
         outregname(OPREG);
         outopsep();
         opregadr();
         outnl();
-#endif
     }
 }
 
@@ -1416,7 +1357,6 @@ void saveopreg()
 {
     if (reguse & OPREG)
     {
-#ifdef I8088
         bssseg();
         common(opregstr);
         outnhex(opregsize);
@@ -1424,6 +1364,5 @@ void saveopreg()
         outstore();
         opregadr();
         outncregname(OPREG);
-#endif
     }
 }

@@ -10,9 +10,7 @@
 #ifndef _SWANCC_SWANCC_BYTEORD_H
 #define _SWANCC_SWANCC_BYTEORD_H
 
-#ifdef I8088
 #define INT_BIG_ENDIAN 0
 #define LONG_BIG_ENDIAN 0
-#endif
 
 #endif /* _SWANCC_SWANCC_BYTEORD_H */

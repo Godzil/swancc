@@ -55,10 +55,8 @@
 #define GLOBAL    0x080U    /* offsets from storage name or 0 */
 #define CCREG     CONSTANT  /* arg to PSHS/PULS functions only */
 
-#ifdef I8088
 #ifdef FRAMEPOINTER
 #define FRAMEREG LOCAL
-#endif
 #define STACKREG 0x100U
 #define DATREG1  0x200U
 #define DATREG2  0x400U
@@ -67,19 +65,15 @@
 
 /* data for pushing and pulling registers */
 #define MINREGCHAR 'A'
-#ifdef I8088
 #define FLAGSREGCHAR 'f'
 #define pushchar() pushlist(AXREG)
-#endif
 
 /* special registers */
-#ifdef I8088
 #define ALREG    BREG
 #define AXREG    DREG
 #define DXREG    DATREG2
 #define MULREG   DATREG1B
 #define SHIFTREG DATREG1B
-#endif
 
 /* groups of registers */
 #define ALLDATREGS (BREG|DREG)
@@ -93,18 +87,14 @@
 #define LONGRETURNREGS (INDREG0|LONGREG2)
 #define LONGREG2 DREG
 
-#ifdef I8088
 #define LONGRETSPECIAL    /* LONGRETURNREGS!=RETURNREG && RETURNREG==LONGREG2 */
 #define RETURNREG DREG
-#endif
 
 /* registers to be used by software operations */
 #define OPREG INDREG0        /* 2nd reg for software ops (1st is DREG) */
 #define OPWORKREG INDREG2    /* 3rd register for software ops */
 
 /* maximum indirection count for 1 instruction */
-#ifdef I8088
 #define MAXINDIRECT 1
-#endif
 
 #endif /* _SWANCC_SWANCC_REG_H */

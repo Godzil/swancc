@@ -130,13 +130,11 @@ void longop(op_t op, struct symstruct *source, struct symstruct *target)
     }
     if (reglist)
     {
-#ifdef I8088
         if (op == EQOP)
         {
             changesp(spmark, FALSE);
         }
         else
-#endif
         {
             modstk(spmark);
         }

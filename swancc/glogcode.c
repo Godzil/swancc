@@ -134,12 +134,10 @@ static void cmplocal(struct symstruct *source, struct symstruct *target, ccode_t
     }
     loadpres(target, source);
     outcmp();
-#ifdef I8088
     if (source->storage == GLOBAL && source->indcount == 0 && !(target->storage & (AXREG | ALREG)))
     {
         bumplc();
     }
-#endif
     movereg(source, target->storage);
 }
 
@@ -352,9 +350,7 @@ static void reduceconst(struct symstruct *source)
 
 static void test(struct symstruct *target, ccode_t *pcondtrue)
 {
-#ifdef I8088
     store_t targreg;
-#endif
 
     *pcondtrue = testcc[(int)*pcondtrue];
     if (target->type->scalar & DLONG)
@@ -367,7 +363,6 @@ static void test(struct symstruct *target, ccode_t *pcondtrue)
         float1op(EQOP, target);
         return;
     }
-#ifdef I8088
     if (target->indcount != 0 || (target->storage == LOCAL && target->offset.offi != sp))
     {
         load(target, DREG);
@@ -385,7 +380,7 @@ static void test(struct symstruct *target, ccode_t *pcondtrue)
     {
         load(target, targreg);
     }
-    
+
     if (target->offset.offi == 0)
     {
         outtest();
@@ -396,7 +391,6 @@ static void test(struct symstruct *target, ccode_t *pcondtrue)
     }
     outcmp();
     outimadj(-target->offset.offi, targreg);
-#endif
 }
 
 /*

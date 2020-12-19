@@ -30,12 +30,10 @@
 #include <swancc/debug.h>
 #include <swancc/label.h>
 
-#ifdef I8088
 #define ADJUSTLONGRETURN
 #define CANHANDLENOFRAME
-#undef CANHANDLENOFRAME
+#undef  CANHANDLENOFRAME
 #define STUPIDFRAME
-#endif
 
 static void out_callstring(void);
 
@@ -97,12 +95,10 @@ void function(struct symstruct *source)
     {
         source->storage = doublreturnregs;
     }
-#ifdef I8088
     else if (source->type->scalar & FLOAT)
     {
         source->storage = RETURNREG | DATREG2;
     }
-#endif
     else
     {
         source->storage = RETURNREG;
@@ -208,12 +204,10 @@ void loadretexpression()
         {
             loadexpression(doublreturnregs, returntype);
         }
-#ifdef I8088
         else if (returntype->scalar & FLOAT)
         {
             loadexpression(/* REURNREG|*/ DATREG2, returntype);
         }
-#endif
         else
         {
             loadexpression(RETURNREG, returntype);
@@ -338,9 +332,7 @@ void reslocals()
                 pushlist(LONGARGREGS);
                 break;
             case 2:
-#ifdef I8088
                 pushlist(ARGREG);
-#endif
         }
         arg1size = 0;        /* show 1st arg allocated */
     }

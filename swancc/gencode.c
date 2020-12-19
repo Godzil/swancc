@@ -91,18 +91,14 @@ store_t regregs;           /* mask (in) for regs which can be reg vars */
 char *acclostr;
 char *accumstr;
 char *badregstr;
-#ifdef I8088
 char *dreg1str;
 char *dreg1bstr;
 char *dreg2str;
-#endif
 char *ireg0str;
 char *ireg1str;
 char *ireg2str;
 char *localregstr;
-#ifdef I8088
 char *stackregstr;
-#endif
 
 /* register sizes */
 uoffset_T accregsize;
@@ -125,12 +121,12 @@ uoffset_T returnadrsize;
                 (t)->type->constructor & FUNCTION))
 #endif
 
-#ifdef I8088
 #if NOTFINISHED
 store_t allregs = BREG | DREG | DATREG1 | DATREG2 | INDREG0 | INDREG1 | INDREG2;
 #else
 store_t allregs = BREG | DREG | INDREG0 | INDREG1 | INDREG2;
 #endif
+
 store_t allindregs = INDREG0 | INDREG1 | INDREG2;
 uoffset_T alignmask = ~(uoffset_T)0x0001;
 bool_t arg1inreg = FALSE;
@@ -145,6 +141,7 @@ offset_T jmplonger = 1;
 char *jumpstring = "br \t";
 char *regpulllist = "f2ax2ax2bx2si2di2bp2qx2qx2cx2dx2";
 char *regpushlist = "dx2cx2qx2qx2bp2di2si2bx2ax2ax2f2";
+
 #if NOTFINISHED
 store_t regregs = INDREG1 | INDREG2 | DATREG1 | DATREG2;
 #else
@@ -166,7 +163,6 @@ char *localregstr = "bp";
 char *localregstr = "sp";
 #endif
 char *stackregstr = "sp";
-#endif
 
 uoffset_T accregsize = 2;
 #ifdef FRAMEPOINTER

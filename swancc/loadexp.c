@@ -113,12 +113,11 @@ void initexpression(struct typestruct *type)
         {
             defword();
         }
-#ifdef I8088
         else if (!(type->scalar & DLONG))
         {
             defdword();
         }
-#endif
+        
         switch (symptr->storage)
         {
             case CONSTANT:

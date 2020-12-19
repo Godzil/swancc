@@ -338,14 +338,12 @@ void cast(struct typestruct *type, struct symstruct *target)
                         }
                     }
                 }
-#ifdef I8088
                 else if (tscalar & FLOAT)
                 {
                     target->indcount = 1;  /* XXX outnnadr clobbers this */
                     target->offset.offi += accregsize;
                     storereg(DATREG2, target);
                 }
-#endif
                 target->storage = source->storage;
                 target->offset.offi = 0;
             }
@@ -427,19 +425,17 @@ void extend(struct symstruct *target)
             {
                 sctoi();
             }
-#ifdef I8088
-                else if (tscalar & SHORT)
+            else if (tscalar & SHORT)
+            {
+                if (tscalar & UNSIGNED)
                 {
-                    if (tscalar & UNSIGNED)
-                    {
-                        ustoi();
-                    }
-                    else
-                    {
-                        stoi();
-                    }
+                    ustoi();
                 }
-#endif
+                else
+                {
+                    stoi();
+                }
+            }
             else
             {
                 ctoi();

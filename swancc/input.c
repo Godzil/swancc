@@ -500,9 +500,7 @@ void openio(int argc, char *argv[])
     else
         switch (arg[1])
         {
-#ifdef I8088
         case '0':        /* generate 16-bit code */
-#endif
         case 'c':        /* caller saves */
 #ifdef DEBUG
         case 'd':        /* print debugging information in asm output */
@@ -554,9 +552,7 @@ ts_s_includelist += sizeof *incnew;
         break;
         }
     }
-#ifdef I8088
     definestring("__8086__");
-#endif
     if (flag['c'])
     {
     callersaves = TRUE;
@@ -569,12 +565,7 @@ ts_s_includelist += sizeof *incnew;
     if (flag['f'])
     {
     arg1inreg = TRUE;
-#ifdef I8088
     definestring("__FIRST_ARG_IN_AX__");
-#endif
-#ifdef MC6808
-    definestring("__FIRST_ARG_IN_X__");
-#endif
     }
     arg1op = arg1inreg ? ROOTLISTOP : LISTOP;
 #ifdef DYNAMIC_LONG_ORDER

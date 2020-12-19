@@ -721,18 +721,14 @@ static void jumptocases()
             slconst((value_t)(ptypesize / 2), DREG);
             /* really log ptypesize */
             deflabel(jtablelab = casejump());
-#ifdef I8088
             jtablelab = jtablelab;     /* not used, allocated for regress */
-#endif
             for (caseval = caseptr->casevalue ; caseval <= case1ptr->casevalue ; ++caseval)
             {
-#ifdef I8088
                 if (ptypesize > 2)
                 {
                     defdword();
                 }
                 else
-#endif
                 {
                     defword();
                 }
@@ -746,12 +742,10 @@ static void jumptocases()
                     ++caseptr;
                 }
                 bumplc2();
-#ifdef I8088
                 if (ptypesize > 2)
                 {
                     bumplc2();
                 }
-#endif
                 outnl();
             }
             deflabel(zjtablelab);
@@ -773,9 +767,7 @@ void outswoffset(offset_T offset)
 #endif
     outplus();
     outswstacklab();
-#ifdef I8088
     bumplc();
-#endif
 }
 
 void outswstacklab()

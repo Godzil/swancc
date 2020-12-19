@@ -65,13 +65,12 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
     if (source->storage == CONSTANT)
     {
         extend(target);
-#ifdef I8088
+
         if (op == MULOP || op == SLOP)
         {
             loadany(target);
         }
         else
-#endif
         {
             load(target, DREG);
         }
@@ -187,7 +186,7 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
     /* source and target now in position to be loaded without any more registers */
     extend(target);
     load(target, DREG);
-#if defined(I8088)
+
     if ((op_t)op != DIVOP && (op_t)op != MODOP)
     {
         load(source, DATREG1);    /* CX */
@@ -217,27 +216,18 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
         }
     }
     else
-#endif
     {
         load(source, OPREG);
         switch ((op_t)op)
         {
             case DIVOP:
-#ifdef I8088
                 call("idiv_");
-#else
-                call("idiv");
-#endif
                 break;
             case MODOP:
                 call("imod");
                 break;
             case MULOP:
-#ifdef I8088
                 call("imul_");
-#else
-                call("imul");
-#endif
                 break;
             case SLOP:
                 call("isl");
