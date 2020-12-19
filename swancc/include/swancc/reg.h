@@ -65,19 +65,11 @@
 #define DATREG1B 0x800U
 #endif
 
-#ifdef MC6809
-#define DPREG    LOCAL      /* arg to PSHS/PULS functions only */
-#define PCREG    GLOBAL     /* arg to PSHS/PULS functions only */
-#endif
-
 /* data for pushing and pulling registers */
 #define MINREGCHAR 'A'
 #ifdef I8088
 #define FLAGSREGCHAR 'f'
 #define pushchar() pushlist(AXREG)
-#endif
-#ifdef MC6809
-#define pushchar() pushlist(BREG)
 #endif
 
 /* special registers */
@@ -88,13 +80,8 @@
 #define MULREG   DATREG1B
 #define SHIFTREG DATREG1B
 #endif
-#ifdef MC6809
-#define XREG INDREG0        /* XREG is special for ABX in index & switch */
-#define YREG INDREG2        /* XREG and YREG allow LEA (Z test) in cmp() */
-#endif
 
 /* groups of registers */
-
 #define ALLDATREGS (BREG|DREG)
 #define CHARREGS BREG
 #define MAXREGS 1           /* number of data registers */
@@ -111,28 +98,6 @@
 #define RETURNREG DREG
 #endif
 
-#ifdef MC6809
-#define RETURNREG INDREG0
-#endif
-
-/* registers which can be pulled as a group with the program counter
- * to perform an efficient function return */
-#ifdef MC6809
-#define JUNK1REGS BREG        /* 1 bytes locals to discard */
-#define JUNK2REGS INDREG2
-#define JUNK3REGS (BREG|INDREG2)
-#define JUNK4REGS (INDREG1|INDREG2)
-#endif
-
-/* registers which can be pushed as a group with the first argument
- * to perform an efficient function startup */
-#ifdef MC6809
-#define LOC1REGS CCREG        /* 1 bytes local to allocate */
-#define LOC2REGS DREG
-#define LOC3REGS (CCREG|DREG)
-#define LOC4REGS (CCREG|DREG|DPREG)
-#endif
-
 /* registers to be used by software operations */
 #define OPREG INDREG0        /* 2nd reg for software ops (1st is DREG) */
 #define OPWORKREG INDREG2    /* 3rd register for software ops */
@@ -140,10 +105,6 @@
 /* maximum indirection count for 1 instruction */
 #ifdef I8088
 #define MAXINDIRECT 1
-#endif
-
-#ifdef MC6809
-#define MAXINDIRECT 2
 #endif
 
 #endif /* _SWANCC_SWANCC_REG_H */

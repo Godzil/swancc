@@ -577,9 +577,6 @@ ts_s_includelist += sizeof *incnew;
     definestring("__8086__");
     }
 #endif
-#ifdef MC6809
-    definestring("__AS09__");
-#endif
     if (flag['c'])
     {
     callersaves = TRUE;
@@ -820,13 +817,9 @@ more:
 static void usage()
 {
     fatalerror(
-#ifdef MC6809
-"usage: cc1 [-cdfptw[-]] [-Ddefine] [-Iincdir] [-Uundef] [-o outfile] [infile]");
-#else 
 #ifdef I80386
 "usage: cc1 [-03cdfltw[-]] [-Ddefine] [-Iincdir] [-Uundef] [-o outfile] [infile]");
 #else 
 "usage: cc1 [-cdfltw[-]] [-Ddefine] [-Iincdir] [-Uundef] [-o outfile] [infile]");
-#endif
 #endif
 }

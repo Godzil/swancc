@@ -10,10 +10,6 @@
 #ifndef _SWANCC_SWANCC_SC_H
 #define _SWANCC_SWANCC_SC_H
 
-#ifdef MC6809
-#define DIRECTPAGE  0x01    /* modifier on global to show in dpseg */
-#endif
-
 #define EXTERNAL    0x02    /* external */
 #define STATIC      0x04
 

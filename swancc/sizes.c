@@ -10,7 +10,6 @@
 #include <swancc.h>
 #include <swancc/sizes.h>
 
-#ifndef MC6809
 uvalue_t intmaskto;   /* mask for ints */
 uvalue_t maxintto;    /* maximum int */
 uvalue_t maxlongto;   /* maximum long */
@@ -19,4 +18,3 @@ uvalue_t maxshortto;  /* maximum short */
 uvalue_t maxuintto;   /* maximum uint32_t */
 uvalue_t maxushortto; /* maximum uint16_t */
 uvalue_t shortmaskto; /* mask for shorts */
-#endif

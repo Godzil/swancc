@@ -12,7 +12,6 @@
  *    -Ms    PC Standalone.
  *    -Ml    i386 Linux
  *    -M8    CvW's c386
- *    -M9    MC6809 with swancc
  */
 #include <stdio.h>
 
@@ -1005,9 +1004,6 @@ void getargs(int argc, char *argv[])
 
     add_prefix(getenv("BCC_EXEC_PREFIX"));
 
-#ifdef MC6809
-    if (opt_M==0) opt_M = '9';
-#endif
 #ifdef CCC
     if (opt_M==0) opt_M = '8';
 #endif

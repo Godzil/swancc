@@ -11,9 +11,6 @@
 #ifndef _SWANCC_SWANCC_GENCODE_H
 #define _SWANCC_SWANCC_GENCODE_H
 
-#ifdef MC6809
-#define CANABXCUTOFF 7             /* favour ABX over MUL before this */
-#endif
 #define EXPRLEVEL 126              /* level for symbols in exptree, > real levs */
 #define OFFKLUDGELEVEL 127         /* level for expr sym with offset from name */
 #define OPERANDSEPARATOR ','       /* char separating operands */

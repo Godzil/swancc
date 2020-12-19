@@ -61,21 +61,7 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
         resultscalar |= sscalar;
         uflag |= sscalar & UNSIGNED;
     }
-#ifdef MC6809
-    if ((op_t) op == MULOP && sscalar & CHAR && tscalar & CHAR &&
-    (source->storage != CONSTANT || (uvalue_t) source->offset.offv > 2))
-    {
-    if (source->storage & WORKDATREGS)
-        push(source);
-    load(target, DREG);
-    outldmulreg();
-    outadr(source);
-    outmulmulreg();
-    target->storage = DREG;
-    target->type = iscalartotype(resultscalar);
-    return;
-    }
-#endif
+
     if (source->storage == CONSTANT)
     {
         extend(target);
@@ -146,14 +132,7 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
     workreg = OPREG;
     if ((sscalar & CHAR && target->storage & WORKDATREGS && source->storage == OPREG && source->indcount != 0) ||
         ((sscalar & CHAR || source->storage & WORKDATREGS) && target->storage == OPREG && target->indcount != 0) ||
-        #ifdef MC6809 /* for -Wall */
-        (
-        #endif
-        (source->storage == OPREG && target->storage == GLOBAL && target->indcount == 0)
-#ifdef MC6809
-        && posindependent)
-#endif
-        )
+        (source->storage == OPREG && target->storage == GLOBAL && target->indcount == 0))
     {
         if ((regmark | OPREG) == allindregs)
         {
@@ -183,11 +162,7 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
             }
         }
         extend(source);
-        if (target->storage != OPREG && (target->storage != GLOBAL || target->indcount != 0
-#ifdef MC6809
-            || !posindependent
-#endif
-        ))
+        if (target->storage != OPREG && (target->storage != GLOBAL || target->indcount != 0))
         {
             workreg = OPREG;
         }
@@ -204,11 +179,7 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
             workreg = OPREG;
         }
     }
-    if (target->storage == GLOBAL && target->indcount == 0
-#ifdef MC6809
-        && posindependent
-#endif
-        )
+    if (target->storage == GLOBAL && target->indcount == 0)
     {
         load(target, workreg);
     }

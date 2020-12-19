@@ -61,10 +61,6 @@ void function(struct symstruct *source)
         else
 #endif
         outcalladr();
-#ifdef MC6809
-        if (source->indcount == 1)
-            ++source->indcount;    /* fake for outadr */
-#endif
         outadr(source);
     }
     source->type = source->type->nexttype;
@@ -391,26 +387,6 @@ void reslocals()
 #ifdef I8088
                 pushlist(ARGREG);
 #endif
-#ifdef MC6809
-                switch (sp - softsp)
-                {
-                case 3:
-                pushlist(LOC1REGS | ARGREG);
-                break;
-                case 4:
-                pushlist(LOC2REGS | ARGREG);
-                break;
-                case 5:
-                pushlist(LOC3REGS | ARGREG);
-                break;
-                case 6:
-                pushlist(LOC4REGS | ARGREG);
-                break;
-                default:
-                pushlist(ARGREG);
-                break;
-                }
-#endif /* MC6809 */
         }
         arg1size = 0;        /* show 1st arg allocated */
     }
@@ -458,36 +434,11 @@ void ret()
     }
     outreturn();
 #else /* no FRAMEPOINTER */
-#ifdef MC6809
-    store_t reglist;
-
-    switch (sp)
-    {
-    case -1:
-    reglist = JUNK1REGS | PCREG;
-    break;
-    case -2:
-    reglist = JUNK2REGS | PCREG;
-    break;
-    case -3:
-    reglist = JUNK3REGS | PCREG;
-    break;
-    case -4:
-    reglist = JUNK4REGS | PCREG;
-    break;
-    default:
-    modstk(0);
-    outreturn();
-    return;
-    }
-    poplist(reglist);
-#else
     if (sp != 0)
     {
     modstk(-(offset_T) func1saveregsize);
     poplist(callee1mask);
     }
     outreturn();
-#endif /* no MC6809 */
 #endif /* no FRAMEPOINTER */
 }

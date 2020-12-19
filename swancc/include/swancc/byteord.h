@@ -15,9 +15,4 @@
 #define LONG_BIG_ENDIAN 1    /* longs are back to front for Xenix */
 #endif
 
-#ifdef MC6809
-#define INT_BIG_ENDIAN 1     /* byte order in words is high-low */
-#define LONG_BIG_ENDIAN 1    /* byte order in longs is high-low */
-#endif
-
 #endif /* _SWANCC_SWANCC_BYTEORD_H */

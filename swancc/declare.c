@@ -1271,10 +1271,6 @@ static bool_t regdecl()
         return FALSE;
     }
 #endif
-#ifdef MC6809
-    if (gvarsymptr->type->constructor != POINTER)
-    return FALSE;
-#endif
     if (!(regavail = regregs & ~reguse))
     {
         return FALSE;

@@ -171,33 +171,6 @@ char *localregstr = "sp";
 char *stackregstr = "sp";
 #endif
 
-#ifdef MC6809
-store_t allregs = BREG | DREG | INDREG0 | INDREG1 | INDREG2;
-store_t allindregs = INDREG0 | INDREG1 | INDREG2;
-uoffset_T alignmask = ~(uoffset_T) 0x0000;
-bool_t arg1inreg = TRUE;
-store_t calleemask = INDREG1 | INDREG2;
-bool_t callersaves = TRUE;
-char *callstring = "JSR\t>";
-store_t doubleargregs = DREG | INDREG0 | INDREG1 | INDREG2;
-store_t doubleregs = DREG | INDREG0 | INDREG1 | INDREG2;
-store_t doublreturnregs = DREG | INDREG0 | INDREG1 | INDREG2;
-offset_T jcclonger = 2;
-offset_T jmplonger = 1;
-char *jumpstring = "JMP\t>";
-char *regpulllist = "CC1B1D2X2U2Y2DP1PC2";
-char *regpushlist = "PC2DP1Y2U2X2D2B1CC1";
-store_t regregs = INDREG1 | INDREG2;
-
-char *acclostr = "B";
-char *accumstr = "D";
-char *badregstr = "Q";
-char *ireg0str = "X";
-char *ireg1str = "U";
-char *ireg2str = "Y";
-char *localregstr = "S";
-#endif
-
 uoffset_T accregsize = 2;
 #ifdef FRAMEPOINTER
 uoffset_T frameregsize = 2;
@@ -207,7 +180,6 @@ uoffset_T opregsize = 2;
 uoffset_T pshregsize = 2;
 uoffset_T returnadrsize = 2;
 
-#ifndef MC6809
 uvalue_t intmaskto = 0xFFFFL;
 uvalue_t maxintto = 0x7FFFL;
 uvalue_t maxlongto = 0x7FFFFFFFL;
@@ -216,7 +188,6 @@ uvalue_t maxshortto = 0x7FFFL;
 uvalue_t maxuintto = 0xFFFFL;
 uvalue_t maxushortto = 0xFFFFL;
 uvalue_t shortmaskto = 0xFFFFL;
-#endif
 
 static store_t callermask;
 static offset_T lastargsp;
@@ -538,10 +509,7 @@ void codeinit()
 #ifdef POSINDEPENDENT
     if (posindependent)
     {
-# ifdef MC6809
-    callstring = "LBSR\t";
-    jumpstring = "LBRA\t";
-# endif
+
     }
 #endif
     if (callersaves)

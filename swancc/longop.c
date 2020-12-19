@@ -180,9 +180,6 @@ void long1op(op_t op, struct symstruct *target)
 
 void outlongendian()
 {
-#ifdef MC6809
-    outbyte('_');
-#endif
 #if DYNAMIC_LONG_ORDER
     if (long_big_endian)
 #endif

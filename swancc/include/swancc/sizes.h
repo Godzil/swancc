@@ -12,7 +12,7 @@
 
 /*
  * the compiler is not very portable in this area
- * it only directly supports I8088-I80386 and MC6809
+ * it only directly supports I8088-I80386
  * it assumes
  *     sizeof(source long) >= sizeof(target long)
  *     usual register size = int
@@ -28,25 +28,11 @@
 #define MAXUCHTO     255    /* maximum unsigned character */
 #define MINSCHTO     (-128) /* minimum signed character */
 
-#ifdef MC6809
-#define is5bitoffset(n)    ((uoffset_T) (n) + 0x10 < 0x20)
-#endif
 #define isbyteoffset(n)    ((uoffset_T) (n) - MINSCHTO <= MAXSCHTO - MINSCHTO)
 #define ischarconst(n)     ((uvalue_t) (n) <= MAXUCHTO)
 #define isnegbyteoffset(n) ((uvalue_t) (n) + MAXSCHTO <= MAXSCHTO - MINSCHTO)
 #define isshortbranch(n)   ((uoffset_T) (n) - MINSCHTO <= MAXSCHTO - MINSCHTO)
 
-#ifdef MC6809
-/* Hack to reduce number of direct page variables. */
-#define intmaskto    ((uvalue_t) 0xFFFFL)
-#define maxintto     ((uvalue_t) 0x7FFFL)
-#define maxlongto    ((uvalue_t) 0x7FFFFFFFL)
-#define maxoffsetto  ((uvalue_t) 0x7FFFL)
-#define maxshortto   ((uvalue_t) 0x7FFFL)
-#define maxuintto    ((uvalue_t) 0xFFFFL)
-#define maxushortto  ((uvalue_t) 0xFFFFL)
-#define shortmaskto  ((uvalue_t) 0xFFFFL)
-#else
 extern uvalue_t intmaskto;   /* mask for ints */
 extern uvalue_t maxintto;    /* maximum int */
 extern uvalue_t maxlongto;   /* maximum long */
@@ -55,6 +41,5 @@ extern uvalue_t maxshortto;  /* maximum short */
 extern uvalue_t maxuintto;   /* maximum unsigned */
 extern uvalue_t maxushortto; /* maximum uint16_t */
 extern uvalue_t shortmaskto; /* mask for shorts */
-#endif
 
 #endif /* _SWANCC_SWANCC_SIZES_H */

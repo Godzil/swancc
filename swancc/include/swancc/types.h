@@ -28,27 +28,13 @@ typedef uint32_t uoffset_T; /* target unsigned machine offset */
 #define outuvalue outhex
 #define outvalue outshex
 #endif
-#ifdef MC6809
-typedef int offset_T;
-typedef uint32_t uoffset_T;
-#endif
-
 
 /*
  * storage class type must hold all the flags defined elsewhere
  * it must have a few more bits than the target has registers
  */
-
 #ifdef I8088
 typedef uint32_t store_t;    /* storage class flags */
-#endif
-#ifdef MC6809
-#ifdef __STDC__
-typedef int store_t;
-# else
-typedef uint32_t store_t;
-# endif
-typedef uint8_t store_t;
 #endif
 
 

@@ -48,12 +48,6 @@ static void errorsummary(void);
 
 static void errsum1(void);
 
-#ifdef MC6809
-#ifdef DEBUG
-static void outvaldigs(uvalue_t num);
-#endif
-#endif
-
 void bugerror(char *message)
 {
     error2error("compiler bug - ", message);
@@ -700,50 +694,6 @@ void outudec(uint32_t num)
     str[sizeof str - 1] = 0;
     outstr(pushudec(str + sizeof str - 1, num));
 }
-
-#ifdef MC6809
-#ifdef DEBUG
-
-/* print unsigned value, hex format (like outhex except value_t is larger) */
-
-void outuvalue(num)
-uvalue_t num;
-{
-#ifdef HEXSTARTCHAR
-    if (num >= 10)
-    outbyte(HEXSTARTCHAR);
-#endif
-    outvaldigs(num);
-#ifdef HEXENDCHAR
-    if (num >= 10)
-    outbyte(HEXENDCHAR);
-#endif
-}
-
-/* print unsigned value, hex format with digits only (no hex designator) */
-static void outvaldigs(uvalue_t num)
-{
-    if (num >= 0x10)
-    {
-    outvaldigs(num / 0x10);
-    num %= 0x10;
-    }
-    outbyte(hexdigits[(int32_t) num]);
-}
-
-/* print signed value, hex format (like outshex except value_t is larger) */
-void outvalue(value_t num)
-{
-    if (num < 0)
-    {
-    outminus();
-    num = -num;
-    }
-    outuvalue((uoffset_T) num);
-}
-
-#endif /* DEBUG */
-#endif /* MC6809 */
 
 /* push decimal digits of an unsigned onto a stack of chars */
 char *pushudec(char *s, register uint32_t num)

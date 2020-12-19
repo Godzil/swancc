@@ -25,10 +25,6 @@
 #define outlbranch() outop3str( "b")
 #define outsbranch() outop2str( "j")
 #endif
-#ifdef MC6809
-#define outlbranch() outop3str( "LB")
-#define outsbranch() outop2str( "B")
-#endif
 
 #define MAXVISLAB 32
 
@@ -52,15 +48,6 @@ static char scondnames[][2] =    /* names of short condition codes */
     {'e', ' ',}, {'n', 'e',}, {'m', 'p',}, {'n', 0,},
     {'l', ' ',}, {'g', 'e',}, {'l', 'e',}, {'g', ' ',},
     {'b', ' ',}, {'a', 'e',}, {'b', 'e',}, {'a', ' ',},
-};
-#endif
-
-#ifdef MC6809
-static char condnames[][2] =    /* names of condition codes */
-{
-    { 'E', 'Q', }, { 'N', 'E', }, { 'R', 'A', }, { 'R', 'N', },
-    { 'L', 'T', }, { 'G', 'E', }, { 'L', 'E', }, { 'G', 'T', },
-    { 'L', 'O', }, { 'H', 'S', }, { 'L', 'S', }, { 'H', 'I', },
 };
 #endif
 
@@ -205,27 +192,8 @@ void deflabel(label_no label)
                         *labpatch = 'j';
                         *(labpatch + 1) = *(cnameptr = scondnames[(int)labptr->labcond]);
 #endif
-#ifdef MC6809
-# ifdef NEW_MC6809 /* patch JMP\t> or LBCC\t to BCC \t */
-                        *labpatch = 'B';
-                        *(labpatch + 4) = '\t';    /* redundant unless JMP */
-                        *(labpatch + 1) =
-                            *(cnameptr = condnames[labptr->labcond]);
-# else
-                        if (labptr->labcond == RA)
-                            strncpy(labpatch, "BRA\t\t", 5);
-                        else
-                            *labpatch = '\t';
-                        goto over;
-# endif
-#endif
                         *(labpatch + 2) = *(cnameptr + 1);
                         *(labpatch + 3) = ' ';
-#ifdef MC6809
-# ifndef NEW_MC6809 /* patch JMP\t> or LBCC\t to BCC \t */
-                        over: ;        /* temp regression test kludge */
-# endif
-#endif
                         nlonger = jcclonger;
                         if (labptr->labcond == RA)
                         {
@@ -338,10 +306,6 @@ void lbranch(ccode_t cond, label_no label)
         }
 #endif
 #endif
-#ifdef MC6809
-        outcond(cond);
-        bumplc();
-#endif
     }
     outlabel(label);
     outnl();
@@ -380,23 +344,7 @@ struct symstruct *namedlabel()
     return symptr;
 }
 
-#ifdef MC6809
-
-/* print condition code name */
-
-void outcond(ccode_t cond)
-{
-    char *cnameptr;
-
-    outbyte(*(cnameptr = condnames[(ccode_t) cond]));
-    outbyte(*(cnameptr + 1));
-    outtab();
-}
-
-#endif
-
 /* print label */
-
 void outlabel(label_no label)
 {
     outbyte(LABELSTARTCHAR);
@@ -430,12 +378,6 @@ void sbranch(ccode_t cond, label_no label)
         outlabel(label);
         outnl();
     }
-#endif
-#ifdef MC6809
-    outsbranch();
-    outcond(cond);
-    outlabel(label);
-    outnl();
 #endif
 }
 
