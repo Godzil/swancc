@@ -27,11 +27,7 @@ char *outbufptr;     /* current spot in output buffer */
 char *outbuftop;     /* top of current output buffer */
 bool_t watchlc;      /* nonzero to print lc after every line depends on zero init */
 
-#ifdef XENIX_AS
-# define HEXSTARTCHAR '/'
-#else
-# define HEXSTARTCHAR '$'
-#endif
+#define HEXSTARTCHAR '$'
 #define OUTBUFSIZE 2048
 #define opcodeleadin()        /* outtab() for fussy assemblers */
 
@@ -259,7 +255,7 @@ void outbyte(int c)
     outp = outbufptr;
     *outp++ = c;
     outbufptr = outp;
-    i f (outp >= outbuftop)
+    if (outp >= outbuftop)
     {
         flushout();
     }

@@ -18,18 +18,6 @@
 #define LOCALSTARTCHAR '.'    /* first char of local names */
 #define PUBLICENDCHAR  ':'
 
-/* adjustments for other assemblers */
-#ifdef AS09
-#undef LABELENDCHAR
-#endif
-
-#ifdef XENIX_AS
-#undef LABELSTARTCHAR
-#define LABELSTARTCHAR 'L'
-#undef LOCALSTARTCHAR
-#define LOCALSTARTCHAR 'L'
-#endif
-
 /* Protypes */
 void bumplc(void);
 void bumplc2(void);

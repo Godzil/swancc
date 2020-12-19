@@ -12,7 +12,7 @@
 
 #ifdef I8088
 #define INT_BIG_ENDIAN 0
-#define LONG_BIG_ENDIAN 1    /* longs are back to front for Xenix */
+#define LONG_BIG_ENDIAN 0
 #endif
 
 #endif /* _SWANCC_SWANCC_BYTEORD_H */

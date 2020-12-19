@@ -49,9 +49,6 @@ static bool_t lowregisDreg(void);
 #ifdef I8088
 static void outand(void);
 static void outequate(void);
-# ifdef XENIX_AS
-static void outexport(void);
-# endif
 static void outmovsx(void);
 static void outmovzx(void);
 static void tfrhilo(void);
@@ -86,17 +83,9 @@ static void opregadr(void);
 #define outdefstr() outop0str(".ascii\t\"")
 #define outexchange() outop1str("xchg\t")
 #define outglobl() outop0str(".globl\t")
-#ifdef XENIX_AS
-#define outimport() outexport()
-#else
 #define outexport() outop0str("export\t")
 #define outimport() outop0str("import\t")
-#endif
-#ifdef XENIX_AS
-#define outj1switch() outop3str("seg\tcs\nbr\t@");
-#else
 #define outj1switch() outop3str("seg\tcs\nbr\t");
-#endif
 #define outj2switch() do { outindleft(); outstr(ireg0str); outindright(); bumplc2(); outnl(); } while(0)
 #define outlcommon() outop0str("\tlcomm\t")
 #define outlswitch() do { outload(); outstr(ireg0str); outncregname(DREG); } while(0)
@@ -153,20 +142,10 @@ void defbyte()
     outop0str(".byte\t");
 }
 
-#ifdef XENIX_AS
-
-void defword()
-{
-}                /* don't have to print ".word\t" */
-
-#else
-
 void defword()
 {
     outop0str(".word\t");
 }
-
-#endif
 
 void defdword()
 {
@@ -209,20 +188,10 @@ static void outand()
     outop2str(ANDSTRING);
 }
 
-#ifdef XENIX_AS
-void outcalladr()
-{
-    outop2str("call\t@");
-}
-
-#else
-
 void outcalladr()
 {
     outop2str("call\t");
 }
-
-#endif
 
 void outcmp()
 {
@@ -244,13 +213,6 @@ static void outequate()
     outop0str("\t=\t");
 }
 
-#ifdef XENIX_AS
-static void outexport()
-{
-    outop0str(".globl\t");
-}
-#endif
-
 void outfail()
 {
     outop0str(".fail\t");
@@ -261,19 +223,6 @@ void outinc()
     outop1str("inc\t");
 }
 
-#ifdef XENIX_AS
-void outindleft()
-{
-    outbyte('(');
-}
-
-void outindright()
-{
-    outbyte(')');
-}
-
-#else
-
 void outindleft()
 {
     outbyte('[');
@@ -283,8 +232,6 @@ void outindright()
 {
     outbyte(']');
 }
-
-#endif
 
 #ifndef FRAMEPOINTER
 void outindstackreg()
@@ -1239,10 +1186,8 @@ static void outstackreg()
 
 void public(char *name)
 {
-#ifndef AS09
     outexport();
     outnccname(name);
-#endif
     outccname(name);
     outnbyte(PUBLICENDCHAR);
 }

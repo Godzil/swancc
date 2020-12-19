@@ -24,11 +24,6 @@
                               * since assembler has only 1 data seg */
 #define DYNAMIC_LONG_ORDER 1 /* long word order spec. at compile time */
 
-/* switches for source and target operating system dependencies */
-/*#define SOS_EDOS*/        /* source O/S is EDOS */
-/*#define SOS_MSDOS*/       /* source O/S is MSDOS */
-/*#define TOS_EDOS*/        /* target O/S is EDOS */
-
 /* switches for source machine dependencies */
 
 #define S_ALIGNMENT (sizeof(long)) /* A little safer */

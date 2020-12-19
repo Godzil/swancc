@@ -744,10 +744,6 @@ static void outnnadr(struct symstruct *adr)
                 outindleft();
             }
             outregname(adr->storage);
-# ifdef XENIX_AS
-            if (indflag)
-                outindright();
-# endif
 #endif
             break;
         case LOCAL:
@@ -793,10 +789,6 @@ static void outnnadr(struct symstruct *adr)
                 badaddress();
             outregname(LOCAL);
 # endif /* FRAMEPOINTER */
-# ifdef XENIX_AS
-            if (indflag)
-                outindright();
-# endif
 #endif /* I8088 */
             break;
         case GLOBAL:
@@ -808,9 +800,7 @@ static void outnnadr(struct symstruct *adr)
             }
             else
             {
-# ifndef XENIX_AS
                 outindleft();
-# endif
                 bumplc();
             }
 #endif
@@ -845,9 +835,7 @@ static void outnnadr(struct symstruct *adr)
     if (indflag)
     {
         --adr->indcount;
-# ifndef XENIX_AS
         outindright();
-# endif
     }
 #endif
 }
