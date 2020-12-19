@@ -415,12 +415,6 @@ static void docont()
         outshex(contloop->spmark);
         outminus();
         outswstacklab();
-#ifdef I80386
-        if (i386_32)
-        {
-            bumplc2();
-        }
-#endif
         outnl();
     }
     jump(contloop->contlab);
@@ -781,12 +775,6 @@ void outswoffset(offset_T offset)
     outswstacklab();
 #ifdef I8088
     bumplc();
-#ifdef I80386
-    if (i386_32)
-    {
-        bumplc2();
-    }
-#endif
 #endif
 }
 

@@ -223,16 +223,6 @@ struct typestruct *tounsigned(struct typestruct *type)
 
 void typeinit()
 {
-#ifdef I80386
-    if (i386_32)
-    {
-        uitype->typesize = itype->typesize = ptypesize = itypesize = 4;
-        dtype->alignmask = fltype->alignmask = uitype->alignmask = ltype->alignmask = ultype->alignmask = itype->alignmask = ~(uoffset_T)(
-            4 - 1);
-        ltype->scalar = LONG;    /* not DLONG */
-        ultype->scalar = UNSIGNED | LONG;
-    }
-#endif
     fitype = prefix(FUNCTION, ftypesize, itype);
     pctype = pointype(ctype);
     skey0 = 1;

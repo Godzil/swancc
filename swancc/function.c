@@ -97,36 +97,22 @@ void function(struct symstruct *source)
 #endif
         source->storage = BREG;
     }
-#ifdef I80386
-    else if (i386_32)
+
+    if (source->type->scalar & DOUBLE)
     {
-        if (source->type->scalar & DOUBLE)
-        {
-            source->storage = doublreturnregs & ~DREG;
-        }
-        else
-        {
-            source->storage = RETURNREG;
-        }
+        source->storage = doublreturnregs;
     }
-    else
-#endif
-    {
-        if (source->type->scalar & DOUBLE)
-        {
-            source->storage = doublreturnregs;
-        }
 #ifdef I8088
-        else if (source->type->scalar & FLOAT)
-        {
-            source->storage = RETURNREG | DATREG2;
-        }
-#endif
-        else
-        {
-            source->storage = RETURNREG;
-        }
+    else if (source->type->scalar & FLOAT)
+    {
+        source->storage = RETURNREG | DATREG2;
     }
+#endif
+    else
+    {
+        source->storage = RETURNREG;
+    }
+
     source->offset.offi = source->indcount = 0;
     if (source->level == OFFKLUDGELEVEL)
     {
@@ -223,35 +209,19 @@ void loadretexpression()
     else
 #endif
     {
-#ifdef I80386
-        if (i386_32)
+        if (returntype->scalar & DOUBLE)
         {
-            if (returntype->scalar & DOUBLE)
-            {
-                loadexpression(doublreturnregs & ~DREG, returntype);
-            }
-            else
-            {
-                loadexpression(RETURNREG, returntype);
-            }
+            loadexpression(doublreturnregs, returntype);
         }
-        else
-#endif
-        {
-            if (returntype->scalar & DOUBLE)
-            {
-                loadexpression(doublreturnregs, returntype);
-            }
 #ifdef I8088
-            else if (returntype->scalar & FLOAT)
-            {
-                loadexpression(/* REURNREG|*/ DATREG2, returntype);
-            }
+        else if (returntype->scalar & FLOAT)
+        {
+            loadexpression(/* REURNREG|*/ DATREG2, returntype);
+        }
 #endif
-            else
-            {
-                loadexpression(RETURNREG, returntype);
-            }
+        else
+        {
+            loadexpression(RETURNREG, returntype);
         }
     }
 }
@@ -294,12 +264,6 @@ void listroot(struct symstruct *target)
 static void out_callstring()
 {
     outop3str(callstring);
-#ifdef I80386
-    if (i386_32)
-    {
-        bumplc2();
-    }
-#endif
 }
 
 #ifdef FRAMEPOINTER
@@ -376,13 +340,8 @@ void reslocals()
                 pushlist(doubleargregs);
                 break;
             case 4:
-#ifdef I80386
-                if (!i386_32)
-#endif
-                {
-                    pushlist(LONGARGREGS);
-                    break;
-                }
+                pushlist(LONGARGREGS);
+                break;
             case 2:
 #ifdef I8088
                 pushlist(ARGREG);

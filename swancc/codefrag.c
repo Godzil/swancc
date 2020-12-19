@@ -141,22 +141,11 @@ void comment()
 
 void ctoi()
 {
-#ifdef I80386
-    if (i386_32)
-    {
-        outmovzx();
-        outaccum();
-        outncregname(BREG);
-    }
-    else
-#endif
-    {
-        outxor();
-        outhiaccum();
-        outcomma();
-        outhiaccum();
-        outnl();
-    }
+    outxor();
+    outhiaccum();
+    outcomma();
+    outhiaccum();
+    outnl();
 }
 
 void defbyte()
@@ -395,17 +384,7 @@ void outword()
 
 void sctoi()
 {
-#ifdef I80386
-    if (i386_32)
-    {
-        outmovsx();
-        outncregname(BREG);
-    }
-    else
-#endif
-    {
-        outnop1str("cbw");
-    }
+    outnop1str("cbw");
 }
 
 void stoi()
@@ -459,21 +438,9 @@ static seg_t segment;        /* current seg, depends on init to CSEG = 0 */
 
 void adc0()
 {
-#ifdef I80386
-    if (i386_32)
-    {
-        adjcarry();
-        outadd();
-        outaccum();
-        outncregname(DXREG);
-    }
-    else
-#endif
-    {
-        outadc();
-        outhiaccum();
-        outncimmadr((offset_T)0);
-    }
+    outadc();
+    outhiaccum();
+    outncimmadr((offset_T)0);
 }
 
 /* add constant to register */
@@ -481,12 +448,7 @@ void adc0()
 void addconst(offset_T offset, store_t reg)
 {
 #ifdef I8088
-#ifdef I80386
-    if ((i386_32 && (uoffset_T)offset + 1 <= 2)  /* do -1 to 1 by dec/inc */
-        || (!i386_32 && (uoffset_T)offset + 2 <= 4))    /* do -2 to 2  */
-#else
-        if ((uoffset_T) offset + 2 <= 4)    /* do -2 to 2  */
-#endif
+    if ((uoffset_T) offset + 2 <= 4)    /* do -2 to 2  */
     {
         if (reg == ALREG)
         {
@@ -530,12 +492,6 @@ void adjlc(offset_T offset, store_t reg)
             {
                 bumplc();
             }
-#ifdef I80386
-            if (i386_32)
-            {
-                bumplc2();
-            }
-#endif
         }
     }
 }
@@ -557,12 +513,6 @@ void adjsp(label_no label)
         outplus();
         outhex((uoffset_T)-sp);
     }
-#ifdef I80386
-    if (i386_32)
-    {
-        bumplc2();
-    }
-#endif
     outnl();
 }
 
@@ -582,12 +532,6 @@ void andconst(offset_T offset)
         outncimmadr((offset_T) (topbits >> (INT16BITSTO - CHBITSTO)));
 #else
         outandac();
-#ifdef I80386
-        if (i386_32)
-        {
-            bumplc2();
-        }
-#endif
         outncimmadr(offset);
         return;
 #endif
@@ -629,12 +573,6 @@ label_no casejump()
     outj1switch();
     outlabel(jtablelab = getlabel());
     outj2switch();
-#ifdef I80386
-    if (i386_32)
-    {
-        bumplc2();
-    }
-#endif
 #endif
     return jtablelab;
 }
@@ -676,35 +614,26 @@ void deflong(uoffset_T value)
     uoffset_T longlow;
 
     longlow = value & (uoffset_T)intmaskto;
-#ifdef I80386
-    if (i386_32)
-    {
-        defdword();
-    }
-    else
-#endif
-    {
-        longhigh = (value >> INT16BITSTO) & (uoffset_T)intmaskto;
-        defword();
+    longhigh = (value >> INT16BITSTO) & (uoffset_T)intmaskto;
+    defword();
 #if DYNAMIC_LONG_ORDER
-        if (long_big_endian)
+    if (long_big_endian)
 #endif
 #if DYNAMIC_LONG_ORDER || LONG_BIG_ENDIAN
-        {
-            outnhex(longhigh);
-        }
+    {
+        outnhex(longhigh);
+    }
 #endif
 #if DYNAMIC_LONG_ORDER
-        else
+    else
 #endif
 #if DYNAMIC_LONG_ORDER || LONG_BIG_ENDIAN == 0
-        {
-            outnhex(longlow);
-            longlow = longhigh;
-        }
-#endif
-        defword();
+    {
+        outnhex(longlow);
+        longlow = longhigh;
     }
+#endif
+    defword();
     outnhex(longlow);
 }
 
@@ -938,12 +867,6 @@ void loadconst(offset_T offset, store_t reg)
         if (reg != BREG)
         {
             bumplc();
-#ifdef I80386
-            if (i386_32)
-            {
-                bumplc2();
-            }
-#endif
         }
         outncimmadr(offset);
     }
@@ -1280,12 +1203,6 @@ void outimmed()
 void outjumpstring()
 {
     outop3str(jumpstring);
-#ifdef I80386
-    if (i386_32)
-    {
-        bumplc2();
-    }
-#endif
 }
 
 /* print cc name, then newline */
@@ -1371,21 +1288,9 @@ void regtransfer(store_t sourcereg, store_t targreg)
 /* subtract carry resulting from char addition */
 void sbc0()
 {
-#ifdef I80386
-    if (i386_32)
-    {
-        adjcarry();
-        outsub();
-        outaccum();
-        outncregname(DXREG);
-    }
-    else
-#endif
-    {
-        outsbc();
-        outhiaccum();
-        outncimmadr((offset_T)0);
-    }
+    outsbc();
+    outhiaccum();
+    outncimmadr((offset_T)0);
 }
 
 /* set a name to a value */
@@ -1412,22 +1317,6 @@ void sl1(store_t reg)
 /* shift left register by a constant (negative = infinity) */
 void slconst(value_t shift, store_t reg)
 {
-#ifdef I80386
-    if (i386_32)
-    {
-        if ((shift = (uvalue_t)shift % INT32BITSTO) != 0)
-        {
-            outsl();
-            if (shift != 1)
-            {
-                bumplc();
-            }
-            outregname(reg);
-            outncimmadr((offset_T)shift);
-        }
-        return;
-    }
-#endif
     if ((uvalue_t)shift >= INT16BITSTO)
     {
         clr(reg);
@@ -1468,25 +1357,6 @@ void slconst(value_t shift, store_t reg)
 /* shift right D register by a constant (negative = infinity) */
 void srconst(value_t shift, bool_t uflag)
 {
-#ifdef I80386
-    if (i386_32)
-    {
-        if ((shift = (uvalue_t)shift % INT32BITSTO) != 0)
-        {
-            if (uflag)
-                outusr();
-            else
-                outsr();
-            if (shift != 1)
-            {
-                bumplc();
-            }
-            outaccum();
-            outncimmadr((offset_T)shift);
-        }
-        return;
-    }
-#endif
     if ((uvalue_t)shift >= INT16BITSTO)    /* covers negatives too */
     {
         if ((bool_t)uflag)
@@ -1570,12 +1440,6 @@ static void opregadr()
     outccname(opregstr);
     outindright();
     bumplc2();
-#ifdef I80386
-    if (i386_32)
-    {
-        bumplc2();
-    }
-#endif
 #endif
 }
 

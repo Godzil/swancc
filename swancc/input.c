@@ -480,14 +480,9 @@ void openio(int argc, char *argv[])
     struct inclist *incptr;
     bool_t flag[128];
 
-#if 0
-    lineptr = "\n";        /* empty line in case error message */
-#endif
     fd = 0;            /* standard input */
     memset(flag, 0, sizeof flag);
-#ifdef I80386
-    flag['3'] = sizeof (int) >= 4;
-#endif
+
     fname = "stdin";
     (incptr = &incfirst)->incnext = &inclast;
     initout();
@@ -507,9 +502,6 @@ void openio(int argc, char *argv[])
         {
 #ifdef I8088
         case '0':        /* generate 16-bit code */
-#endif
-#ifdef I80386
-        case '3':        /* generate 32-bit code */
 #endif
         case 'c':        /* caller saves */
 #ifdef DEBUG
@@ -563,19 +555,8 @@ ts_s_includelist += sizeof *incnew;
         }
     }
 #ifdef I8088
-#ifdef I80386
-    if (flag['3'])
-    {
-    i386_32 = TRUE;
-    definestring("__AS386_32__");
-    definestring("__i386__");
-    }
-    else
-#endif
-    {
     definestring("__AS386_16__");
     definestring("__8086__");
-    }
 #endif
     if (flag['c'])
     {
@@ -816,10 +797,5 @@ more:
 
 static void usage()
 {
-    fatalerror(
-#ifdef I80386
-"usage: cc1 [-03cdfltw[-]] [-Ddefine] [-Iincdir] [-Uundef] [-o outfile] [infile]");
-#else 
-"usage: cc1 [-cdfltw[-]] [-Ddefine] [-Iincdir] [-Uundef] [-o outfile] [infile]");
-#endif
+    fatalerror("usage: cc1 [-cdfltw[-]] [-Ddefine] [-Iincdir] [-Uundef] [-o outfile] [infile]");
 }

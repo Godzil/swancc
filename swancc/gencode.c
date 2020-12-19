@@ -49,9 +49,6 @@ offset_T framep;            /* hardware relative frame ptr */
 uoffset_T func1saveregsize; /* choice of next two values */
 uoffset_T funcdsaveregsize; /* funcsaveregsize adjusted for doubles */
 uoffset_T funcsaveregsize;  /* tot size of framelist/calleemask regs */
-#ifdef I80386
-bool_t i386_32;             /* nonzero to generate 386 32 bit code depends on zero init */
-#endif
 #ifdef DYNAMIC_LONG_ORDER
 bool_t long_big_endian;    /* nonzero if high long word is first */
 /* depends on zero init */
@@ -458,60 +455,6 @@ int32_t bitcount(uvalue_t number)
 
 void codeinit()
 {
-#ifdef I80386
-    if (i386_32)
-    {
-        /* Need DATREG2 for doubles although handling of extra data regs is
-         * not finished.
-         * XXX - might need more regs for 16-bit mode doubles or floats.
-         */
-        allregs = BREG | DREG | INDREG0 | INDREG1 | INDREG2 | DATREG1 | DATREG1B | DATREG2;
-#if NOTFINISHED
-        allindregs = INDREG0 | INDREG1 | INDREG2 | DATREG1 | DATREG2;
-#else
-        allindregs = INDREG0 | INDREG1 | INDREG2;
-#endif
-        alignmask = ~(uoffset_T)0x00000003;
-        calleemask = INDREG0 | INDREG1 | INDREG2;
-        doubleargregs = DREG | DATREG2;
-        doubleregs = DREG | DATREG2;
-        doublreturnregs = DREG | DATREG2;
-        jcclonger = 4;
-        jmplonger = 3;
-        regpulllist = "fd4eax4eax4ebx4esi4edi4ebp4qx4qx4ecx4edx4";
-        regpushlist = "edx4ecx4qx4qx4ebp4edi4esi4ebx4eax4eax4fd4";
-
-        accumstr = "eax";
-        dreg1str = "ecx";
-        dreg2str = "edx";
-        ireg0str = "ebx";
-        ireg1str = "esi";
-        ireg2str = "edi";
-#ifdef FRAMEPOINTER
-        localregstr = "ebp";
-#else
-        localregstr = "esp";
-#endif
-        stackregstr = "esp";
-
-        opregsize = returnadrsize = pshregsize = maxregsize =
-        #ifdef FRAMEPOINTER
-            frameregsize =
-        #endif
-            accregsize = 4;
-
-        intmaskto = (uint32_t)0xFFFFFFFFL;
-        maxintto = 0x7FFFFFFFL;
-        maxoffsetto = 0x7FFFFFFFL;
-        maxuintto = (uint32_t)0xFFFFFFFFL;
-    }
-#endif
-#ifdef POSINDEPENDENT
-    if (posindependent)
-    {
-
-    }
-#endif
     if (callersaves)
     {
         calleemask = 0;

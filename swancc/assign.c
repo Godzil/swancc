@@ -325,18 +325,6 @@ void cast(struct typestruct *type, struct symstruct *target)
             {
                 /* XXX - 386 only */
                 storereg(DREG, target);
-#ifdef I80386
-                if (i386_32)
-                {
-                    if (tscalar & DOUBLE)
-                    {
-                        target->indcount = 1;  /* XXX outnnadr clobbers this */
-                        target->offset.offi += accregsize;
-                        storereg(doubleregs & ~DREG, target);
-                    }
-                }
-                else
-#endif
                 if (tscalar & DOUBLE)
                 {
                     uint32_t i;

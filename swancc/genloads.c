@@ -147,17 +147,6 @@ store_t getindexreg()
     {
         return INDREG2;
     }
-#if NOTFINISHED
-#ifdef I80386
-    if (i386_32)
-    {
-    if (!(reguse & DATREG1))
-        return DATREG1;
-    if (!(reguse & DATREG2))
-        return DATREG2;
-    }
-#endif
-#endif
     bugerror("out of index regs");
     return 0;
 }
@@ -356,25 +345,15 @@ void load(struct symstruct *source, store_t targreg)
         }
         if (source->storage == CONSTANT)
         {
-#ifdef I80386
-            if (i386_32)
+            store_t regs;
+            uint32_t i, off = 1;
+            loadconst(((uint16_t *)source->offset.offd)[0], DREG);
+            regs = (targreg & ~DREG);
+            for (i = 1 ; i ; i <<= 1)
             {
-                loadconst(((offset_T *)source->offset.offd)[0], DREG);
-                loadconst(((offset_T *)source->offset.offd)[1], targreg & ~DREG);
-            }
-            else /* XXX - more for non-386 */
-#endif
-            {
-                store_t regs;
-                uint32_t i, off = 1;
-                loadconst(((uint16_t *)source->offset.offd)[0], DREG);
-                regs = (targreg & ~DREG);
-                for (i = 1 ; i ; i <<= 1)
+                if (regs & i)
                 {
-                    if (regs & i)
-                    {
-                        loadconst(((uint16_t *)source->offset.offd)[off++], i);
-                    }
+                    loadconst(((uint16_t *)source->offset.offd)[off++], i);
                 }
             }
         }
@@ -397,23 +376,11 @@ void load(struct symstruct *source, store_t targreg)
         float val;
 
         val = *source->offset.offd;
-#ifdef I80386
-        if (i386_32)
-        {
-            loadconst(((offset_T *)&val)[0], targreg);    /* XXX 386 */
-        }
-        else
-#endif
-        {
-            loadconst(((uint16_t *)&val)[0], DREG);
-            loadconst(((uint16_t *)&val)[1], targreg & ~DREG);
-        }
+
+        loadconst(((uint16_t *)&val)[0], DREG);
+        loadconst(((uint16_t *)&val)[1], targreg & ~DREG);
     }
-#ifdef I80386
-    else if (!i386_32 && source->type->scalar & FLOAT)
-#else
-        else if (source->type->scalar & FLOAT)
-#endif
+    else if (source->type->scalar & FLOAT)
     {
         /* Treat a float just like a long ... */
         if (source->indcount == 0)
@@ -642,17 +609,9 @@ void movereg(struct symstruct *source, store_t targreg)
     {
         targreg = BREG;
     }
-#ifdef I80386
-    if (i386_32 && source->type->scalar & SHORT && source->indcount <= 1)
-    {
-        outshortregname(targreg);
-        bumplc();
-    }
-    else
-#endif
-    {
-        outregname(targreg);
-    }
+
+    outregname(targreg);
+
     if (source->storage == CONSTANT)
     {
         adjlc((offset_T)source->offset.offv, targreg);
@@ -713,12 +672,6 @@ static void outnamoffset(struct symstruct *adr)
         outshex(adr->offset.offi);
     }
     bumplc2();
-#ifdef I80386
-    if (i386_32)
-    {
-        bumplc2();
-    }
-#endif
 }
 
 /* print comma, then register name, then newline */
@@ -760,11 +713,8 @@ static void outnnadr(struct symstruct *adr)
 #ifdef I8088
         case DATREG1:
         case DATREG2:
-#ifdef I80386
-            if (indflag && !i386_32)
-#else
-                if (indflag)
-#endif
+
+            if (indflag)
             {
                 outnl();
                 badaddress();
@@ -852,12 +802,6 @@ static void outnnadr(struct symstruct *adr)
         case GLOBAL:
 #ifdef I8088
             bumplc();
-#ifdef I80386
-            if (i386_32)
-            {
-                bumplc2();
-            }
-#endif
             if (!indflag)
             {
                 outimmed();
@@ -1063,11 +1007,7 @@ void push(struct symstruct *source)
         }
     }
 #ifdef I8088
-    else if ((source->indcount == 1 && (sscalar & (SHORT | INT | LONG | FLOAT) || source->type->constructor & POINTER))
-             #ifdef I80386
-             || (source->storage == CONSTANT && i386_32)
-#endif
-        )
+    else if ((source->indcount == 1 && (sscalar & (SHORT | INT | LONG | FLOAT) || source->type->constructor & POINTER)))
     {
         size = source->type->typesize;
         if (size == 1)
@@ -1087,25 +1027,6 @@ void push(struct symstruct *source)
         outpshs();
         bumplc();
         outtab();
-#ifdef I80386
-        if (i386_32)
-        {
-            if (source->storage == CONSTANT)
-            {
-                unbumplc();
-                adjlc((offset_T)source->offset.offv, INDREG0);
-            }
-            if (size == 2)
-            {
-                outword();
-                bumplc();
-            }
-            else
-            {
-                outdword();
-            }
-        }
-#endif
         outadr(source);
         sp -= size;
     }
@@ -1249,18 +1170,8 @@ void storereg(store_t sourcereg, struct symstruct *target)
         }
         outnnadr(target);
         outcomma();
-#ifdef I80386
-        if (i386_32 && target->type->scalar & SHORT)
-        {
-            outshortregname(sourcereg);
-            bumplc();
-            outnl();
-        }
-        else
-#endif
-        {
-            outnregname(sourcereg);
-        }
+
+        outnregname(sourcereg);
 #endif
     }
 }

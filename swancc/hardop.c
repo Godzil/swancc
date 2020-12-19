@@ -262,8 +262,7 @@ void op1(op_t op, struct symstruct *source, struct symstruct *target)
     /*
      * Emergency fix. The types of constants should be reduced here and in
      * other low-level routines anyway, and not in exptree.c and table.c,
-     * and for the 80386 and maybe the 8086 they would be better not
-     * reduced.
+     * and maybe Ffor the 8086 they would be better not reduced.
      */
     if (source->storage == CONSTANT && ischarconst(source->offset.offv))
     {
@@ -383,12 +382,6 @@ void op1(op_t op, struct symstruct *source, struct symstruct *target)
             {
                 outregname(BREG);
             }
-# ifdef I80386
-            if (i386_32 && !(sscalar & CHAR))
-            {
-                bumplc2();
-            }
-# endif
             outncimmadr((offset_T)source->offset.offv);
 
 #endif /* OP1 */

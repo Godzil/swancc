@@ -299,12 +299,6 @@ void lbranch(ccode_t cond, label_no label)
         }
         outtab();
         bumplc2();
-#ifdef I80386
-        if (i386_32)
-        {
-            bumplc();
-        }
-#endif
 #endif
     }
     outlabel(label);

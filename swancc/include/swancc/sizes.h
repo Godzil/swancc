@@ -12,7 +12,7 @@
 
 /*
  * the compiler is not very portable in this area
- * it only directly supports I8088-I80386
+ * it only directly supports I8088
  * it assumes
  *     sizeof(source long) >= sizeof(target long)
  *     usual register size = int

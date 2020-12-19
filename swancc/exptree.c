@@ -119,24 +119,6 @@ static void binconvert(struct nodestruct *nodeptr)
             }
         }
     }
-#ifdef I80386
-    else if (i386_32 && bothscalar & SHORT)
-    {
-        nodeptr->nodetype = itype;
-        if (bothscalar & UNSIGNED)
-        {
-            nodeptr->nodetype = uitype;
-        }
-        if (lscalar & SHORT)
-        {
-            nodeptr->left.nodeptr = castnode(nodeptr->nodetype, nodeptr->left.nodeptr);
-        }
-        if (rscalar & SHORT)
-        {
-            nodeptr->right = castnode(nodeptr->nodetype, right);
-        }
-    }
-#endif
     else if (bothscalar & UNSIGNED)
     {
         nodeptr->nodetype = uitype;
@@ -1067,12 +1049,7 @@ static struct typestruct *nodetype(struct nodestruct *nodeptr)
             nodeptr->left.nodeptr = left = unconvert(left);
             nodeptr->right = right = unconvert(right);
             targtype = left->nodetype;
-            if (
-                #ifdef I80386 \
-                i386_32 ||
-
-                #endif
-                (targtype->scalar & FLOAT) == 0)
+            if ((targtype->scalar & FLOAT) == 0)
             {
                 if (targtype == right->nodetype)
                 {
@@ -1204,15 +1181,6 @@ static struct typestruct *nodetype(struct nodestruct *nodeptr)
                     nodeptr->right = castnode(rscalar & UNSIGNED ? ultype : targtype, right);
                 }
             }
-#ifdef I80386
-            else if (i386_32 && lscalar & INT)
-            {
-                if (rscalar & SHORT)
-                {
-                    nodeptr->right = castnode(rscalar & UNSIGNED ? uitype : targtype, right);
-                }
-            }
-#endif
             break;
         case SLABOP:
         case SRABOP:

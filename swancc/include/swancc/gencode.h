@@ -30,9 +30,7 @@ extern offset_T framep;            /* hardware relative frame ptr */
 extern uoffset_T func1saveregsize; /* choice of next two values */
 extern uoffset_T funcdsaveregsize; /* funcsaveregsize adjusted for doubles */
 extern uoffset_T funcsaveregsize;  /* tot size of framelist/calleemask regs */
-#ifdef I80386
-extern bool_t i386_32;             /* nonzero to generate 386 32 bit code depends on zero init */
-#endif
+
 #ifdef DYNAMIC_LONG_ORDER
 extern bool_t long_big_endian;    /* nonzero if high long word is first */
                 /* depends on zero init */

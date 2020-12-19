@@ -64,33 +64,6 @@ void cmp(struct symstruct *source, struct symstruct *target, ccode_t *pcondtrue)
     label_no falselab;
 
     cmplocal(source, target, pcondtrue);
-#if 0
-#ifdef I80386
-    if (i386_32)
-    {
-    if (*pcondtrue == LO)
-    {
-        getlabel();
-        getlabel();
-        outnop2str("sbb\teax,eax");
-        outnop1str("inc eax");
-        target->storage = BREG;
-        target->type = ctype;
-        return;
-    }
-    if (*pcondtrue == HS)
-    {
-        getlabel();
-        getlabel();
-        outnop2str("sbb\teax,eax");
-        outnop2str("neg eax");
-        target->storage = BREG;
-        target->type = ctype;
-        return;
-    }
-    }
-#endif
-#endif
     sbranch(oppcc[(int)*pcondtrue], falselab = getlabel());
     loadlogical(target, falselab);
 }
@@ -412,18 +385,7 @@ static void test(struct symstruct *target, ccode_t *pcondtrue)
     {
         load(target, targreg);
     }
-
-#ifdef I80386
-    /* Extension was not done in exptree for the == 0 case, to allow
-     * optimization here - which we don't do for shorts.  (foo--) is
-     * newfoo == -1 here and used to be missed.
-     */
-    if (i386_32 && target->type->scalar & SHORT)
-    {
-        extend(target);
-    }
-#endif
-
+    
     if (target->offset.offi == 0)
     {
         outtest();

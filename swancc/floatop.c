@@ -32,24 +32,6 @@ bool_t f_indirect(struct symstruct *target)
     {
         if (target->storage == CONSTANT)
         {
-#ifdef I80386
-            if (i386_32)
-            {
-                if (target->type->scalar & FLOAT)
-                {
-                    float val;
-
-                    val = *target->offset.offd;
-                    push(constsym(((value_t *)&val)[0]));
-                }
-                else
-                {
-                    push(constsym(((value_t *)target->offset.offd)[1]));
-                    push(constsym(((value_t *)target->offset.offd)[0]));
-                }
-            }
-            else
-#endif
             {
                 /* TODO: THIS IS NOT AN ACCEPTABLE WAY as system/compiler dependant */
                 if (target->type->scalar & FLOAT)
