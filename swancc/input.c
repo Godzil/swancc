@@ -555,7 +555,6 @@ ts_s_includelist += sizeof *incnew;
         }
     }
 #ifdef I8088
-    definestring("__AS386_16__");
     definestring("__8086__");
 #endif
     if (flag['c'])
