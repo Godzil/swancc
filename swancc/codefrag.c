@@ -796,7 +796,8 @@ void andconst(offset_T offset)
     uint8_t botbits;
     uoffset_T topbits;
 
-    if ((topbits = offset & ~(uoffset_T)CHMASKTO & intmaskto) != 0 && topbits != (~(uoffset_T)CHMASKTO & intmaskto))
+    if (((topbits = (offset & ~CHMASKTO & intmaskto)) != 0) &&
+         (topbits != (~CHMASKTO & intmaskto)))
         /* if topbits == 0, callers reduce the type */
     {
 #ifdef OP1
@@ -990,26 +991,26 @@ label_no defstr(char *sptr, char *stop, bool_t dataflag)
     }
 #endif
     outnlabel(strlab = getlabel());
-    byte = (unsigned char)*sptr++;
+    byte = (uint8_t)*sptr++;
     while (sptr <= stop)
     {
-        if ((unsigned char)byte >= MINPRINTCHAR && (unsigned char)byte <= MAXPRINTCHAR)
+        if ((uint8_t)byte >= MINPRINTCHAR && (uint8_t)byte <= MAXPRINTCHAR)
         {
             outdefstr();
             count = DEFSTR_STRINGMAX;
-            while (count-- > 0 && (unsigned char)byte >= MINPRINTCHAR && (unsigned char)byte <= MAXPRINTCHAR &&
+            while (count-- > 0 && (uint8_t)byte >= MINPRINTCHAR && (uint8_t)byte <= MAXPRINTCHAR &&
                    sptr <= stop)
             {
 #if DEFSTR_DELIMITER - DEFSTR_QUOTER
-                if ((unsigned char)byte == DEFSTR_DELIMITER || (unsigned char)byte == DEFSTR_QUOTER)
+                if ((uint8_t)byte == DEFSTR_DELIMITER || (uint8_t)byte == DEFSTR_QUOTER)
 #else
-                    if ((unsigned char) byte == DEFSTR_DELIMITER)
+                    if ((uint8_t) byte == DEFSTR_DELIMITER)
 #endif
                 {
                     outbyte(DEFSTR_QUOTER);
                 }
                 outbyte(byte);
-                byte = (unsigned char)*sptr++;
+                byte = (uint8_t)*sptr++;
             }
             outnbyte(DEFSTR_DELIMITER);
         }
@@ -1017,7 +1018,7 @@ label_no defstr(char *sptr, char *stop, bool_t dataflag)
         {
             defbyte();
             count = DEFSTR_BYTEMAX;
-            while (count-- > 0 && ((unsigned char)byte < MINPRINTCHAR || (unsigned char)byte > MAXPRINTCHAR) &&
+            while (count-- > 0 && ((uint8_t)byte < MINPRINTCHAR || (uint8_t)byte > MAXPRINTCHAR) &&
                    sptr <= stop)
             {
                 if (count < DEFSTR_BYTEMAX - 1)
@@ -1025,7 +1026,7 @@ label_no defstr(char *sptr, char *stop, bool_t dataflag)
                     outcomma();
                 }    /* byte separator */
                 outhex((uoffset_T)byte);
-                byte = (unsigned char)*sptr++;
+                byte = (uint8_t)*sptr++;
             }
             outnl();
         }
@@ -1433,7 +1434,7 @@ bool_t muleasy(uvalue_t factor, store_t reg)
             ++lastcount;
         }
         mulstack[(int)++mulsp] = lastcount;
-        /* first time bumps mulsp to 0 even if an unsigned char */
+        /* first time bumps mulsp to 0 even if an uint8_t */
         for (count = 0 ; (factor & 1) != 0 ; factor >>= 1)
         {
             ++count;

@@ -30,7 +30,7 @@ typedef uint32_t uoffset_T; /* target unsigned machine offset */
 #endif
 #ifdef MC6809
 typedef int offset_T;
-typedef unsigned uoffset_T;
+typedef uint32_t uoffset_T;
 #endif
 
 
@@ -46,9 +46,9 @@ typedef uint32_t store_t;    /* storage class flags */
 #ifdef __STDC__
 typedef int store_t;
 # else
-typedef unsigned store_t;
+typedef uint32_t store_t;
 # endif
-typedef unsigned char store_t;
+typedef uint8_t store_t;
 #endif
 
 
@@ -65,7 +65,7 @@ typedef int fd_t;             /* file descriptor */
 typedef uint32_t bool_t;     /* boolean: TRUE if nonzero */
 typedef int32_t  ccode_t;    /* condition code code */
 typedef int32_t constr_t;   /* type constructor flags */
-typedef uint32_t indn_t;     /* storage indirection count */
+typedef uint8_t indn_t;     /* storage indirection count */
 typedef uint32_t label_no;   /* label number */
 typedef uint32_t maclev_t;   /* macro expansion level */
 typedef int32_t  op_t;       /* operator code */
@@ -79,7 +79,7 @@ typedef uint32_t weight_t;   /* expression tree node weight */
 /*
  * derived structure types
  * the fields are ordered in a way that is most space-efficient
- * when smalin_t is char and smalu_t is unsigned char
+ * when smalin_t is char and smalu_t is uint8_t
  * the first element of the structures is the one most frequently accessed
  */
 
@@ -112,6 +112,7 @@ struct symstruct
     {
         float *offd;      /* value for double constants */
         offset_T offi;     /* offset for register or global storage */
+        uint32_t offu;     /* offset for register or global storage */
         label_no offlabel; /* label number for strings */
         char *offp;        /* to string for macro definitions */
         sym_t offsym;      /* symbol code for keywords */

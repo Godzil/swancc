@@ -317,11 +317,11 @@ void cast(struct typestruct *type, struct symstruct *target)
         }
         if (tscalar & RSCALAR)
         {
-            if (source->storage == CONSTANT && (!reguse & doubleregs))
+            if ((source->storage == CONSTANT) && (!(reguse & doubleregs)))
             {
                 load(source, doubleregs & ~DREG);
             }
-            if (source->storage != CONSTANT && source->indcount == 0)
+            if ((source->storage != CONSTANT) && source->indcount == 0)
             {
                 /* XXX - 386 only */
                 storereg(DREG, target);
@@ -339,10 +339,10 @@ void cast(struct typestruct *type, struct symstruct *target)
 #endif
                 if (tscalar & DOUBLE)
                 {
-                    int i;
+                    uint32_t i;
                     for (i = 1 ; i ; i <<= 1)
                     {
-                        if (i != DREG && (doubleregs & i))
+                        if ( (i != DREG) && (doubleregs & i) )
                         {
                             target->indcount = 1;  /* XXX outnnadr clobbers this */
                             target->offset.offi += accregsize;

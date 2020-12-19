@@ -27,9 +27,9 @@
  * the symbol structure. This allows groups of registers to be tested
  * using bitwise "&". Throughout the compiler, the group of these bit
  * flags has the type  reg_t. If there are only a few registers, reg_t
- * can be an unsigned char. It must be unsigned if the high bit is
+ * can be an uint8_t. It must be unsigned if the high bit is
  * used, to avoid sign extension problems. For bootstrapping the compiler
- * from a compiler with no unsigned char, the unsigned type should be
+ * from a compiler with no uint8_t, the unsigned type should be
  * used instead (with a signifigant waste of storage).
  *
  * The bit flags should really be defined as ((reg_t) whatever) but

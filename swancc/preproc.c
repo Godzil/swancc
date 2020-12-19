@@ -71,7 +71,7 @@ static void elsecontrol(void);
 
 static void endif(void);
 
-static int32_t getparnames(void);
+static uint32_t getparnames(void);
 
 static void ifcontrol(sym_t ifcase);
 
@@ -308,7 +308,7 @@ void define()
     struct symstruct **hashptr;
     struct symstruct *locmark = NULL; /* for -Wall */
     char *macstring;
-    int32_t nparnames;
+    uint32_t nparnames;
     char *oldstring;
     struct symstruct *symptr;
 
@@ -346,7 +346,7 @@ void define()
                 ts_s_macstring += 2;
 #endif
                 *charptr++ = EOL;    /* end current string */
-                *charptr++ = symptr->indcount;    /* param to insert */
+                *charptr++ = (char) symptr->indcount;    /* param to insert */
             }
             else
             {
@@ -460,7 +460,7 @@ void define()
 #endif
     addsym(sname, vtype, symptr);
     symptr->storage = DEF_NONE;
-    symptr->indcount = nparnames;
+    symptr->indcount = (indn_t)nparnames;
     symptr->flags = DEFINITION;
     symptr->level = GLBLEVEL;
     symptr->offset.offp = macstring;
@@ -477,7 +477,7 @@ void define()
 static void defineorundefinestring(char *str, bool_t defineflag)
 {
     char *fakeline;
-    unsigned len;
+    uint32_t len;
     bool_t old_eof;
 
     len = strlen(str);
@@ -744,10 +744,10 @@ void entermac()
                 {
                     char *newparam;
                     char *oldparam;
-                    unsigned size;
+                    uint32_t size;
 
                     oldparam = *(paramlist - 1);
-                    size = (/* size_t */ unsigned)(charptr - oldparam);
+                    size = (/* size_t */ uint32_t)(charptr - oldparam);
                     newparam = ourmalloc(size);
 #ifdef TS
                     ts_s_macparam_string_alloced += size;
@@ -825,7 +825,7 @@ void entermac()
 
         str = pushudec(symptr->offset.offp + MAX__LINE__, input.linenumber);
         memcpy(symptr->offset.offp, str, /* size_t */
-               (unsigned)(symptr->offset.offp + MAX__LINE__ + 1 + 1 - str));
+               (uint32_t)(symptr->offset.offp + MAX__LINE__ + 1 + 1 - str));
     }
 
     {
@@ -849,9 +849,9 @@ void entermac()
 }
 
 /* getparnames() - get parameter names during macro definition, return count */
-static int32_t getparnames()
+static uint32_t getparnames()
 {
-    int32_t nparnames;
+    uint32_t nparnames;
     struct symstruct *symptr;
 
     nparnames = 0;

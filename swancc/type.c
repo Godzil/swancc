@@ -65,7 +65,7 @@ static char skey1;
 
 struct typestruct *addstruct(char *structname)
 {
-    unsigned namelength;
+    uint32_t namelength;
     struct symstruct *symptr;
     struct typestruct *structype;
 

@@ -40,7 +40,7 @@
  * up to 3 of the flags may be set (none for constructed types)
  * the 2nd and third flags can only be UNSIGNED or DLONG
  * UNSIGNED only applies to integral types
- * DLONG only applies to long and unsigned long types and says that these
+ * DLONG only applies to long and uint32_t types and says that these
  * are actually longer than an int
  */
 

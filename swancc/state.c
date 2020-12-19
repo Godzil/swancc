@@ -364,7 +364,7 @@ static void docase()
                 int ncases;
 
                 ncases = (/* ptrdiff_t */ int)(switchnow->caseptr - &switchnow->caselist[0]);
-                switchnow = realloc(switchnow, (/* size_t */ unsigned)((char *)switchnow->caseptr - (char *)switchnow) +
+                switchnow = realloc(switchnow, (/* size_t */ uint32_t)((char *)switchnow->caseptr - (char *)switchnow) +
                                                GROWCASES * sizeof(struct casestruct));
 #ifdef TS
                 ++ts_n_case_realloc;

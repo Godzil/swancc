@@ -35,7 +35,7 @@ bool_t watchlc;      /* nonzero to print lc after every line depends on zero ini
 #define OUTBUFSIZE 2048
 #define opcodeleadin()        /* outtab() for fussy assemblers */
 
-static unsigned errcount;    /* # errors in compilation */
+static uint32_t errcount;    /* # errors in compilation */
 /* depends on zero init */
 static char hexdigits[] = "0123456789ABCDEF";
 static char *outbuf;
@@ -189,12 +189,12 @@ void finishup()
 /* flush output file */
 void flushout()
 {
-    unsigned nbytes;
+    uint32_t nbytes;
 
     switch (outstage)
     {
         case 0:
-            nbytes = (unsigned)(outbufptr - outbuf);
+            nbytes = (uint32_t)(outbufptr - outbuf);
             outbufptr = outbuf;
             break;
         case 2:
@@ -346,7 +346,7 @@ void outcomma()
 }
 
 /* print line number in format ("# %u \"%s\"%s", nr, fname, str) */
-void outcpplinenumber(unsigned nr, char *fname, char *str)
+void outcpplinenumber(uint32_t nr, char *fname, char *str)
 {
     outstr("# ");
     outudec(nr);
@@ -356,7 +356,7 @@ void outcpplinenumber(unsigned nr, char *fname, char *str)
     outnstr(str);
 }
 
-/* print unsigned offset, hex format */
+/* print uint32_toffset, hex format */
 void outhex(uoffset_T num)
 {
 #ifdef HEXSTARTCHAR
@@ -693,7 +693,7 @@ void outtab()
 }
 
 /* print unsigned, decimal format */
-void outudec(unsigned num)
+void outudec(uint32_t num)
 {
     char str[10 + 1];
 
@@ -746,9 +746,9 @@ void outvalue(value_t num)
 #endif /* MC6809 */
 
 /* push decimal digits of an unsigned onto a stack of chars */
-char *pushudec(char *s, register unsigned num)
+char *pushudec(char *s, register uint32_t num)
 {
-    register unsigned reduction;
+    register uint32_t reduction;
 
     while (num >= 10)
     {

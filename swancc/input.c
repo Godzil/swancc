@@ -92,7 +92,7 @@ static void usage(void);
 #ifdef ARBITRARY_BACKSLASH_NEWLINES
 static void backslash()
 {
-    static unsigned nbackslash;
+    static uint32_t nbackslash;
 
     if (nbackslash != 0)
     --nbackslash;
@@ -193,13 +193,13 @@ void errorloc()
     outudec(input.linenumber);
     outbyte('.');
     if (maclevel == 0)
-        outudec((unsigned) (lineptr - inputbuf->fbuf) - input.lineoffset);
+        outudec((uint32_t) (lineptr - inputbuf->fbuf) - input.lineoffset);
     else
     {
-        outudec((unsigned) (savedlineptr() - inputbuf->fbuf)
+        outudec((uint32_t) (savedlineptr() - inputbuf->fbuf)
             - input.lineoffset);
         outstr(" (macro level ");
-        outudec((unsigned) maclevel);
+        outudec((uint32_t) maclevel);
         outbyte(')');
     }
     }
@@ -230,7 +230,7 @@ void include()
 {
     char *dirnameptr;
     char *dirnamend;
-    unsigned dirnamelen;
+    uint32_t dirnamelen;
     fd_t fd;
     char *fnameptr;
     char *fullnameptr;

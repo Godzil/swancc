@@ -24,7 +24,7 @@
 #include <swancc/preproc.h>
 #include <swancc/codefrag.h>
 
-static unsigned insizeof;    /* nest level for getsizeof
+static uint32_t insizeof;    /* nest level for getsizeof
                               * used to avoid aborting undefined idents
                               * to 0 when they appear in a cpp expression
                               * under sizeof
@@ -286,11 +286,12 @@ static struct nodestruct *postfix_exp(seenlp)bool_t seenlp;
                             }
                             else
                             {
-                                unsigned len;
+                                size_t len;
                                 char *name;
 
                                 name = np->left.symptr->name.namep;
-                                if ((len = strlen(name)) >= 6 && strcmp(name + len - 6, "printf") == 0)
+                                len = strlen(name);
+                                if ((len >= 6) && strcmp(name + len - 6, "printf") == 0)
                                 {
                                     printf_fp = TRUE;
                                 }
@@ -309,11 +310,12 @@ static struct nodestruct *postfix_exp(seenlp)bool_t seenlp;
                             }
                             else
                             {
-                                unsigned len;
+                                size_t len;
                                 char *name;
 
                                 name = np->left.symptr->name.namep;
-                                if ((len = strlen(name)) >= 5 && strcmp(name + len - 5, "scanf") == 0)
+                                len = strlen(name);
+                                if ((len >= 5) && strcmp(name + len - 5, "scanf") == 0)
                                 {
                                     scanf_fp = TRUE;
                                 }
@@ -436,8 +438,8 @@ static struct nodestruct *primary_exp()
         case FLOATCONST:
             symptr = constsym((value_t)0);
             symptr->type = constant.type;
-            symptr->offset.offd = qmalloc(sizeof *symptr->offset.offd);
-            *symptr->offset.offd = constant.value.d;
+            symptr->offset.offd = qmalloc(sizeof(*symptr->offset.offd));
+            *symptr->offset.offd = (float)constant.value.d;
             nextsym();
             return leafnode(symptr);
         case LPAREN:
@@ -450,7 +452,7 @@ static struct nodestruct *primary_exp()
             symptr->storage = GLOBAL;
             symptr->flags = LABELLED | STRING;
             /* string length before defstr() or prefix() updates charptr */
-            stringlen = charptr - constant.value.s + 1;
+            stringlen = (uoffset_T) (charptr - constant.value.s + 1);
             symptr->name.label = defstr(constant.value.s, charptr, FALSE);
             symptr->type = prefix(ARRAY, stringlen, ctype);
             nextsym();

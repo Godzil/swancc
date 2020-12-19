@@ -43,7 +43,7 @@ struct symstruct locsyms[]; /* local symbol table */
 
 #define GOLDEN 157        /* GOLDEN/HASHTABSIZE approx golden ratio */
 #define HASHTABSIZE 256
-#define MARKER ((unsigned int) 0x18C396A5L)    /* lint everywhere it is used */
+#define MARKER ((uint32_t) 0x18C396A5L)    /* lint everywhere it is used */
 #ifdef VERY_SMALL_MEMORY
 #define MAXEXPR 125
 #else
@@ -559,7 +559,7 @@ label_no holdstr(char *sptr, char *stop)
 
 void newlevel()
 {
-    if (*(unsigned int *)chartop != MARKER)
+    if (*(uint32_t *)chartop != MARKER)
     {
         heapcorrupterror();
     }
@@ -577,7 +577,7 @@ void oldlevel()
 {
     struct symstruct *symptr;
 
-    if (*(unsigned int *)chartop != MARKER)
+    if (*(uint32_t *)chartop != MARKER)
     {
         heapcorrupterror();
     }
@@ -604,7 +604,7 @@ void ourfree(void *ptr)
     free(ptr);
 }
 
-void *ourmalloc(unsigned int nbytes)
+void *ourmalloc(uint32_t nbytes)
 {
     void *ptr;
 
@@ -621,7 +621,7 @@ void outofmemoryerror(char *message)
 
 #if defined(DEBUG) && 0
     {
-    unsigned int size;
+    uint32_t size;
     char *ptr;
 
     for (size = 0x1000; size != 0; --size)
@@ -639,9 +639,9 @@ void outofmemoryerror(char *message)
     finishup();
 }
 
-void *growobject(void *object, unsigned int extra)
+void *growobject(void *object, size_t extra)
 {
-    /* size_t */ unsigned int oblength;
+    size_t oblength;
 
     /* It would be nice to realloc the previous memory if it can be left in
      * the same place. Since a realloc that moves the memory can almost be
@@ -652,7 +652,7 @@ void *growobject(void *object, unsigned int extra)
 #ifdef TS
     ts_size_growobj_wasted += chartop - (char *) object;
 #endif
-    oblength = (/* size_t */ unsigned int)(charptr - (char *)object);
+    oblength = (/* size_t */ uint32_t)(charptr - (char *)object);
     growheap(oblength + extra);
 #ifdef TS
     ++ts_n_growobj;
@@ -663,14 +663,14 @@ void *growobject(void *object, unsigned int extra)
     return object;
 }
 
-#define ALLOC_UNIT ((unsigned int) 0x400)
+#define ALLOC_UNIT ((uint32_t) 0x400)
 #ifdef S_ALIGNMENT
-#define ALLOC_OVERHEAD (S_ALIGNMENT - 1 + sizeof (unsigned int))
+#define ALLOC_OVERHEAD (S_ALIGNMENT - 1 + sizeof (uint32_t))
 #else
-#define ALLOC_OVERHEAD (sizeof (unsigned int))
+#define ALLOC_OVERHEAD (sizeof (uint32_t))
 #endif
 
-void growheap(unsigned int size)
+void growheap(size_t size)
 {
     char *newptr;
 
@@ -687,10 +687,10 @@ void growheap(unsigned int size)
     chartop = newptr;
     char1top = newptr - 1;
     char3top = newptr - 3;
-    *(unsigned int *)newptr = MARKER;
+    *(uint32_t *)newptr = MARKER;
 }
 
-void *qmalloc(unsigned int size)
+void *qmalloc(size_t size)
 {
     char *ptr;
 

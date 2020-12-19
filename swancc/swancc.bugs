@@ -73,7 +73,7 @@ compiler bugs
 
 79. compiler starts trying to load the void expression (i ? (void)0 : (void)0)
 
-80. (unsigned char *) - (char *) causes error and message is obscure
+80. (uint8_t *) - (char *) causes error and message is obscure
 
 81. 'defined' is a reserved word
 

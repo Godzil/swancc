@@ -523,7 +523,7 @@ static void getident()
     do
     {
         *idptr++ = c;
-        c = (unsigned char)*++reglineptr;
+        c = (uint8_t)*++reglineptr;
     } while (symofchar[c] <= MAXIDSYM && --length != 0);
     ch = c;
     *idptr = 0;

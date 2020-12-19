@@ -504,9 +504,9 @@ static void declselt(struct typestruct *structype, offset_T *psoffset, struct ty
 
 static bool_t declspec()
 {
-    unsigned nsc;
-    unsigned ntype;
-    unsigned nunsigned;
+    uint32_t nsc;
+    uint32_t ntype;
+    uint32_t nunsigned;
 
     gvarsc = NULLDECL;
     gvartype = itype;
@@ -1056,7 +1056,7 @@ static void initarray(struct typestruct *type)
             /* same dim should be allowed but defstr always nullterms */
         {
             error("string longer than dimension");
-            stringend = constant.value.s + (/* size_t */ unsigned)(stringlength = remaining - 1);
+            stringend = constant.value.s + (/* size_t */ uint32_t)(stringlength = remaining - 1);
         }
         defstr(constant.value.s, stringend, TRUE);
         remaining -= (stringlength + 1);

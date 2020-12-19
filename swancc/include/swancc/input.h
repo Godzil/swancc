@@ -23,7 +23,7 @@ struct fcbstruct                 /* file control block structure */
 #ifdef FAKE_INBUFSIZE_1
     FILE *fp;
 #endif
-    unsigned linenumber;         /* current line in file */
+    uint32_t linenumber;         /* current line in file */
     int lineoffset;              /* offset to start of current line in buf */
     char *lineptr;               /* current spot in line */
     char *limit;                 /* end of used part of input buffer */

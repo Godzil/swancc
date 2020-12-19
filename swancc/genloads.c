@@ -414,13 +414,13 @@ void load(struct symstruct *source, store_t targreg)
             {
                 store_t regs;
                 uint32_t i, off = 1;
-                loadconst(((unsigned short *)source->offset.offd)[0], DREG);
+                loadconst(((uint16_t *)source->offset.offd)[0], DREG);
                 regs = (targreg & ~DREG);
                 for (i = 1 ; i ; i <<= 1)
                 {
                     if (regs & i)
                     {
-                        loadconst(((unsigned short *)source->offset.offd)[off++], i);
+                        loadconst(((uint16_t *)source->offset.offd)[off++], i);
                     }
                 }
             }
@@ -452,8 +452,8 @@ void load(struct symstruct *source, store_t targreg)
         else
 #endif
         {
-            loadconst(((unsigned short *)&val)[0], DREG);
-            loadconst(((unsigned short *)&val)[1], targreg & ~DREG);
+            loadconst(((uint16_t *)&val)[0], DREG);
+            loadconst(((uint16_t *)&val)[1], targreg & ~DREG);
         }
     }
 #ifdef I80386

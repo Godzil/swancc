@@ -55,15 +55,15 @@ bool_t f_indirect(struct symstruct *target)
                 if (target->type->scalar & FLOAT)
                 {
                     float val = *target->offset.offd;
-                    push(constsym(((unsigned short *)&val)[1]));
-                    push(constsym(((unsigned short *)&val)[0]));
+                    push(constsym(((uint16_t *)&val)[1]));
+                    push(constsym(((uint16_t *)&val)[0]));
                 }
                 else
                 {
-                    push(constsym(((unsigned short *)target->offset.offd)[3]));
-                    push(constsym(((unsigned short *)target->offset.offd)[2]));
-                    push(constsym(((unsigned short *)target->offset.offd)[1]));
-                    push(constsym(((unsigned short *)target->offset.offd)[0]));
+                    push(constsym(((uint16_t *)target->offset.offd)[3]));
+                    push(constsym(((uint16_t *)target->offset.offd)[2]));
+                    push(constsym(((uint16_t *)target->offset.offd)[1]));
+                    push(constsym(((uint16_t *)target->offset.offd)[0]));
                 }
             }
         }

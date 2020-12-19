@@ -599,15 +599,11 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
                 return p1;
             }
     }
-    if (target->storage != CONSTANT || !((lscalar & (ISCALAR | RSCALAR)) && (op_t)t != PTRSUBOP) || (p2 != NULL &&
-                                                                                                     (p2->tag != LEAF ||
-                                                                                                      (source = p2->left.symptr)->storage !=
-                                                                                                      CONSTANT ||
-                                                                                                      (!((rscalar = source->type->scalar) &
-                                                                                                         (ISCALAR |
-                                                                                                          RSCALAR)) &&
-                                                                                                       (op_t)t !=
-                                                                                                       PTRSUBOP))))
+    if (target->storage != CONSTANT ||
+       !((lscalar & (ISCALAR | RSCALAR)) && (op_t)t != PTRSUBOP) ||
+        (p2 != NULL && (p2->tag != LEAF ||
+           (source = p2->left.symptr)->storage != CONSTANT ||
+           (!((rscalar = source->type->scalar) & (ISCALAR | RSCALAR)) && (op_t)t != PTRSUBOP))))
     {
         goto node1;
     }
@@ -875,12 +871,12 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
     p1->nodetype = target->type;
     return p1;
 
-    intconst:
+intconst:
     target->offset.offv = targval;
     p1->nodetype = target->type = itype;
     return p1;
 
-    node1:
+node1:
     {
         struct nodestruct *nodeptr;
         struct nodestruct *regp2;
@@ -1072,10 +1068,10 @@ static struct typestruct *nodetype(struct nodestruct *nodeptr)
             nodeptr->right = right = unconvert(right);
             targtype = left->nodetype;
             if (
-#ifdef I80386 \
+                #ifdef I80386 \
                 i386_32 ||
 
-#endif
+                #endif
                 (targtype->scalar & FLOAT) == 0)
             {
                 if (targtype == right->nodetype)

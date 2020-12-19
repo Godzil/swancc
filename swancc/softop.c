@@ -9,6 +9,7 @@
  */
 
 #include <swancc.h>
+#include <swancc/softop.h>
 #include <swancc/gencode.h>
 #include <swancc/reg.h>
 #include <swancc/scan.h>

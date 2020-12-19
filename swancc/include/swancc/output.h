@@ -37,7 +37,7 @@ void flushout(void) __attribute__ ((deprecated));
 void initout(void) __attribute__ ((deprecated));
 void outbyte(int ch) __attribute__ ((deprecated));
 void outcomma(void) __attribute__ ((deprecated));
-void outcpplinenumber(unsigned nr, char *fname, char *str);
+void outcpplinenumber(uint32_t nr, char *fname, char *str);
 void outhex(uoffset_T num) __attribute__ ((deprecated));
 void outhexdigs(uoffset_T num) __attribute__ ((deprecated));
 void outline(char *s) __attribute__ ((deprecated));
@@ -56,11 +56,11 @@ void outplus(void) __attribute__ ((deprecated));
 void outshex(offset_T num) __attribute__ ((deprecated));
 void outstr(char *s) __attribute__ ((deprecated));
 void outtab(void) __attribute__ ((deprecated));
-void outudec(unsigned num) __attribute__ ((deprecated));
+void outudec(uint32_t num) __attribute__ ((deprecated));
 void outuvalue(uvalue_t num) __attribute__ ((deprecated));
 void outvalue(value_t num) __attribute__ ((deprecated));
 
-char *pushudec(char *s, unsigned num);
+char *pushudec(char *s, uint32_t num);
 void setoutbufs(void);
 
 #endif /* _SWANCC_SWANCC_OUTPUT_H */

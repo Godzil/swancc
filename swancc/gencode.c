@@ -529,10 +529,10 @@ void codeinit()
         #endif
             accregsize = 4;
 
-        intmaskto = (unsigned long)0xFFFFFFFFL;
+        intmaskto = (uint32_t)0xFFFFFFFFL;
         maxintto = 0x7FFFFFFFL;
         maxoffsetto = 0x7FFFFFFFL;
-        maxuintto = (unsigned long)0xFFFFFFFFL;
+        maxuintto = (uint32_t)0xFFFFFFFFL;
     }
 #endif
 #ifdef POSINDEPENDENT

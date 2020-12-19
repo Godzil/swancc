@@ -11,7 +11,7 @@
 #define _SWANCC_SWANCC_SCAN_H
 
 #define NAMESIZE    64    /* limit on identifier lengths */
-#define SYMOFCHAR(ch)    (symofchar[(unsigned char) (ch)])
+#define SYMOFCHAR(ch)    (symofchar[(uint8_t) (ch)])
 
 /* scanner codes */
 

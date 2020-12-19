@@ -20,7 +20,7 @@
  */
 
 #define CHBITSTO     8      /* bits in a character */
-#define CHMASKTO     0xFF   /* mask to reduce SOURCE int to TARGET uchar */
+#define CHMASKTO     0xFFU   /* mask to reduce SOURCE int to TARGET uchar */
 #define INT16BITSTO  16     /* not accessed in non-16 bit case */
 #define INT32BITSTO  32     /* not accessed in non-32 bit case */
 #define MAXINTBITSTO 32     /* max bits in an integer (var processors) */
@@ -53,7 +53,7 @@ extern uvalue_t maxlongto;   /* maximum long */
 extern uvalue_t maxoffsetto; /* maximum offset */
 extern uvalue_t maxshortto;  /* maximum short */
 extern uvalue_t maxuintto;   /* maximum unsigned */
-extern uvalue_t maxushortto; /* maximum unsigned short */
+extern uvalue_t maxushortto; /* maximum uint16_t */
 extern uvalue_t shortmaskto; /* mask for shorts */
 #endif
 
