@@ -12,8 +12,11 @@ message("-- Building version ${VERSION}")
 
 option(WARN_AS_ERR "Compile with -Werror" ON)
 
+set_property(GLOBAL PROPERTY C_STANDARD 99)
+set_property(GLOBAL PROPERTY C_EXTENSIONS OFF)
+
 # -Wno-unused-parameter -Wno-unused-result -Wno-write-strings
-set(BASE_CFLAGS "-Wall -Wextra -Wpedantic -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion -Wno-deprecated-declarations")
+set(BASE_CFLAGS "-Wall -Wextra -Wold-style-cast -Wold-style-definition -Wpedantic -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion -Wno-deprecated-declarations")
 set(CMAKE_C_FLAGS "${BASE_CFLAGS}")
 set(CMAKE_CXX_FLAGS "${BASE_CFLAGS}")
 
@@ -25,4 +28,4 @@ endif()
 # Global define
 add_definitions(-DVERSION="${VERSION}")
 
-add_subdirectory(bcc)
+add_subdirectory(swancc)
