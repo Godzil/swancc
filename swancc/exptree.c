@@ -332,7 +332,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
         default:
             break;
     }
-    if (t == PTRADDABOP || t == PTRADDOP) && p1->nodetype->nexttype->constructor & (FUNCTION | VOID))
+    if (((t == PTRADDABOP) || (t == PTRADDOP)) && (p1->nodetype->nexttype->constructor & (FUNCTION | VOID)))
     {
         error("arithmetic on pointer to function or void");
     }
