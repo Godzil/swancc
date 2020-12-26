@@ -17,6 +17,7 @@
 #include <swancc/table.h>
 #include <swancc/type.h>
 #include <swancc/output.h>
+#include <stdlib.h>
 
 /* Global variables */
 
@@ -103,18 +104,16 @@ struct typestruct *newtype()
 {
     struct typestruct *type;
 
-    type = qmalloc(sizeof *type);
+    type = (struct typestruct *)calloc(1, sizeof(struct typestruct *));
+    if (type == NULL)
+    {
+        fatalerror("Memory allocation error!");
+    }
 #ifdef TS
     ++ts_n_type;
     ts_s_type += sizeof *type;
 #endif
-    type->typesize =        /* (uoffset_T) */
-    type->scalar =        /* (scalar_t) */
-    type->constructor =    /* (constr_t) */
-    type->structkey[0] = 0;
-    type->nexttype = type->prevtype = type->sidetype = NULL;
-    type->listtype = NULL;
-    type->tname = "";
+
     return type;
 }
 
@@ -211,6 +210,23 @@ struct typestruct *tounsigned(struct typestruct *type)
 
 void typeinit()
 {
+    /* Init all basic types */
+    dtype = newtype(); /* double */
+    fltype = newtype(); /* flaot */
+    itype = newtype(); /* int */
+    ltype = newtype(); /* long */
+    sctype = newtype(); /* ?? */
+    stype = newtype(); /* short */
+    uctype = newtype(); /* unsigned chat */
+    uitype = newtype(); /* unsigned int */
+    ultype = newtype(); /* unsigned long */
+    ustype = newtype(); /* unsigned short */
+    vtype = newtype(); /* void */
+    ctype = newtype(); /* char */
+    fitype = newtype(); /* function */
+    pctype = newtype(); /* pointer */
+    returntype = newtype();
+
     fitype = prefix(FUNCTION, FUNCTION_TYPE_SIZE, itype);
     pctype = pointype(ctype);
     skey0 = 1;
