@@ -115,6 +115,9 @@ void longop(op_t op, struct symstruct *source, struct symstruct *target)
         case SUBOP:
             call("lsub");
             break;
+
+        default:
+            break;
     }
     if (scalar & UNSIGNED)
     {

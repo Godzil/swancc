@@ -1038,7 +1038,7 @@ static void initarray(struct typestruct *type)
     struct typestruct *basetype;
     uoffset_T dimension;
     char *stringend;
-    uoffset_T stringlength;
+    size_t stringLength;
     uoffset_T remaining;
 
     if ((basesize = (basetype = type->nexttype)->typesize) == 0)
@@ -1051,15 +1051,17 @@ static void initarray(struct typestruct *type)
     }
     if (sym == STRINGCONST && (basetype->scalar & CHAR))
     {
-        stringlength = (stringend = charptr) - constant.value.s;
-        if (remaining != 0 && stringlength >= remaining)
+        stringLength = strlen(constant.value.s);
+        stringend = charptr;
+
+        if (remaining != 0 && stringLength >= remaining)
             /* same dim should be allowed but defstr always nullterms */
         {
             error("string longer than dimension");
-            stringend = constant.value.s + (/* size_t */ uint32_t)(stringlength = remaining - 1);
+            stringend = constant.value.s + (/* size_t */ uint32_t)(stringLength = remaining - 1);
         }
         defstr(constant.value.s, stringend, TRUE);
-        remaining -= (stringlength + 1);
+        remaining -= (stringLength + 1);
         nextsym();
     }
     else

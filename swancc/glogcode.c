@@ -175,6 +175,9 @@ static void comparecond(struct nodestruct *exp, label_no truelab, label_no false
         case NEOP:
             condtrue = NE;
             break;
+
+        default:
+            break;
     }
     cmplocal(source, target, &condtrue);
     changesp(spmark, FALSE);

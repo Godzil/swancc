@@ -8,6 +8,7 @@
  * Copyright (C) 2020 Manoël <godzil> Trapier / 986-Studio
  */
 #include <string.h>
+#include <stdio.h>
 
 #include <swancc.h>
 #include <swancc/express.h>
@@ -112,7 +113,7 @@ static struct nodestruct *exp2()
     return lhs;
 }
 
-static struct nodestruct *exp3to12(lprecedence)int32_t lprecedence;
+static struct nodestruct *exp3to12(int32_t lprecedence)
 {
     struct nodestruct *lhs;
     op_t op;
@@ -204,6 +205,10 @@ static struct nodestruct *exp3to12(lprecedence)int32_t lprecedence;
                 {
                     rprecedence = 20;
                 }
+                break;
+
+            default:
+                //fatalerror("Invalid symbol");
                 break;
         }
         if (rprecedence == 0)
@@ -513,6 +518,9 @@ static struct nodestruct *unary_exp()
         case STAR:
             nextsym();
             return node(INDIRECTOP, cast_exp(), NULLNODE);    /* maybe unary_exp */
+
+        default:
+            break;
     }
     return postfix_exp(FALSE);
 }

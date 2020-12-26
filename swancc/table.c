@@ -722,8 +722,11 @@ void syminit()
     locptr = locsyms;
     for (tdptr = scaltypes ; tdptr < scaltypes + NSCALTYPES ; ++tdptr)
     {
-        (*tdptr->tdtypeptr = type = newtype())->scalar = tdptr->tdscalar;
-        type->alignmask = ~((type->typesize = tdptr->tdsize) - 1) | alignmask;
+        type = newtype();
+        *tdptr->tdtypeptr = type;
+        type->scalar = tdptr->tdscalar;
+        type->typesize = tdptr->tdsize;
+        type->alignmask = ~(type->typesize - 1) | alignmask;
         type->tname = tdptr->tdname;
         if (tdptr->tdkeyscalar)
         {

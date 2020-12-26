@@ -21,24 +21,24 @@
 /* Global variables */
 
 /* basic scalar types */
-struct typestruct *dtype;
-struct typestruct *fltype;
-struct typestruct *itype;
-struct typestruct *ltype;
-struct typestruct *sctype;
-struct typestruct *stype;
-struct typestruct *uctype;
-struct typestruct *uitype;
-struct typestruct *ultype;
-struct typestruct *ustype;
-struct typestruct *vtype;
+struct typestruct *dtype; /* double */
+struct typestruct *fltype; /* flaot */
+struct typestruct *itype; /* int */
+struct typestruct *ltype; /* long */
+struct typestruct *sctype; /* ?? */
+struct typestruct *stype; /* short */
+struct typestruct *uctype; /* unsigned chat */
+struct typestruct *uitype; /* unsigned int */
+struct typestruct *ultype; /* unsigned long */
+struct typestruct *ustype; /* unsigned short */
+struct typestruct *vtype; /* void */
 
 /* working type */
-struct typestruct *ctype;
+struct typestruct *ctype; /* char */
 
 /* constructed types */
-struct typestruct *fitype;
-struct typestruct *pctype;
+struct typestruct *fitype; /* function */
+struct typestruct *pctype; /* pointer */
 
 /* return type of current function */
 struct typestruct *returntype;
@@ -52,7 +52,8 @@ struct typestruct *addstruct(char *structname)
     struct symstruct *symptr;
     struct typestruct *structype;
 
-    (structype = newtype())->constructor = STRUCTU;
+    structype = newtype();
+    structype->constructor = STRUCTU;
     structype->alignmask = ctype->alignmask;
     if (++skey1 == 0)
     {
@@ -66,7 +67,8 @@ struct typestruct *addstruct(char *structname)
         symptr = addlorg(structname, structype);
         symptr->storage = 0;
         symptr->flags = STRUCTNAME;
-        if (charptr + (namelength = strlen(structname)) >= chartop)
+        namelength = strlen(structname);
+        if ((charptr + namelength) >= chartop)
         {
             growheap(namelength + 1);
         }
@@ -137,7 +139,9 @@ struct typestruct *prefix(constr_t constructor, uoffset_T size, struct typestruc
             return searchtype;
         }
     }
-    switch ((searchtype = newtype())->constructor = constructor)
+    searchtype = newtype();
+    searchtype->constructor = constructor;
+    switch (constructor)
     {
         case ARRAY:
             searchtype->alignmask = type->alignmask;
@@ -156,6 +160,7 @@ struct typestruct *prefix(constr_t constructor, uoffset_T size, struct typestruc
     searchtype->typesize = size;
     searchtype->nexttype = type;
     searchtype->sidetype = type->prevtype;
+
     return type->prevtype = searchtype;
 }
 
@@ -199,14 +204,14 @@ struct typestruct *tounsigned(struct typestruct *type)
         case LONG:
             return ultype;
         default:
-            error("unsigned only applies to integral types");
+            error("unsigned only applies to integer types");
             return type;
     }
 }
 
 void typeinit()
 {
-    fitype = prefix(FUNCTION, ftypesize, itype);
+    fitype = prefix(FUNCTION, FUNCTION_TYPE_SIZE, itype);
     pctype = pointype(ctype);
     skey0 = 1;
     vtype->constructor = VOID;

@@ -282,6 +282,9 @@ static void control()
         case UNDEFCNTL:
             undef();
             break;
+
+        default:
+            break;
     }
 }
 
@@ -477,7 +480,7 @@ void define()
 static void defineorundefinestring(char *str, bool_t defineflag)
 {
     char *fakeline;
-    uint32_t len;
+    size_t len;
     bool_t old_eof;
 
     len = strlen(str);

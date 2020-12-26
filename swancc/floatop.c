@@ -135,6 +135,9 @@ void floatop(op_t op, struct symstruct *source, struct symstruct *target)
         case SUBOP:
             call("Fsub");
             break;
+
+        default:
+            break;
     }
     if (sflag)
     {

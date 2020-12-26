@@ -328,6 +328,9 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
                 }
             }
             break;
+
+        default:
+            break;
     }
     if (t == PTRADDABOP || t == PTRADDOP) && p1->nodetype->nexttype->constructor & (FUNCTION | VOID))
     {

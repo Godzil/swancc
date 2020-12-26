@@ -56,7 +56,7 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
     sscalar = source->type->scalar;
     resultscalar = tscalar;
     uflag = tscalar & UNSIGNED;
-    if (op != SLOP && op != SROP)
+    if ((op != SLOP) && (op != SROP))
     {
         resultscalar |= sscalar;
         uflag |= sscalar & UNSIGNED;
@@ -112,6 +112,9 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
             case SROP:
                 srconst(sourceval, uflag);
                 return;
+
+            default:
+                break;
         }
         sscalar = (source->type = iscalartotype(resultscalar))->scalar;
     }
@@ -213,6 +216,9 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
                 outregname(DREG);
                 outnstr(",cl");
                 break;
+
+            default:
+                break;
         }
     }
     else
@@ -234,6 +240,9 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
                 break;
             case SROP:
                 call("isr");
+                break;
+
+            default:
                 break;
         }
         if (uflag)

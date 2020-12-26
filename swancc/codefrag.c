@@ -38,12 +38,12 @@
 #define BSSSEG 2
 #define outbssseg() outop0str(".bss\n")
 
-static void adjcarry(void);
+void adjcarry(void);
 static void clr(store_t reg);
 static bool_t lowregisDreg(void);
 static void outand(void);
 static void outequate(void);
-static void outmovsx(void);
+void outmovsx(void);
 static void outmovzx(void);
 static void tfrhilo(void);
 static void tfrlohi(void);
@@ -94,7 +94,7 @@ static void opregadr(void);
 #define subfactor(reg) do { outsub(); outregname(reg); outncregname(DXREG); } while(0)
 #define usr1() do {outusr(); outaccum(); outnc1(); } while(0)
 
-static void adjcarry()
+void adjcarry(void)
 {
     outop3str("rcl\t");
     outregname(DXREG);
@@ -263,7 +263,7 @@ void outload()
     outop2str("mov\t");
 }
 
-static void outmovsx()
+void outmovsx(void)
 {
     outop3str("movsx\t");
 }
@@ -1044,6 +1044,9 @@ char *opstring(op_t op)
             return EORSTRING;
         case OROP:
             return ORSTRING;
+
+        default:
+            break;
     }
     return "badop";
 }

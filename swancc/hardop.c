@@ -141,6 +141,9 @@ void incdec(op_t op, struct symstruct *source)
             case POSTINCOP:
                 call("linc");
                 break;
+
+            default:
+                break;
         }
         outlongendian();
         restoreopreg();
@@ -167,6 +170,9 @@ void incdec(op_t op, struct symstruct *source)
                 break;
             case POSTINCOP:
                 call("Fpostinc");
+                break;
+
+            default:
                 break;
         }
         outntypechar(targ.type);
