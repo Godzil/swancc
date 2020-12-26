@@ -254,7 +254,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
     scalar_t rscalar = 0; /* for -Wall */
     bool_t uflag;
 
-    switch ((op_t)t)
+    switch (t)
     {
         case ADDABOP:
             if (p1->nodetype->constructor & (ARRAY | POINTER))
@@ -312,7 +312,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
                 *source->offset.offd = -*source->offset.offd;
                 else
                 source->offset.offv = -source->offset.offv;
-                return node((op_t) t == SUBOP ? ADDOP : ADDABOP, p1, p2);
+                return node(t == SUBOP ? ADDOP : ADDABOP, p1, p2);
             }
 #endif
             if (p1->nodetype->constructor & (ARRAY | POINTER))
@@ -329,7 +329,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
             }
             break;
     }
-    if (((op_t)t == PTRADDABOP || (op_t)t == PTRADDOP) && p1->nodetype->nexttype->constructor & (FUNCTION | VOID))
+    if (t == PTRADDABOP || t == PTRADDOP) && p1->nodetype->nexttype->constructor & (FUNCTION | VOID))
     {
         error("arithmetic on pointer to function or void");
     }
@@ -338,7 +338,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
         goto node1;
     }
     target = p1->left.symptr;
-    switch ((op_t)t)
+    switch (t)
     {
         case ADDRESSOP:
             if (target->indcount == 0 && target->flags == REGVAR)
@@ -536,7 +536,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
         {
             targval = target->offset.offv;
         }
-        switch ((op_t)t)
+        switch (t)
         {
             case COMMAOP:
                 return p2;
@@ -565,7 +565,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
                 return p1;
         }
     }
-    switch ((op_t)t)
+    switch (t)
     {
         case COLONOP:
         case FUNCOP:
@@ -582,10 +582,10 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
             }
     }
     if (target->storage != CONSTANT ||
-       !((lscalar & (ISCALAR | RSCALAR)) && (op_t)t != PTRSUBOP) ||
+       !((lscalar & (ISCALAR | RSCALAR)) && (t != PTRSUBOP)) ||
         (p2 != NULL && (p2->tag != LEAF ||
            (source = p2->left.symptr)->storage != CONSTANT ||
-           (!((rscalar = source->type->scalar) & (ISCALAR | RSCALAR)) && (op_t)t != PTRSUBOP))))
+           (!((rscalar = source->type->scalar) & (ISCALAR | RSCALAR)) && (t != PTRSUBOP)))))
     {
         goto node1;
     }
@@ -628,7 +628,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
                 dsourceval = sourceval;
             }
         }
-        switch ((op_t)t)
+        switch (t)
         {
             case ADDOP:
                 dtargval += dsourceval;
@@ -684,7 +684,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
         p1->nodetype = target->type = dtype;
         return p1;
     }
-    switch ((op_t)t)
+    switch (t)
     {
         case ADDOP:
             targval += sourceval;
@@ -871,7 +871,7 @@ node1:
         nodeptr->tag = t;
         nodeptr->left.nodeptr = p1;
         nodeptr->right = regp2;
-        if ((op_t)t == FUNCOP)
+        if (t == FUNCOP)
         {
             nodeptr->weight = MAXREGS + 1;
         }

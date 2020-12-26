@@ -38,22 +38,173 @@ typedef uint32_t store_t;    /* storage class flags */
  */
 
 typedef int fd_t;             /* file descriptor */
+
+
+/* scanner codes */
+enum scan_states
+{
+    /* The first group of entries consists of all the values that occur in the
+     * switch for cppscan().
+     */
+    IDENT = 0,
+    INTCONST,
+#define MAXIDSYM INTCONST    /* IDENT and INTCONST must be the only symofchar[] entries below this */
+    FLOATCONST,
+#define MAXPPNUMSYM FLOATCONST    /* IDENT, INTCONST and FLOATCONST must be the only symofchar[] entries below this */
+    CHARCONST,
+    CONTROL,
+    SLASH,
+    SPECIALCHAR,
+    STRINGCONST,
+
+    /* The next group of entries are all the rest of the values that occur in
+     *  symofchar[] and so in the switch for nextsym().
+     */
+    AMPERSAND,         /* ADDRESSOP or ANDOP */
+    BADCHAR,
+    COLON,             /* also COLONOP */
+    COMMA,             /* also COMMAOP */
+    DECSYM,            /* PREDECOP or POSTDECOP */
+    EOFSYM,
+    HYPHEN,            /* NEGOP or SUBOP */
+    INCSYM,            /* PREINCOP or POSTINCOP */
+    LBRACE,
+    LBRACKET,
+    LPAREN,
+    RBRACE,
+    RBRACKET,
+    RPAREN,
+    SEMICOLON,
+    STAR,              /* INDIRECTOP or MULOP */
+    WHITESPACE,
+
+    /* The next group of entries consists of all operator codes.  These codes must
+     * be contiguous so they can be used as (offsetted) array indexes.  The group
+     * is ordered by operator-precedence (this is not necessary).  The first part
+     * of it overlaps the previous group.
+     */
+
+    /* Assign-abops (level 1) belong here but are at end to improve switch. */
+#define FIRSTOP CONDOP
+    CONDOP,            /* level 2 */
+    OROP,              /* level 5 */
+    EOROP,             /* level 6 */
+    ANDOP,             /* level 7 */
+    GTOP,              /* level 9 */
+    LTOP,
+    ADDOP,             /* level 11 */
+    DIVOP,             /* level 12 */
+    MODOP,
+    LOGNOTOP,          /* level 13 */
+    NOTOP,
+    STRUCELTOP,        /* level 14 */
+    STRUCPTROP,
+    /* End of symbols that appear in symofchar[]. */
+
+    ASSIGNOP,          /* level 1 - assign ops must be contiguous */
+    ADDABOP,
+    ANDABOP,
+    DIVABOP,
+    EORABOP,
+    MODABOP,
+    MULABOP,
+    ORABOP,
+    SLABOP,
+    SRABOP,
+    SUBABOP,
+
+    COMMAOP,           /* level 0 */
+    COLONOP,           /* level 2 */
+    LOGOROP,           /* level 3 */
+    LOGANDOP,          /* level 4 */
+    EQOP,              /* level 8 */
+    NEOP,
+    GEOP,              /* level 9 */
+    LEOP,
+    SLOP,              /* level 10 */
+    SROP,
+    SUBOP,             /* level 11 */
+    MULOP,             /* level 12 */
+    ADDRESSOP,         /* level 13 */
+    CASTOP,
+    INDIRECTOP,
+    NEGOP,
+    PREDECOP,
+    PREINCOP,
+    POSTDECOP,
+    POSTINCOP,
+
+    FUNCOP,            /* level 14 */
+    LISTOP,
+    ROOTLISTOP,
+
+    LEAF,              /* special */
+    PTRADDABOP,
+    PTRADDOP,
+    PTRSUBOP,
+
+    /* end of operator codes (they must stay contiguous) */
+#define LASTOP PTRSUBOP
+
+    ENUMDECL,
+    NULLDECL,
+    STRUCTDECL,
+    TYPEDECL,
+    TYPEDEFNAME,
+    UNIONDECL,
+    UNSIGNDECL,
+    AUTODECL,
+    EXTERNDECL,
+    REGDECL,
+    STATICDECL,
+    TYPEDEFDECL,
+
+    ASMSYM,
+    BREAKSYM,
+    CASESYM,
+    CONTSYM,
+    DEFAULTSYM,
+    DEFINEDSYM,
+    DOSYM,
+    ELSESYM,
+    FORSYM,
+    GOTOSYM,
+    IFSYM,
+    RETURNSYM,
+    SIZEOFSYM,
+    SWITCHSYM,
+    WHILESYM,
+
+    ASMCNTL,
+    DEFINECNTL,
+    ENDASMCNTL,
+    INCLUDECNTL,
+    LINECNTL,
+    UNDEFCNTL,
+
+    ELIFCNTL,            /* "IF" controls must be contiguous */
+    ELSECNTL,
+    ENDIFCNTL,
+    IFCNTL,
+    IFDEFCNTL,
+    IFNDEFCNTL
+};
+
 /*
  * derived scalar types
  * the types containing bit flags fit in an 8 bit smalin_t
  */
-
 typedef uint32_t bool_t;     /* boolean: TRUE if nonzero */
 typedef int32_t  ccode_t;    /* condition code code */
 typedef int32_t constr_t;   /* type constructor flags */
 typedef uint8_t indn_t;     /* storage indirection count */
 typedef uint32_t label_no;   /* label number */
 typedef uint32_t maclev_t;   /* macro expansion level */
-typedef int32_t  op_t;       /* operator code */
+typedef enum scan_states op_t; /* Operator op */
 typedef uint32_t sc_t;       /* storage class flags */
 typedef uint32_t scalar_t;   /* type scalar flags */
 typedef uint32_t scopelev_t; /* scope level */
-typedef int32_t  sym_t;      /* symbol code from scanner */
+typedef enum scan_states sym_t;      /* symbol code from scanner */
 typedef uint32_t weight_t;   /* expression tree node weight */
 
 

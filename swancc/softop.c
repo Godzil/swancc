@@ -76,7 +76,7 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
         }
         target->type = iscalartotype(resultscalar);
         sourceval = source->offset.offv;
-        switch ((op_t)op)
+        switch (op)
         {
             case DIVOP:
                 if (diveasy(sourceval, uflag))
@@ -187,10 +187,10 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
     extend(target);
     load(target, DREG);
 
-    if ((op_t)op != DIVOP && (op_t)op != MODOP)
+    if ((op != DIVOP) && (op != MODOP))
     {
         load(source, DATREG1);    /* CX */
-        switch ((op_t)op)
+        switch (op)
         {
             case MULOP:
                 outop2str("imul\t");
@@ -218,7 +218,7 @@ void softop(op_t op, struct symstruct *source, struct symstruct *target)
     else
     {
         load(source, OPREG);
-        switch ((op_t)op)
+        switch (op)
         {
             case DIVOP:
                 call("idiv_");
