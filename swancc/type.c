@@ -104,7 +104,7 @@ struct typestruct *newtype()
 {
     struct typestruct *type;
 
-    type = (struct typestruct *)calloc(1, sizeof(struct typestruct *));
+    type = (struct typestruct *)calloc(1, sizeof(struct typestruct));
     if (type == NULL)
     {
         fatalerror("Memory allocation error!");
