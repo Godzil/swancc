@@ -83,14 +83,14 @@ extern char *localregstr;
 extern char *stackregstr;
 
 /* register sizes */
-extern uoffset_T accregsize;
+#define ACCUMULATOR_REG_SIZE (2)
 #ifdef FRAMEPOINTER
-extern uoffset_T frameregsize;
+#define FRAME_REG_SIZE (2)
 #endif
-extern uoffset_T maxregsize;
-extern uoffset_T opregsize;
-extern uoffset_T pshregsize;
-extern uoffset_T returnadrsize;
+#define MAX_REG_SIZE (2)
+#define OP_REG_SIZE (2)
+#define PUSH_REG_SIZE (2)
+#define RETURN_ADDR_SIZE (2)
 
 /* Prototypes */
 

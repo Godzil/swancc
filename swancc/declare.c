@@ -220,7 +220,7 @@ static void declaf()
                 error("function returning function is illegal");
                 break;
         }
-        gvartype = prefix(FUNCTION, ftypesize, gvartype);
+        gvartype = prefix(FUNCTION, FUNCTION_TYPE_SIZE, gvartype);
     }
     else if (sym == LBRACKET)
     {
@@ -231,7 +231,7 @@ static void declaf()
         }
         else
         {
-            asize = constexpression() & intmaskto;
+            asize = constexpression() & MASK_TO_INT;
         }  /* FIXME: warn overflow */
         rbracket();
         declaf();
@@ -334,7 +334,7 @@ static struct typestruct *declenum()
     }
     else
     {
-        enumtype->typesize = itypesize;
+        enumtype->typesize = INT_TYPE_SIZE;
         enumtype->alignmask = itype->alignmask;
     }
     if (sym != IDENT)
@@ -357,10 +357,10 @@ static struct typestruct *declenum()
         if (sym == ASSIGNOP)
         {
             nextsym();
-            ordinal = constexpression() & intmaskto;    /* FIXME: warn ovflo */
-            if (ordinal > maxintto)
+            ordinal = constexpression() & MASK_TO_INT;    /* FIXME: warn ovflo */
+            if (ordinal > MAX_INT)
             {
-                ordinal -= (maxuintto + 1);
+                ordinal -= (MAX_UINT + 1);
             }
         }
         if (esymptr->storage == CONSTANT)
@@ -743,10 +743,10 @@ static void declfunc()
     #endif
         reguse = 0;    /* would already be 0 unless last f had reg vars */
     decllist();
-    argsp = returnadrsize;
+    argsp = RETURN_ADDR_SIZE;
     if (returntype->constructor & STRUCTU)
     {
-        argsp += ptypesize;
+        argsp += POINTER_TYPE_SIZE;
     }
     softsp = -func1saveregsize;
     for (symptr = &locsyms[0] ; symptr < locptr && symptr->flags != STRUCTNAME &&
@@ -771,31 +771,31 @@ static void declfunc()
 #endif
         if (arg1inreg && symptr == &locsyms[0] && symptr->flags != REGVAR)
         {
-            if ((arg1size = argsize) < itypesize)
+            if ((arg1size = argsize) < INT_TYPE_SIZE)
             {
-                arg1size = itypesize;
+                arg1size = INT_TYPE_SIZE;
             }
             argsp = softsp -= arg1size;
         }
 #if INT_BIG_ENDIAN
-        if (argsize < itypesize)
-            argsp += itypesize - argsize;
+        if (argsize < INT_TYPE_SIZE)
+            argsp += INT_TYPE_SIZE - argsize;
         symptr->offset.offi = argsp;
         argsp += argsize;
 #else
         symptr->offset.offi = argsp;
-        if (argsize > itypesize)
+        if (argsize > INT_TYPE_SIZE)
         {
             argsp += argsize;
         }
         else
         {
-            argsp += itypesize;
+            argsp += INT_TYPE_SIZE;
         }
 #endif
         if (arg1inreg && symptr == &locsyms[0])
         {
-            argsp = returnadrsize;
+            argsp = RETURN_ADDR_SIZE;
         }    /* skip return adr after 1st arg */
     }
     if (main_flag > 0)

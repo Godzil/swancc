@@ -341,10 +341,10 @@ static void docase()
 {
     value_t caseval;
 
-    caseval = constexpression() & intmaskto;    /* FIXME: warn overflow */
-    if (caseval > maxintto)
+    caseval = constexpression() & MASK_TO_INT;    /* FIXME: warn overflow */
+    if (caseval > MAX_INT)
     {
-        caseval -= (maxuintto + 1);
+        caseval -= (MAX_UINT + 1);
     }
     colon();
     if (switchnow == NULL)
@@ -718,13 +718,13 @@ static void jumptocases()
             {
                 ctoi();
             }
-            slconst((value_t)(ptypesize / 2), DREG);
-            /* really log ptypesize */
+            slconst((value_t)(POINTER_TYPE_SIZE / 2), DREG);
+            /* really log POINTER_TYPE_SIZE */
             deflabel(jtablelab = casejump());
             jtablelab = jtablelab;     /* not used, allocated for regress */
             for (caseval = caseptr->casevalue ; caseval <= case1ptr->casevalue ; ++caseval)
             {
-                if (ptypesize > 2)
+                if (POINTER_TYPE_SIZE > 2)
                 {
                     defdword();
                 }
@@ -742,7 +742,7 @@ static void jumptocases()
                     ++caseptr;
                 }
                 bumplc2();
-                if (ptypesize > 2)
+                if (POINTER_TYPE_SIZE > 2)
                 {
                     bumplc2();
                 }

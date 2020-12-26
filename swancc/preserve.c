@@ -192,7 +192,7 @@ void savereturn(store_t savelist, offset_T saveoffset)
         if (reg & savelist)
         {
             outstore();
-            spoffset = saveoffset + *regoffptr * maxregsize;
+            spoffset = saveoffset + *regoffptr * MAX_REG_SIZE;
 #ifdef FRAMEPOINTER
             if (switchnow != NULL)
             {

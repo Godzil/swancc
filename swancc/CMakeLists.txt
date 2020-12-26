@@ -5,7 +5,7 @@ project(swancc)
 # Base lib
 set(LIBSRC assign.c codefrag.c debug.c declare.c parser.c express.c exptree.c floatop.c function.c gencode.c genloads.c
         glogcode.c hardop.c input.c label.c loadexp.c longop.c output.c preproc.c preserve.c scan.c softop.c state.c
-        table.c type.c sizes.c)
+        table.c type.c)
 
 set(LIBHDR include/swancc.h include/swancc/align.h include/swancc/assign.h include/swancc/byteord.h include/swancc/codefrag.h
         include/swancc/condcode.h include/swancc/const.h include/swancc/debug.h include/swancc/declare.h include/swancc/express.h

@@ -168,7 +168,7 @@ void loadretexpression()
         onstack(structarg);
         indirec(structarg);
         structarg->flags = 0;    /* assign() doesn't like TEMP even for indir */
-        structarg->offset.offi = returnadrsize;
+        structarg->offset.offi = RETURN_ADDR_SIZE;
         assign(exp->left.symptr, structarg);
         etptr = etmark;
         exprptr = exprmark;
@@ -309,7 +309,7 @@ void reslocals()
         pushlist(callee1mask);        /*XXX: Add if round this */
 #else /* not STUPIDFRAME */
 #ifdef CANHANDLENOFRAME
-        if (stackarg || softsp != -frameregsize)    /* args or locals */
+        if (stackarg || softsp != -FRAME_REG_SIZE)    /* args or locals */
 #endif
         {
             pushlist(frame1list);
@@ -338,7 +338,7 @@ void reslocals()
     }
 #ifdef FRAMEPOINTER
 #ifndef STUPIDFRAME /* else this moved above for compat with Xenix cc frame */
-    if (loadframe || softsp != -frameregsize)
+    if (loadframe || softsp != -FRAME_REG_SIZE)
     modstk(softsp);
     /* else avoid modstk() because softsp holds space for frame pointer only) */
     /* but pointer has not been pushed (must keep softsp for later levels) */

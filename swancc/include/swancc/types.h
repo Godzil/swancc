@@ -135,4 +135,12 @@ struct typelist
 #define NULLNODE ((struct nodestruct *) NULL)
 #define NULLTYPE ((struct typestruct *) NULL)
 
+/* Target type sizes */
+#define CHAR_TYPE_SIZE (1)
+#define DOUBLE_TYPE_SIZE (8)
+#define FUNCTION_TYPE_SIZE (0) /* This one is not a type?! */
+#define INT_TYPE_SIZE (2)
+#define POINTER_TYPE_SIZE (2)
+#define SHORT_TYPE_SIZE (2)
+
 #endif /* _SWANCC_SWANCC_TYPES_H */

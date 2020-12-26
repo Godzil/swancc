@@ -493,7 +493,7 @@ static void loadlongindirect(struct symstruct *source, store_t targreg)
     source->flags = flags;
     source->storage = reg;
     source->indcount = 1;
-    source->offset.offi = offset + accregsize;
+    source->offset.offi = offset + ACCUMULATOR_REG_SIZE;
     loadreg(source, targreg);
     source->type = type;
 }
@@ -512,8 +512,8 @@ void loadreg(struct symstruct *source, store_t targreg)
         longlow = (offset_T)source->offset.offv;
         if (source->type->scalar & DLONG)
         {
-            longlow &= (offset_T)intmaskto;
-            longhigh = (offset_T)(source->offset.offv >> INT16BITSTO) & (offset_T)intmaskto;
+            longlow &= (offset_T)MASK_TO_INT;
+            longhigh = (offset_T)(source->offset.offv >> INT16BITSTO) & (offset_T)MASK_TO_INT;
             if ((store_t)targreg != LONGREG2)    /* loading the whole long */
             {
 #if DYNAMIC_LONG_ORDER
@@ -578,7 +578,7 @@ void makelessindirect(struct symstruct *source)
     }
 #if MAXINDIRECT > 1
     if (source->indcount == MAXINDIRECT &&
-    (source->type->typesize > maxregsize ||
+    (source->type->typesize > MAX_REG_SIZE ||
      source->type->constructor & FUNCTION))
     {
     source->indcount = 1;
@@ -965,13 +965,13 @@ void push(struct symstruct *source)
         }
         if (sscalar & DLONG)
         {
-            source->offset.offi += itypesize;
+            source->offset.offi += INT_TYPE_SIZE;
             outpshs();
             bumplc();
             outtab();
             outadr(source);
             source->indcount = 1;
-            source->offset.offi -= itypesize;
+            source->offset.offi -= INT_TYPE_SIZE;
         }
         outpshs();
         bumplc();
@@ -1077,7 +1077,7 @@ void pushreg(store_t reg)
     outpshs();
     outtab();
     outnregname(reg);
-    sp -= pshregsize;
+    sp -= PUSH_REG_SIZE;
 }
 
 void storereg(store_t sourcereg, struct symstruct *target)

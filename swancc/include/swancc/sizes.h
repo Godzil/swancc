@@ -33,13 +33,16 @@
 #define isnegbyteoffset(n) ((uvalue_t) (n) + MAXSCHTO <= MAXSCHTO - MINSCHTO)
 #define isshortbranch(n)   ((uoffset_T) (n) - MINSCHTO <= MAXSCHTO - MINSCHTO)
 
-extern uvalue_t intmaskto;   /* mask for ints */
-extern uvalue_t maxintto;    /* maximum int */
-extern uvalue_t maxlongto;   /* maximum long */
-extern uvalue_t maxoffsetto; /* maximum offset */
-extern uvalue_t maxshortto;  /* maximum short */
-extern uvalue_t maxuintto;   /* maximum unsigned */
-extern uvalue_t maxushortto; /* maximum uint16_t */
-extern uvalue_t shortmaskto; /* mask for shorts */
+
+/* Varion size limits and masks for target types */
+#define MASK_TO_INT (0xFFFFL)
+#define MASK_TO_INT (0xFFFFL)
+#define MAX_INT (0x7FFFL)
+#define MAX_LONG (0x7FFFFFFFL)
+#define MAX_OFFSET (0x7FFFL)
+#define MAX_SHORT (0x7FFFL)
+#define MAX_UINT (0xFFFFL)
+#define MAX_USHORT (0xFFFFL)
+#define MASK_SHORT (0xFFFFL)
 
 #endif /* _SWANCC_SWANCC_SIZES_H */

@@ -16,7 +16,7 @@ set_property(GLOBAL PROPERTY C_STANDARD 99)
 set_property(GLOBAL PROPERTY C_EXTENSIONS OFF)
 
 # -Wno-unused-parameter -Wno-unused-result -Wno-write-strings
-set(BASE_CFLAGS "-Wall -Wextra -Wold-style-cast -Wold-style-definition -Wpedantic -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion -Wno-deprecated-declarations")
+set(BASE_CFLAGS "-Wall -Wextra -Wold-style-cast -Wold-style-definition -Wpedantic -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion -Wno-sign-conversion -Wno-deprecated-declarations")
 set(CMAKE_C_FLAGS "${BASE_CFLAGS}")
 set(CMAKE_CXX_FLAGS "${BASE_CFLAGS}")
 

@@ -100,16 +100,6 @@ char *ireg2str;
 char *localregstr;
 char *stackregstr;
 
-/* register sizes */
-uoffset_T accregsize;
-#ifdef FRAMEPOINTER
-uoffset_T frameregsize;
-#endif
-uoffset_T maxregsize;
-uoffset_T opregsize;
-uoffset_T pshregsize;
-uoffset_T returnadrsize;
-
 #define FIRSTOPDATA GTOP
 
 #if MAXINDIRECT <= 1
@@ -117,7 +107,7 @@ uoffset_T returnadrsize;
 #else
 # define istooindirect(t) ((t)->indcount >= MAXINDIRECT && \
                ((t)->indcount > MAXINDIRECT || \
-                (t)->type->typesize > maxregsize || \
+                (t)->type->typesize > MAX_REG_SIZE || \
                 (t)->type->constructor & FUNCTION))
 #endif
 
@@ -163,24 +153,6 @@ char *localregstr = "bp";
 char *localregstr = "sp";
 #endif
 char *stackregstr = "sp";
-
-uoffset_T accregsize = 2;
-#ifdef FRAMEPOINTER
-uoffset_T frameregsize = 2;
-#endif
-uoffset_T maxregsize = 2;
-uoffset_T opregsize = 2;
-uoffset_T pshregsize = 2;
-uoffset_T returnadrsize = 2;
-
-uvalue_t intmaskto = 0xFFFFL;
-uvalue_t maxintto = 0x7FFFL;
-uvalue_t maxlongto = 0x7FFFFFFFL;
-uvalue_t maxoffsetto = 0x7FFFL;
-uvalue_t maxshortto = 0x7FFFL;
-uvalue_t maxuintto = 0xFFFFL;
-uvalue_t maxushortto = 0xFFFFL;
-uvalue_t shortmaskto = 0xFFFFL;
 
 static store_t callermask;
 static offset_T lastargsp;
@@ -457,13 +429,13 @@ void codeinit()
     }
     callermask = ~calleemask;
 #ifdef FRAMEPOINTER
-    funcsaveregsize = bitcount((uvalue_t)calleemask) * maxregsize + frameregsize;
-    funcdsaveregsize = bitcount((uvalue_t)calleemask & ~doubleregs) * maxregsize + frameregsize;
+    funcsaveregsize = bitcount((uvalue_t)calleemask) * MAX_REG_SIZE + FRAME_REG_SIZE;
+    funcdsaveregsize = bitcount((uvalue_t)calleemask & ~doubleregs) * MAX_REG_SIZE + FRAME_REG_SIZE;
     framelist = FRAMEREG | calleemask;
 #else
-    funcsaveregsize = bitcount((uvalue_t) calleemask) * maxregsize;
+    funcsaveregsize = bitcount((uvalue_t) calleemask) * MAX_REG_SIZE;
     funcdsaveregsize = bitcount((uvalue_t) calleemask & ~doubleregs)
-               * maxregsize;
+               * MAX_REG_SIZE;
 #endif
 }
 
@@ -641,7 +613,7 @@ void makeleaf(struct nodestruct *exp)
              * -2 skips for ax and bx
              * need dirtymask to mostly avoid this
              */
-            savereturn(regmark & callermask & regregs, spmark - 2 * (offset_T)pshregsize);
+            savereturn(regmark & callermask & regregs, spmark - 2 * (offset_T)PUSH_REG_SIZE);
             if (exp->nodetype->constructor & STRUCTU)
             {
                 address(structarg);

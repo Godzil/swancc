@@ -73,13 +73,6 @@
 /* TODO: These list of variable definition are suspicious
  * Also need to check if the types are correct.
  */
-/* default sizes and long and float sizes are hard-coded into type data */
-extern uoffset_T ctypesize;
-extern uoffset_T dtypesize;
-extern uoffset_T ftypesize;
-extern uoffset_T itypesize;
-extern uoffset_T ptypesize;
-extern uoffset_T stypesize;
 
 /* basic scalar types */
 extern struct typestruct *dtype;

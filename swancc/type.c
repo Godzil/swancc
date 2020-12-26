@@ -19,13 +19,6 @@
 #include <swancc/output.h>
 
 /* Global variables */
-/* default sizes and long and float sizes are hard-coded into type data */
-uoffset_T ctypesize;
-uoffset_T dtypesize;
-uoffset_T ftypesize;
-uoffset_T itypesize;
-uoffset_T ptypesize;
-uoffset_T stypesize;
 
 /* basic scalar types */
 struct typestruct *dtype;
@@ -49,16 +42,6 @@ struct typestruct *pctype;
 
 /* return type of current function */
 struct typestruct *returntype;
-
-
-
-
-uoffset_T ctypesize = 1;
-uoffset_T dtypesize = 8;
-uoffset_T ftypesize = 0;
-uoffset_T itypesize = 2;
-uoffset_T ptypesize = 2;
-uoffset_T stypesize = 2;
 
 static char skey0;
 static char skey1;
@@ -140,7 +123,7 @@ void outntypechar(struct typestruct *type)
 
 struct typestruct *pointype(struct typestruct *type)
 {
-    return prefix(POINTER, ptypesize, type);
+    return prefix(POINTER, POINTER_TYPE_SIZE, type);
 }
 
 struct typestruct *prefix(constr_t constructor, uoffset_T size, struct typestruct *type)
@@ -163,7 +146,7 @@ struct typestruct *prefix(constr_t constructor, uoffset_T size, struct typestruc
             searchtype->alignmask = ~(uoffset_T)0;
             break;
         case POINTER:
-            searchtype->alignmask = ~(ptypesize - 1) | alignmask;
+            searchtype->alignmask = ~(POINTER_TYPE_SIZE - 1) | alignmask;
             break;
         case STRUCTU:
             bugerror("prefixing structure/union");

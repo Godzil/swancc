@@ -107,7 +107,7 @@ void floatop(op_t op, struct symstruct *source, struct symstruct *target)
     }
     fpush(target);
     sflag = TRUE;
-    if ( (source->flags != TEMP) || (source->offset.offi != (sp + (offset_T)dtypesize)))
+    if ( (source->flags != TEMP) || (source->offset.offi != (sp + (offset_T)DOUBLE_TYPE_SIZE)))
     {
         sflag = FALSE;
         if (source->storage == OPREG)
@@ -127,7 +127,7 @@ void floatop(op_t op, struct symstruct *source, struct symstruct *target)
             break;
         case EQOP:
             call("Fcomp");
-            sp += dtypesize;    /* target is popped */
+            sp += DOUBLE_TYPE_SIZE;    /* target is popped */
             break;            /* target symbol now invalid but is not used */
         case MULOP:
             call("Fmul");
@@ -139,7 +139,7 @@ void floatop(op_t op, struct symstruct *source, struct symstruct *target)
     if (sflag)
     {
         outnl();
-        sp += dtypesize;    /* source is popped */
+        sp += DOUBLE_TYPE_SIZE;    /* source is popped */
     }
     else
     {
@@ -192,7 +192,7 @@ void fpush(struct symstruct *source)
 
 void justpushed(struct symstruct *target)
 {
-    sp -= dtypesize;
+    sp -= DOUBLE_TYPE_SIZE;
     onstack(target);
     target->type = dtype;
 }

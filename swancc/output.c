@@ -431,7 +431,7 @@ void outplus()
 /* print signed offset, hex format */
 void outshex(num)offset_T num;
 {
-    if (num >= -(maxoffsetto + 1))
+    if (num >= -(MAX_OFFSET + 1))
     {
         outminus();
         num = -num;

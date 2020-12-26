@@ -683,15 +683,15 @@ static void intconst()
         }
         ++digptr;
     }
-    if (constant.value.v <= maxintto && lcount == 0 && ucount == 0)
+    if (constant.value.v <= MAX_INT && lcount == 0 && ucount == 0)
     {
         constant.type = itype;
     }
-    else if (constant.value.v <= maxuintto && lcount == 0 && (base != 10 || ucount != 0))
+    else if (constant.value.v <= MAX_UINT && lcount == 0 && (base != 10 || ucount != 0))
     {
         constant.type = uitype;
     }
-    else if (constant.value.v <= maxlongto && ucount == 0)
+    else if (constant.value.v <= MAX_LONG && ucount == 0)
     {
         constant.type = ltype;
     }
@@ -999,6 +999,10 @@ void nextsym()
                         gch1();
                     }
                     return;
+
+                default:
+                    //fatalerror("Invalid symbol");
+                    break;
             }
         }
     }

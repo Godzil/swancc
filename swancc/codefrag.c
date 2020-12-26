@@ -454,8 +454,8 @@ void andconst(offset_T offset)
     uint8_t botbits;
     uoffset_T topbits;
 
-    if (((topbits = (offset & ~CHMASKTO & intmaskto)) != 0) &&
-         (topbits != (~CHMASKTO & intmaskto)))
+    if (((topbits = (offset & ~CHMASKTO & MASK_TO_INT)) != 0) &&
+        (topbits != (~CHMASKTO & MASK_TO_INT)))
         /* if topbits == 0, callers reduce the type */
     {
 #ifdef OP1
@@ -536,8 +536,8 @@ void deflong(uoffset_T value)
     uoffset_T longhigh;
     uoffset_T longlow;
 
-    longlow = value & (uoffset_T)intmaskto;
-    longhigh = (value >> INT16BITSTO) & (uoffset_T)intmaskto;
+    longlow = value & MASK_TO_INT;
+    longhigh = (value >> INT16BITSTO) & MASK_TO_INT;
     defword();
 #if DYNAMIC_LONG_ORDER
     if (long_big_endian)
@@ -1359,7 +1359,7 @@ void saveopreg()
     {
         bssseg();
         common(opregstr);
-        outnhex(opregsize);
+        outnhex(OP_REG_SIZE);
         cseg();
         outstore();
         opregadr();

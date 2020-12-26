@@ -29,7 +29,7 @@ static void blockmove(struct symstruct *source, struct symstruct *target);
 static void call3(char *funcname, struct symstruct *target, struct symstruct *source, uoffset_T size);
 static void fconvert(struct symstruct *source, struct typestruct *type);
 
-/* block move assumes itypesize == accregsize && BREG size == 1 */
+/* block move assumes INT_TYPE_SIZE == ACCUMULATOR_REG_SIZE && BREG size == 1 */
 static void blockmove(struct symstruct *source, struct symstruct *target)
 {
     struct symstruct oldtarget;
@@ -37,7 +37,7 @@ static void blockmove(struct symstruct *source, struct symstruct *target)
     struct symstruct worksource;
 
     oldtarget = *target;
-    if ((typesize = target->type->typesize) >= 8 * itypesize || source->indcount + target->indcount != 2)
+    if ((typesize = target->type->typesize) >= 8 * INT_TYPE_SIZE || source->indcount + target->indcount != 2)
     {
         address(source);
         address(target);
@@ -54,14 +54,14 @@ static void blockmove(struct symstruct *source, struct symstruct *target)
             addoffset(target);
         }
         worksource = *source;
-        for (; typesize >= itypesize ; typesize -= itypesize)
+        for (; typesize >= INT_TYPE_SIZE ; typesize -= INT_TYPE_SIZE)
         {
             loadreg(source, DREG);
-            worksource.offset.offi += itypesize;
+            worksource.offset.offi += INT_TYPE_SIZE;
             *source = worksource;
             storereg(DREG, target);
             target->indcount = 1;
-            target->offset.offi += accregsize;
+            target->offset.offi += ACCUMULATOR_REG_SIZE;
         }
         while (typesize-- != 0)
         {
@@ -161,7 +161,7 @@ void cast(struct typestruct *type, struct symstruct *target)
     }
     if (target->type->constructor == ARRAY)
     {
-        oldsize = ptypesize;
+        oldsize = POINTER_TYPE_SIZE;
     }
     else
     {
@@ -172,7 +172,7 @@ void cast(struct typestruct *type, struct symstruct *target)
     if ((newsize = type->typesize) == oldsize && !((newscalar | oldscalar) & RSCALAR))
     {
     }
-    else if (newsize == ctypesize)    /* char only */
+    else if (newsize == CHAR_TYPE_SIZE)    /* char only */
     {
         if (oldscalar & RSCALAR)
         {
@@ -185,12 +185,12 @@ void cast(struct typestruct *type, struct symstruct *target)
 #endif
 #if DYNAMIC_LONG_ORDER || LONG_BIG_ENDIAN
 # if INT_BIG_ENDIAN
-            target->offset.offi += oldsize - ctypesize;
+            target->offset.offi += oldsize - CHAR_TYPE_SIZE;
 # else
         {
             if (oldscalar & DLONG)
             {
-                target->offset.offi += itypesize;
+                target->offset.offi += INT_TYPE_SIZE;
             }    /* discard msword */
         }
 # endif
@@ -200,7 +200,7 @@ void cast(struct typestruct *type, struct symstruct *target)
 #endif
 #if DYNAMIC_LONG_ORDER || LONG_BIG_ENDIAN == 0
 # if INT_BIG_ENDIAN
-            target->offset.offi += ctypesize;
+            target->offset.offi += CHAR_TYPE_SIZE;
 # else
             {
             }
@@ -232,7 +232,7 @@ void cast(struct typestruct *type, struct symstruct *target)
             {
                 if (oldscalar & DLONG)
                 {
-                    target->offset.offi += itypesize;
+                    target->offset.offi += INT_TYPE_SIZE;
                 }    /* discard msword */
             }
 #endif
@@ -276,7 +276,7 @@ void cast(struct typestruct *type, struct symstruct *target)
             call("dto");
             outntypechar(type);
             justpushed(target);    /* XXX - sets dtype wrong (harmless) and
-                 * wastes (dtypesize - ftypesize) stack */
+                 * wastes (DOUBLE_TYPE_SIZE - FUNCTION_TYPE_SIZE) stack */
         }
         restoreopreg();
     }
@@ -311,7 +311,7 @@ void cast(struct typestruct *type, struct symstruct *target)
         }
         regpushed = preslval(source, target);
         if (!(tscalar & CHAR) || source->flags != TEMP || source->offset.offi != sp ||
-            source->type->typesize > itypesize)
+            source->type->typesize > INT_TYPE_SIZE)
         {
             cast(target->type, source);
         }
@@ -333,7 +333,7 @@ void cast(struct typestruct *type, struct symstruct *target)
                         if ( (i != DREG) && (doubleregs & i) )
                         {
                             target->indcount = 1;  /* XXX outnnadr clobbers this */
-                            target->offset.offi += accregsize;
+                            target->offset.offi += ACCUMULATOR_REG_SIZE;
                             storereg(i, target);
                         }
                     }
@@ -341,7 +341,7 @@ void cast(struct typestruct *type, struct symstruct *target)
                 else if (tscalar & FLOAT)
                 {
                     target->indcount = 1;  /* XXX outnnadr clobbers this */
-                    target->offset.offi += accregsize;
+                    target->offset.offi += ACCUMULATOR_REG_SIZE;
                     storereg(DATREG2, target);
                 }
                 target->storage = source->storage;
@@ -355,7 +355,7 @@ void cast(struct typestruct *type, struct symstruct *target)
                 pointat(&temptarg);
                 call("Fpull");
                 outntypechar(temptarg.type);
-                sp += dtypesize;
+                sp += DOUBLE_TYPE_SIZE;
             }
             else
             {
@@ -384,7 +384,7 @@ void cast(struct typestruct *type, struct symstruct *target)
             {
                 storereg(DREG, target);
                 target->indcount = 1;
-                target->offset.offi += accregsize;
+                target->offset.offi += ACCUMULATOR_REG_SIZE;
             }
             if ((store_t)(sourcereg = source->storage) == DREG && target->type->scalar & CHAR)
             {
@@ -395,7 +395,7 @@ void cast(struct typestruct *type, struct symstruct *target)
             {
                 /* DLONG */
                 target->indcount = 1;
-                target->offset.offi -= accregsize;
+                target->offset.offi -= ACCUMULATOR_REG_SIZE;
                 recovlist(regpushed);
             }
             else
@@ -418,7 +418,7 @@ void extend(struct symstruct *target)
 
     if ((tscalar = target->type->scalar) & (CHAR | SHORT))
     {
-        if (target->storage != CONSTANT && target->type->typesize < itypesize)
+        if (target->storage != CONSTANT && target->type->typesize < INT_TYPE_SIZE)
         {
             load(target, DREG);
             if (target->type == sctype)

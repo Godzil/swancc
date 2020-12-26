@@ -134,11 +134,11 @@ void initexpression(struct typestruct *type)
                 }
                 else if (type->scalar & SHORT)
                 {
-                    value &= shortmaskto;
+                    value &= MASK_SHORT;
                 }
                 else if (type->scalar & INT)
                 {
-                    value &= intmaskto;
+                    value &= MASK_TO_INT;
                 }
                 /* XXX - no longmaskto */
                 outnhex(value);

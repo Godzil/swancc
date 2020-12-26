@@ -401,7 +401,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
                     static double MAXULONG = (double)0xFFFFFFFFL + 1;
 
                     val = *target->offset.offd;
-                    if (val > maxlongto)
+                    if (val > MAX_LONG)
                     {
                         val -= MAXULONG;
                     }
@@ -431,18 +431,18 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
                 }
                 else if (rscalar & SHORT)
                 {
-                    target->offset.offv &= shortmaskto;
-                    if (!(rscalar & UNSIGNED) && target->offset.offv > maxshortto)
+                    target->offset.offv &= MASK_SHORT;
+                    if (!(rscalar & UNSIGNED) && target->offset.offv > MAX_SHORT)
                     {
-                        target->offset.offv -= (maxushortto + 1);
+                        target->offset.offv -= (MAX_USHORT + 1);
                     }
                 }
                 else if (rscalar & INT)
                 {
-                    target->offset.offv &= intmaskto;
-                    if (!(rscalar & UNSIGNED) && target->offset.offv > maxintto)
+                    target->offset.offv &= MASK_TO_INT;
+                    if (!(rscalar & UNSIGNED) && target->offset.offv > MAX_INT)
                     {
-                        target->offset.offv -= (maxuintto + 1);
+                        target->offset.offv -= (MAX_UINT + 1);
                     }
                 }
                 else if (rscalar & FLOAT)
@@ -451,7 +451,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
                 }
             }
             else if (
-                (targszdelta = ((p1->nodetype->constructor & (ARRAY | POINTER)) ? ptypesize : p1->nodetype->typesize) -
+                (targszdelta = ((p1->nodetype->constructor & (ARRAY | POINTER)) ? POINTER_TYPE_SIZE : p1->nodetype->typesize) -
                                p2->nodetype->typesize) == 0)
             {
             }
@@ -467,7 +467,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
                 {
                     if (lscalar & DLONG)
                     {
-                        target->offset.offi += itypesize;
+                        target->offset.offi += INT_TYPE_SIZE;
                     }    /* discard msword */
                 }
 # endif
@@ -479,7 +479,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
 # if INT_BIG_ENDIAN
                     {
                     if (rscalar & CHAR)
-                        target->offset.offi += ctypesize;
+                        target->offset.offi += CHAR_TYPE_SIZE;
                     }
 # else
                 {
@@ -835,7 +835,7 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
     }
     else
     {
-        targval &= intmaskto;
+        targval &= MASK_TO_INT;
         if (uflag)
         {
             target->type = uitype;
@@ -843,9 +843,9 @@ struct nodestruct *node(op_t t, struct nodestruct *p1, struct nodestruct *p2)
         else
         {
             target->type = itype;
-            if (targval > maxintto)
+            if (targval > MAX_INT)
             {
-                targval -= (maxuintto + 1);
+                targval -= (MAX_UINT + 1);
             }
         }
     }
