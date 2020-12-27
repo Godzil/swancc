@@ -728,7 +728,8 @@ void nextsym()
                 ++reglineptr;
             }
             lastch = *reglineptr;
-            if (SYMOFCHAR(ch = *(lineptr = reglineptr + 1)) == SPECIALCHAR && sym != SPECIALCHAR)
+            ch = *(lineptr = reglineptr + 1);
+            if (SYMOFCHAR(ch) == SPECIALCHAR && sym != SPECIALCHAR)
             {
                 specialchar();
             }

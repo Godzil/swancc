@@ -22,11 +22,11 @@
 /* Global variables */
 
 /* basic scalar types */
-struct typestruct *dtype; /* double */
-struct typestruct *fltype; /* flaot */
 struct typestruct *itype; /* int */
+struct typestruct *dtype; /* double */
+struct typestruct *fltype; /* float */
 struct typestruct *ltype; /* long */
-struct typestruct *sctype; /* ?? */
+struct typestruct *sctype; /* signed char */
 struct typestruct *stype; /* short */
 struct typestruct *uctype; /* unsigned chat */
 struct typestruct *uitype; /* unsigned int */
@@ -210,23 +210,6 @@ struct typestruct *tounsigned(struct typestruct *type)
 
 void typeinit()
 {
-    /* Init all basic types */
-    dtype = newtype(); /* double */
-    fltype = newtype(); /* flaot */
-    itype = newtype(); /* int */
-    ltype = newtype(); /* long */
-    sctype = newtype(); /* ?? */
-    stype = newtype(); /* short */
-    uctype = newtype(); /* unsigned chat */
-    uitype = newtype(); /* unsigned int */
-    ultype = newtype(); /* unsigned long */
-    ustype = newtype(); /* unsigned short */
-    vtype = newtype(); /* void */
-    ctype = newtype(); /* char */
-    fitype = newtype(); /* function */
-    pctype = newtype(); /* pointer */
-    returntype = newtype();
-
     fitype = prefix(FUNCTION, FUNCTION_TYPE_SIZE, itype);
     pctype = pointype(ctype);
     skey0 = 1;

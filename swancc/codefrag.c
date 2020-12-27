@@ -354,7 +354,7 @@ void ustoi()
     outnl();
 }
 
-#ifdef FRAMEREG
+#ifdef FRAMEPOINTER
 
 void outindframereg()
 {

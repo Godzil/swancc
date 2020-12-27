@@ -44,24 +44,27 @@
  */
 
 /* register bit flags */
-#define NOSTORAGE 0x000U     /* structure/union member offsets */
-#define CONSTANT  0x001U     /* offsets are values */
-#define BREG      0x002U
-#define DREG      0x004U
-#define INDREG0   0x008U
-#define INDREG1   0x010U
-#define INDREG2   0x020U
-#define LOCAL     0x040U
-#define GLOBAL    0x080U    /* offsets from storage name or 0 */
-#define CCREG     CONSTANT  /* arg to PSHS/PULS functions only */
+typedef enum strage_t
+{
+    NOSTORAGE = 0x000U,    /* structure/union member offsets */
+    CONSTANT  = 0x001U,    /* offsets are values */
+    BREG      = 0x002U,
+    DREG      = 0x004U,
+    INDREG0   = 0x008U,
+    INDREG1   = 0x010U,
+    INDREG2   = 0x020U,
+    LOCAL     = 0x040U,
+    GLOBAL    = 0x080U,    /* offsets from storage name or 0 */
+    CCREG     = CONSTANT,  /* arg to PSHS/PULS functions only */
 
 #ifdef FRAMEPOINTER
-#define FRAMEREG LOCAL
-#define STACKREG 0x100U
-#define DATREG1  0x200U
-#define DATREG2  0x400U
-#define DATREG1B 0x800U
+    FRAMEREG = LOCAL,
+    STACKREG = 0x100U,
+    DATREG1  = 0x200U,
+    DATREG2  = 0x400U,
+    DATREG1B = 0x800U,
 #endif
+} store_t;
 
 /* data for pushing and pulling registers */
 #define MINREGCHAR 'A'

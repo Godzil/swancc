@@ -102,10 +102,8 @@ static void blockpush(struct symstruct *source)
     length->type = uitype;
     address(source);
     modstk(spmark = sp - (offset_T)typesize);
-#ifdef STACKREG
+#ifdef FRAMEPOINTER
     regtransfer(STACKREG, DREG);
-#else
-#include "need STACKREG and stackregstr"
 #endif
     push(length);
     push(source);
@@ -818,7 +816,7 @@ void outnregname(store_t reg)
 /* print register name */
 void outregname(store_t reg)
 {
-    switch ((store_t)reg)
+    switch (reg)
     {
         case BREG:
             outstr(acclostr);
@@ -860,10 +858,11 @@ void outregname(store_t reg)
 #endif
         default:
         {
+            /* TODO: This code is buggy as hell and can create infinite loop */
             int i;
             if (reg)
             {
-                for (i = 1 ; i ; i <<= 1)
+                for (i = 1 ; i < INT16_MAX ; i <<= 1)
                 {
                     if (reg & i)
                     {
@@ -877,7 +876,7 @@ void outregname(store_t reg)
                 outstr(badregstr);
             }
         }
-            break;
+        break;
     }
 }
 

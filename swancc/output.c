@@ -440,7 +440,7 @@ void outshex(num)offset_T num;
 }
 
 /* print string  */
-void outstr(s)char *s;
+void outstr(char *s)
 {
     char *outp;
     char *rs;

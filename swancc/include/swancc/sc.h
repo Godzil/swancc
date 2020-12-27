@@ -10,25 +10,27 @@
 #ifndef _SWANCC_SWANCC_SC_H
 #define _SWANCC_SWANCC_SC_H
 
-#define EXTERNAL    0x02    /* external */
-#define STATIC      0x04
+typedef enum sc_t
+{
+    EXTERNAL    = 0x02,    /* external */
+    STATIC      = 0x04,
 
-/* symbols with flags above the 1st initialised value are not to be dumped */
-#define MAXDUMPFLAG 0x07
-#define INITIALIZED 0x08    /* modifier on global to show initialized */
-#define LABELLED    0x10    /* modifier on static to show labelled and on STRING to show labelled */
+    /* symbols with flags above the 1st initialised value are not to be dumped */
+    MAXDUMPFLAG = 0x07,
+    INITIALIZED = 0x08,    /* modifier on global to show initialized */
+    LABELLED    = 0x10,    /* modifier on static to show labelled and on STRING to show labelled */
 
-/* Remaining "flags" are numbers, not flags
- * they are disjoint from all combinations of flags above
- * except STRING => LABELLED (and no other flags)
- */
-
-#define DEFINITION 0x20        /* #defined name */
-#define KEYWORD    0x40        /* reserved word for C */
-#define STRUCTNAME 0x60        /* struct/union name or member name */
-#define REGVAR     0x80        /* register variable */
-#define TEMP       0xa0        /* temporary on stack expression eval */
-#define STRING     0xc0        /* string constant (=> LABELLED) */
+    /* Remaining "flags" are numbers, not flags
+     * they are disjoint from all combinations of flags above
+     * except STRING => LABELLED (and no other flags)
+     */
+    DEFINITION = 0x20,        /* #defined name */
+    KEYWORD    = 0x40,        /* reserved word for C */
+    STRUCTNAME = 0x60,        /* struct/union name or member name */
+    REGVAR     = 0x80,        /* register variable */
+    TEMP       = 0xa0,        /* temporary on stack expression eval */
+    STRING     = 0xc0,        /* string constant (=> LABELLED) */
+} sc_t;
 
 /* Protoypes */
 int main(int argc, char *argv[]);

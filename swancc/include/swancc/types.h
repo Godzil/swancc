@@ -13,6 +13,9 @@
 
 #include <stdint.h>
 
+#include <swancc/reg.h>
+#include <swancc/sc.h>
+
 /*
  * source types big enough to handle target quantities
  * these have to be match the source compiler and target machine
@@ -31,14 +34,74 @@ typedef uint32_t uoffset_T; /* target unsigned machine offset */
  * storage class type must hold all the flags defined elsewhere
  * it must have a few more bits than the target has registers
  */
-typedef uint32_t store_t;    /* storage class flags */
+//typedef uint32_t store_t;    /* storage class flags */
+
+/*
+ * A type is essentially a "constructor", a size, and a list of pointers
+ * leading to a scalar type.
+ * The type constructors are codes for the scalar types and (), [], *,
+ * struct and union.
+ * The scalar types are char, short, int, long, float and double.
+ * The type lists are triply linked.
+ *
+ * Part of the type structure might look like
+ *
+ *              int        (int)
+ *               =
+ *       func <-------> int        (int ())
+ *        |            =
+ *         --> ptr <--> int        (int *)
+ *
+ * (the exact structure depends on the order of declarations).
+ * This layout results from the pre-declared (int) and (int ()) followed by
+ * a declaration using (int *).
+ * The sideways link (from func to ptr here) allows all types leading to a
+ * given type to be found.
+ * This allows different declarations of (int *) to be recognised as the same.
+ * Type equivalence is equality of type pointers.
+ *
+ *
+ * flags for scalar types
+ * up to 3 of the flags may be set (none for constructed types)
+ * the 2nd and third flags can only be UNSIGNED or DLONG
+ * UNSIGNED only applies to integral types
+ * DLONG only applies to long and uint32_t types and says that these
+ * are actually longer than an int
+ */
+
+typedef enum scalar_t
+{
+    CHAR     = 0x01,
+    SHORT    = 0x02,
+    INT      = 0x04,
+    LONG     = 0x08,
+    FLOAT    = 0x10,
+    DOUBLE   = 0x20,
+    UNSIGNED = 0x40,
+    DLONG    = 0x80,
+} scalar_t;
+
+#define ISCALAR  (CHAR | SHORT | INT | LONG)
+#define RSCALAR  (FLOAT | DOUBLE)
+
+/*
+ * flags for type constructor
+ * at most 1 of the flags may be set (none for scalar types)
+ * flags are used for fast testing for array/pointer
+ */
+#define ARRAY    1
+#define FUNCTION 2
+#define POINTER  4
+#define STRUCTU  8
+#define VOID     0x10
+
+/* type sizes */
 
 /*
  * types for library routines
  */
 
 typedef int fd_t;             /* file descriptor */
-
 
 /* scanner codes */
 enum scan_states
@@ -201,8 +264,8 @@ typedef uint8_t indn_t;     /* storage indirection count */
 typedef uint32_t label_no;   /* label number */
 typedef uint32_t maclev_t;   /* macro expansion level */
 typedef enum scan_states op_t; /* Operator op */
-typedef uint32_t sc_t;       /* storage class flags */
-typedef uint32_t scalar_t;   /* type scalar flags */
+//typedef uint32_t sc_t;       /* storage class flags */
+//typedef uint32_t scalar_t;   /* type scalar flags */
 typedef uint32_t scopelev_t; /* scope level */
 typedef enum scan_states sym_t;      /* symbol code from scanner */
 typedef uint32_t weight_t;   /* expression tree node weight */
